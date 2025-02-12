@@ -16,10 +16,10 @@ public class GameGridGizmosHelper : MonoBehaviour
         gridWorldSizeZ = gameGrid.gameGridWorldSizeZ;
         cellRadius = gameGrid.nodeRadius;
 
-        Gizmos.DrawWireCube(new Vector3(gridWorldSizeX / 2, 0, gridWorldSizeZ / 2), new Vector3(gridWorldSizeX, 1, gridWorldSizeZ));
+        int gizmosGridX = Mathf.RoundToInt(gridWorldSizeX / (2 * cellRadius));
+        int gizmosGridZ = Mathf.RoundToInt(gridWorldSizeZ / (2 * cellRadius));
 
-        int gizmosGridX = Mathf.RoundToInt(gridWorldSizeX / 2 * cellRadius);
-        int gizmosGridZ = Mathf.RoundToInt(gridWorldSizeZ / 2 * cellRadius);        
+        Gizmos.DrawWireCube(new Vector3(gridWorldSizeX / 2, 0, gridWorldSizeZ / 2), new Vector3(gridWorldSizeX, 1, gridWorldSizeZ));
 
         for (int i = 0; i < gizmosGridX; i++)
         {

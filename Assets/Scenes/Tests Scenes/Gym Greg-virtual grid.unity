@@ -178,7 +178,7 @@ MonoBehaviour:
   gameAgentsMask:
     serializedVersion: 2
     m_Bits: 64
-  showNodesInfos: 0
+  showNodesInfos: 1
 --- !u!114 &45567634
 MonoBehaviour:
   m_ObjectHideFlags: 0
