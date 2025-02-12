@@ -14,10 +14,14 @@ public class GameGrid : MonoBehaviour
     public bool drawGizmos;
 
     private static GameGrid instance;
+    public static GameGrid Instance {  get { return instance; } }
     private Node[,] gameGrid;
     private int gameGridSizeX;
+    public int GameGridSizeX { get { return gameGridSizeX; } }
     private int gameGridSizeY;
+    public int GameGridSizeY {  get { return gameGridSizeY; } }
     private float nodeDiameter;
+    public float NodeDiameter { get { return nodeDiameter; } }
 
     private void Awake()
     {
@@ -51,7 +55,7 @@ public class GameGrid : MonoBehaviour
         }
     }
 
-    private Vector3 WorldPosFromGridPos(Vector2 gridPos)
+    public Vector3 WorldPosFromGridPos(Vector2 gridPos)
     {
         return new Vector3(gridPos.x * nodeDiameter + nodeRadius, 0, gridPos.y * nodeDiameter + nodeRadius);
     }
