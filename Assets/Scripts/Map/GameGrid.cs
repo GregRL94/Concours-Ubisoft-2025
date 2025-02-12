@@ -73,7 +73,7 @@ public class GameGrid : MonoBehaviour
 
     private bool IsNodeFree(Vector3 worldPos)
     {        
-        if (Physics.OverlapBox(worldPos, Vector3.one * (nodeRadius - nodeFreeTolerance * nodeRadius)).Length > 0)
+        if (Physics.OverlapBox(worldPos, Vector3.one * (nodeRadius - nodeFreeTolerance * nodeRadius), Quaternion.identity, gameAgentsMask).Length > 0)
         {
             return false;
         }
@@ -105,7 +105,26 @@ public class GameGrid : MonoBehaviour
             {
                 foreach (Node node in gameGrid)
                 {
-                    Gizmos.color = node.isFree ? Color.green : Color.red;
+                    switch (node.playerZone)
+                    {
+                        case PlayerEnum.NONE:
+                            Gizmos.color = Color.black;
+                            break;
+
+                        case PlayerEnum.PLAYER1:
+                            Gizmos.color = Color.blue;
+                            break;
+
+                        case PlayerEnum.PLAYER2:
+                            Gizmos.color = Color.white;
+                            break;
+                    }
+
+                    if (!node.isFree)
+                    {
+                        Gizmos.color = Color.red;
+                    }
+
                     Gizmos.DrawCube(node.worldPos, Vector3.one * (nodeDiameter - nodeDiameter / 10));
                 }
             }
