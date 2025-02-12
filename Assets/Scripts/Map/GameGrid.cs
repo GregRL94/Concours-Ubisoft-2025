@@ -6,14 +6,18 @@ public class GameGrid : MonoBehaviour
 {
     public int gameGridWorldSizeX;
     public int gameGridWorldSizeZ;
-    public int nodeRadius;
+    public float nodeRadius;
+    [Range(0f, 1f)] public float nodeFreeTolerance;
+    [Range(10f, 50f)] public float raycastCheckHeight;
+    public LayerMask playerZonesMask;
+    public LayerMask gameAgentsMask;    
     public bool drawGizmos;
 
     private static GameGrid instance;
     private Node[,] gameGrid;
     private int gameGridSizeX;
     private int gameGridSizeY;
-    private int nodeDiameter;
+    private float nodeDiameter;
 
     private void Awake()
     {
@@ -28,8 +32,8 @@ public class GameGrid : MonoBehaviour
         }
 
         nodeDiameter = 2 * nodeRadius;
-        gameGridSizeX = gameGridWorldSizeX / nodeDiameter;
-        gameGridSizeY = gameGridWorldSizeZ / nodeDiameter;
+        gameGridSizeX = Mathf.RoundToInt(gameGridWorldSizeX / nodeDiameter);
+        gameGridSizeY = Mathf.RoundToInt(gameGridWorldSizeZ / nodeDiameter);
         CreateGrid(gameGridSizeX, gameGridSizeY);
     }
 
@@ -40,10 +44,9 @@ public class GameGrid : MonoBehaviour
         for (int i = 0; i < gridSizeX; i++)
         {
             for (int j = 0; j < grideSizeZ; j++)
-            {                
-                Vector2 nodeGridPos = new Vector2(i, j);
-                Debug.Log(nodeGridPos);
-                gameGrid[i, j] = new Node(nodeGridPos, WorldPosFromGridPos(nodeGridPos));
+            {
+                Vector3 nodeWorldPos = WorldPosFromGridPos(new Vector2(i, j));
+                gameGrid[i, j] = new Node(new Vector2(i, j), nodeWorldPos, IsNodeFree(nodeWorldPos), NodeInPlayerZone(nodeWorldPos));
             }
         }
     }
@@ -55,8 +58,8 @@ public class GameGrid : MonoBehaviour
 
     public Node NodeFromWorldPos(Vector3 worldPos)
     {
-        int i = Mathf.FloorToInt(worldPos.x) / nodeDiameter;
-        int j = Mathf.FloorToInt(worldPos.z) / nodeDiameter;
+        int i = Mathf.FloorToInt(worldPos.x) / (int)nodeDiameter;
+        int j = Mathf.FloorToInt(worldPos.z) / (int)nodeDiameter;
 
         return gameGrid[i, j];
     }
@@ -68,6 +71,31 @@ public class GameGrid : MonoBehaviour
         return new Vector3(snappedPosX, worldPos.y, snappedPosZ);
     }
 
+    private bool IsNodeFree(Vector3 worldPos)
+    {        
+        if (Physics.OverlapBox(worldPos, Vector3.one * (nodeRadius - nodeFreeTolerance * nodeRadius)).Length > 0)
+        {
+            return false;
+        }
+        return true;
+    }
+
+    private PlayerEnum NodeInPlayerZone(Vector3 worldPos)
+    {
+        Ray ray = new Ray(worldPos + Vector3.up * raycastCheckHeight, Vector3.down);
+        RaycastHit hit;
+
+        if (Physics.Raycast(ray, out hit, 2 * raycastCheckHeight, playerZonesMask))
+        {
+            PlayerZone zone = hit.collider.gameObject.GetComponent<PlayerZone>();
+            if (zone != null)
+            {
+                return zone.playerZone;
+            }
+        }
+        return PlayerEnum.NONE;
+    }
+
     private void OnDrawGizmos()
     {
         if (drawGizmos)
@@ -77,6 +105,7 @@ public class GameGrid : MonoBehaviour
             {
                 foreach (Node node in gameGrid)
                 {
+                    Gizmos.color = node.isFree ? Color.green : Color.red;
                     Gizmos.DrawCube(node.worldPos, Vector3.one * (nodeDiameter - nodeDiameter / 10));
                 }
             }
