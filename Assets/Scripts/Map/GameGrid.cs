@@ -10,18 +10,15 @@ public class GameGrid : MonoBehaviour
     [Range(0f, 1f)] public float nodeFreeTolerance;
     [Range(10f, 50f)] public float raycastCheckHeight;
     public LayerMask playerZonesMask;
-    public LayerMask gameAgentsMask;    
-    public bool drawGizmos;
+    public LayerMask gameAgentsMask;
+    public bool showNodesInfos;
 
     private static GameGrid instance;
     public static GameGrid Instance {  get { return instance; } }
     private Node[,] gameGrid;
     private int gameGridSizeX;
-    public int GameGridSizeX { get { return gameGridSizeX; } }
     private int gameGridSizeY;
-    public int GameGridSizeY {  get { return gameGridSizeY; } }
     private float nodeDiameter;
-    public float NodeDiameter { get { return nodeDiameter; } }
 
     private void Awake()
     {
@@ -102,9 +99,8 @@ public class GameGrid : MonoBehaviour
 
     private void OnDrawGizmos()
     {
-        if (drawGizmos)
+        if (showNodesInfos)
         {
-            Gizmos.DrawWireCube(new Vector3(gameGridWorldSizeX / 2, 0, gameGridWorldSizeZ / 2), new Vector3(gameGridWorldSizeX, 1, gameGridWorldSizeZ));
             if (gameGrid != null)
             {
                 foreach (Node node in gameGrid)
