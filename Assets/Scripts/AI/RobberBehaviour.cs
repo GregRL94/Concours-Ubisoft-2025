@@ -5,6 +5,18 @@ using UnityEngine.AI;
 
 public class RobberBehaviour : BTAgent
 {
+    [Header("Metrics")]
+    [Tooltip("Robber base speed")]
+    private float _vBase;
+    private float _currentSpeed = 0;
+    [Tooltip("Robber circular vision")]
+    private float _radialVision;
+    private float _currentVision = 0;
+    [Tooltip("Robber stealing time")]
+    private float _stealTime;
+    [Tooltip("Robber stealing range")]
+    private float _stealRange;
+
     [Header("Target Game Object")]
     public GameObject painting;
     public GameObject car;
