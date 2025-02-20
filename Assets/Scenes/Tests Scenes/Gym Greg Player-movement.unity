@@ -270,7 +270,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d8ab37c6fa84df247b33dd1bfa544eca, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  speed: 2
+  force: 16
+  maxSpeed: 10
 --- !u!1 &427773083
 GameObject:
   m_ObjectHideFlags: 0
@@ -736,7 +737,7 @@ BoxCollider:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1711790963}
-  m_Material: {fileID: 0}
+  m_Material: {fileID: 13400000, guid: 750184527f0349f41a479f49daad39fa, type: 2}
   m_IncludeLayers:
     serializedVersion: 2
     m_Bits: 0
