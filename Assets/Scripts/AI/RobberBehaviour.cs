@@ -1,113 +1,305 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
+using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.AI;
 
 public class RobberBehaviour : BTAgent
 {
+    private GameManager _gameManager;
+
     [Header("Metrics")]
-    [Tooltip("Robber base speed")]
-    private float _vBase;
-    private float _currentSpeed = 0;
-    [Tooltip("Robber circular vision")]
-    private float _radialVision;
-    private float _currentVision = 0;
-    [Tooltip("Robber stealing time")]
-    private float _stealTime;
-    [Tooltip("Robber stealing range")]
-    private float _stealRange;
+    [SerializeField, Tooltip("Robber base speed")]
+    private float _vBase = 10f;
+    [SerializeField, Tooltip("Robber flee speed")]
+    private float _vFlee = 10f;
+    [SerializeField, Tooltip("Robber circular vision")]
+    private float _radialVision = 5f;
+    [SerializeField, Tooltip("Robber flee vision")]
+    private float _fleeVision = 10f;
+    private float _currentVision = 0f;
+    [SerializeField, Tooltip("Robber stealing time")]
+    private float _stealTime = 10f;
+    [SerializeField, Tooltip("Robber stealing range")]
+    private float _stealRange = 2f;
+    [SerializeField, Tooltip("Robber stealing list")]
+    private List<MuseumObjects.ObjectType> _stealingList;
 
-    [Header("Target Game Object")]
-    public GameObject painting;
-    public GameObject car;
 
-    public GameObject backDoor;
-    public GameObject frontDoor;
-
-    [Header("DEBUG")]
+    [Header("DEBUG READING")]
     [SerializeField]
-    private bool _paintingStealed;
+    private NavMeshAgent _robberAgent;
+    [SerializeField]
+    private MuseumObjects _currentTargetObject;
+    private BTNode.Status _hasStolen = BTNode.Status.RUNNING;
+    [SerializeField]
+    private bool _isVulnerable = false;
+    [SerializeField]
+    private bool _isFleeing = false;
+    [SerializeField]
+    private float _robberTimeFleeing = 5f;
+
+    //Coroutines
+    private Coroutine _stealingObjectTimer;
+    private Coroutine _fleeingTimer;
+    private Coroutine _detectPlayers;
+    public bool IsVulnerable => _isVulnerable;
 
     // Start is called before the first frame update
     public override void Start()
     {
         base.Start();
-        BTSequence steal = new BTSequence("Steal Something");
+        _currentVision = _radialVision;
+        if(!_robberAgent)_robberAgent = GetComponent<NavMeshAgent>();
+        _robberAgent.speed = _vBase;
+
+
+        //Flee state
+        BTLeaf isFleeing = new BTLeaf("Is fleeing", IsFleeing);
+        BTInverter isntFleeing = new BTInverter("Isn't fleeing");
+        BehaviourTree BTIsntFleeing = new BehaviourTree();
+        BehaviourTree BTIsFleeing = new BehaviourTree();
+        BTDependantSequence fleeState = new BTDependantSequence("Nigerundayo !", BTIsFleeing, agent);
+        BTLeaf fleeFromPlayers = new BTLeaf("Flee from players", FleeFromPlayers);
+        isntFleeing.AddChild(isFleeing);
+        BTIsntFleeing.AddChild(isntFleeing);
+        BTIsFleeing.AddChild(isFleeing);
+        fleeState.AddChild(fleeFromPlayers);
+
+        //Neutral state
+        BTDependantSequence neutralState = new BTDependantSequence("Steal Objects", BTIsntFleeing, agent);
+        BTLeaf goToObjectListed = new BTLeaf("Go To Object Listed", GoToObjectListed);
+        BTLeaf stealObjectListed = new BTLeaf("StealObject", StealObject);
+        BTLeaf hasStealedEverything = new BTLeaf("Has Stealed Everything", HasStealedEverything);
         
-        BTLeaf goToPainting = new BTLeaf("Go To Painting", GoToPainting);
-        BTLeaf hasGotPainting = new BTLeaf("Go To Painting", HasGotPainting);
-        BTLeaf goToFrontDoor = new BTLeaf("Go To Car", GoToFrontDoor);
-        BTLeaf goToBackDoor = new BTLeaf("Go To Car", GoToBackDoor);
-        BTLeaf goToCar = new BTLeaf("Go To Car", GoToCar);
+        neutralState.AddChild(hasStealedEverything);
+        neutralState.AddChild(goToObjectListed);
+        neutralState.AddChild(stealObjectListed);
 
-        BTSelector goToDoor = new BTSelector("Go To Open Door");
+        //Robber global behaviour
+        BTSelector robberBehaviour = new BTSelector("Robber Behaviour");
+        robberBehaviour.AddChild(neutralState);
+        robberBehaviour.AddChild(fleeState);
+        tree.AddChild(robberBehaviour);
 
-        BTInverter invertMoney = new BTInverter("Invert Painting");
-        invertMoney.AddChild(hasGotPainting);
-
-        goToDoor.AddChild(goToFrontDoor);
-        goToDoor.AddChild(goToBackDoor);
-
-        steal.AddChild(hasGotPainting);
-        steal.AddChild(goToDoor);
-        steal.AddChild(goToPainting);
-        steal.AddChild(goToCar);
-        tree.AddChild(steal);
-
+        //Start detecting
+        _detectPlayers = StartCoroutine(DetectPlayersLoop());
     }
 
-    public BTNode.Status HasGotPainting()
+    #region Steal
+    public BTNode.Status StealObject()
     {
-        if (_paintingStealed)
+        if (_currentTargetObject == null) return BTNode.Status.SUCCESS;
+        if (_stealingObjectTimer == null) _stealingObjectTimer = StartCoroutine(StealTimer(_stealTime));
+        return _hasStolen;
+    }
+    public BTNode.Status HasStealedEverything()
+    {
+        if (_stealingList.Count <= 0)
             return BTNode.Status.FAILURE;
         return BTNode.Status.SUCCESS;
     }
-    public BTNode.Status GoToPainting()
+    public BTNode.Status GoToObjectListed()
     {
-        BTNode.Status s = GoToLocation(painting.transform.position);
+        if (_currentTargetObject == null) GetNearestObject();
+        BTNode.Status s = GoToPosition(_currentTargetObject.transform.position);
         if (s == BTNode.Status.SUCCESS)
         {
-            Debug.Log("PAINTING STEALED !");
-            painting.transform.parent = this.gameObject.transform;
-            _paintingStealed = true;
+            Debug.Log($"Start Stealing {_currentTargetObject.MuseumObjectType} !");
+            _hasStolen = BTNode.Status.RUNNING;
         }
         return s;
     }
 
-    public BTNode.Status GoToCar()
+    private void GetNearestObject()
     {
-        BTNode.Status s = GoToLocation(car.transform.position);
-        if (s == BTNode.Status.SUCCESS)
+        MuseumObjects[] museumObjects = MuseumObjectsManager.Instance?.GetObjectList(_stealingList[0]);
+        float minDistance = float.MaxValue;
+        MuseumObjects nearestObject = null;
+        for (int i = 0; i < museumObjects.Length; i++)
         {
-            Debug.Log("Flee success !");
-            painting.SetActive(false);
+            //skip already stealed objects
+            MuseumObjects nearest = museumObjects[i];
+            if (!nearest.gameObject.activeSelf)
+                continue;
+
+            float distance = Vector3.Distance(this.transform.position, museumObjects[i].transform.position);
+            //skip not nearest objects
+            if (distance >= minDistance)
+                continue;
+
+            minDistance = distance;
+            nearestObject = nearest;
         }
-        return s;
+        //Debug.Log($"Nearest Object : {nearestObject.gameObject.name}");
+        _currentTargetObject = nearestObject;
     }
 
-    public BTNode.Status GoToBackDoor()
+    private IEnumerator StealTimer(float time)
     {
-        return GoToDoor(backDoor);
-    }
-
-    public BTNode.Status GoToFrontDoor()
-    {
-        return GoToDoor(frontDoor);
-    }
-
-    public BTNode.Status GoToDoor(GameObject door)
-    {
-        BTNode.Status s = GoToLocation(door.transform.position);
-        if (s == BTNode.Status.SUCCESS)
+        state = ActionState.WORKING;
+        StartVulnerableState();
+        while (_hasStolen == BTNode.Status.RUNNING)
         {
-            if (!door.GetComponent<Lock>().isLocked)
+            //Debug.Log("WAIT");
+            yield return new WaitForSeconds(time);
+            _hasStolen = BTNode.Status.SUCCESS;
+            state = ActionState.IDLE;
+
+            Debug.Log($"{_currentTargetObject.MuseumObjectType} STEALED !");
+            _currentTargetObject.gameObject.SetActive(false);
+            _currentTargetObject = null;
+            _stealingList.RemoveAt(0);
+            StopVunerableState();
+            _stealingObjectTimer = null;
+        }
+    }
+    #endregion
+
+    #region Flee
+    private IEnumerator DetectPlayersLoop()
+    {
+        while (true)
+        {
+            float playerDetected = DetectPlayers(transform.position, _currentVision);
+            if (playerDetected > 0)
             {
-                door.SetActive(false);
-                return BTNode.Status.SUCCESS;
+                if (!_isFleeing) StartFleeState();
+                else RestartFleeingTimer();
             }
+            yield return new WaitForSeconds(0.1f);
+        }
+    }
+
+    private float DetectPlayers(Vector3 pos, float radius = 5f)
+    {
+        float radiusSqr = radius * radius;
+        float playerDetected = 0;
+        for (int i = 0; i < GameManager.Instance.Players.Length; i++)
+        {
+            if ((GameManager.Instance.Players[i].transform.position - pos).sqrMagnitude <= radiusSqr)
+                playerDetected++;
+        }
+        return playerDetected;
+    }
+
+    public BTNode.Status FleeFromPlayers()
+    {
+        //Debug.Log("Fleeing");
+        if (_fleeingTimer == null) _fleeingTimer = StartCoroutine(FleeTimer(_robberTimeFleeing));
+        //relance le timer si il est en range de vision (nouvel leaf / function)
+        BTNode.Status s = GoToPosition(GetMostFarPosition());
+        return s;
+    }
+    private Vector3 GetMostFarPosition()
+    {
+        Vector3 mostFar = Vector3.zero;
+        float mostFarDistance1 = 0;
+        float mostFarDistance2 = 0;
+        Vector3 centerPlayers = (GameManager.Instance.Players[0].transform.position + GameManager.Instance.Players[1].transform.position) / 2f;
+        for (int i = 0; i < GameManager.Instance.MapCorners.Length; i++)
+        {
+            float distance1 = Vector3.Distance(GameManager.Instance.Players[0].transform.position, GameManager.Instance.MapCorners[i].position);
+            float distance2 = Vector3.Distance(GameManager.Instance.Players[1].transform.position, GameManager.Instance.MapCorners[i].position);
+            if (distance1 <= mostFarDistance1 || distance2 <= mostFarDistance2) continue;
+            mostFarDistance1 = distance1;
+            mostFarDistance2 = distance2;
+            mostFar = GameManager.Instance.MapCorners[i].position;
+
+        }
+        return mostFar;
+    }
+
+    private void RestartFleeingTimer()
+    {
+        if (_fleeingTimer != null) StopAndClearCoroutine(ref _fleeingTimer);
+        _fleeingTimer = StartCoroutine(FleeTimer(_robberTimeFleeing));
+    }
+
+    private IEnumerator FleeTimer(float timer)
+    {
+        yield return new WaitForSeconds(timer);
+        Debug.Log("Stop fleeing");
+        StopFleeingState();
+    }
+
+    public BTNode.Status IsFleeing()
+    {
+        if (_isFleeing) return BTNode.Status.SUCCESS;
+        else return BTNode.Status.FAILURE;
+    }
+    #endregion
+
+    #region States
+    private void StartVulnerableState()
+    {
+        _isVulnerable = true;
+        _robberAgent.speed = 0;
+        _currentVision = 0;
+        Debug.Log("Vulnerable State");
+    }
+
+    private void StopVunerableState()
+    {
+        _isVulnerable = false;
+        _robberAgent.speed = _vBase;
+        _currentVision = _radialVision;
+    }
+
+    public void StartFleeState()
+    {
+        StopVunerableState();
+        _isFleeing = true;
+        if (_stealingObjectTimer != null) StopAndClearCoroutine(ref _stealingObjectTimer);
+        _currentTargetObject = null;
+        _robberAgent.speed = _vFlee;
+        _currentVision = _fleeVision;
+        Debug.Log("Flee State");
+    }
+
+    private void StopFleeingState()
+    {
+        _isFleeing = false;
+        if (_fleeingTimer != null) StopAndClearCoroutine(ref _fleeingTimer);
+        _robberAgent.speed = _vBase;
+        _currentVision = _radialVision;
+        Debug.Log("Neutral State");
+    }
+    #endregion
+
+
+    public BTNode.Status GoToPosition(Vector3 destination)
+    {
+        float distanceToTarget = Vector3.Distance(destination, this.transform.position);
+        if (state == ActionState.IDLE)
+        {
+            agent.SetDestination(destination);
+            state = ActionState.WORKING;
+        }
+        else if (Vector3.Distance(agent.pathEndPosition, destination) >= _stealRange)
+        {
+            state = ActionState.IDLE;
             return BTNode.Status.FAILURE;
         }
-        else
-            return s;
+        else if (distanceToTarget < _stealRange)
+        {
+            state = ActionState.IDLE;
+            return BTNode.Status.SUCCESS;
+        }
+        return BTNode.Status.RUNNING;
+    }
+
+  
+    private void StopAndClearCoroutine(ref Coroutine coroutine)
+    {
+        StopCoroutine(coroutine);
+        coroutine = null;
+    }
+
+    private void OnDrawGizmos()
+    {
+        Gizmos.color = Color.red;
+        Gizmos.DrawWireSphere(this.transform.position, _currentVision);
     }
 }

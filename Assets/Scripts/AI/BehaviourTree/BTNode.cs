@@ -26,4 +26,12 @@ public class BTNode
     {
         children.Add(n);
     }
+
+    public void Reset()
+    {
+        currentChild = 0;
+        foreach (BTNode n in children)
+            n.Reset();
+        
+    }
 }

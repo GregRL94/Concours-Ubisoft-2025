@@ -14,7 +14,13 @@ public class BTSequence : BTNode
         Status childstatus = children[currentChild].Process();
         if (childstatus == Status.RUNNING) return Status.RUNNING;
         if (childstatus == Status.FAILURE)
-            return childstatus;
+        {
+            currentChild = 0;
+            foreach (BTNode n in children)
+                n.Reset();
+            
+            return Status.FAILURE;
+        }
 
         currentChild++;
         if (currentChild >= children.Count)
