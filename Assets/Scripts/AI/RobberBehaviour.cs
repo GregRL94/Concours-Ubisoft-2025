@@ -7,8 +7,6 @@ using UnityEngine.AI;
 
 public class RobberBehaviour : BTAgent
 {
-    private GameManager _gameManager;
-
     [Header("Metrics")]
     [SerializeField, Tooltip("Robber base speed")]
     private float _vBase = 10f;
@@ -195,7 +193,7 @@ public class RobberBehaviour : BTAgent
     private Vector3 GetMostFarPosition()
     {
         Vector3 mostFar = Vector3.zero;
-        float mostFarDistance1 = 0;
+        /*float mostFarDistance1 = 0;
         float mostFarDistance2 = 0;
         Vector3 centerPlayers = (GameManager.Instance.Players[0].transform.position + GameManager.Instance.Players[1].transform.position) / 2f;
         for (int i = 0; i < GameManager.Instance.MapCorners.Length; i++)
@@ -207,7 +205,26 @@ public class RobberBehaviour : BTAgent
             mostFarDistance2 = distance2;
             mostFar = GameManager.Instance.MapCorners[i].position;
 
+        }*/
+
+        Node[,] gameGrid = GameGrid.Instance.Grid;
+
+        float mostDistanceToPlayer1 = 0;
+        float mostDistanceToPlayer2 = 0;
+
+        for (int i = 0; i < gameGrid.Length; i++)
+        {
+            for (int j = 0; j < gameGrid.Length; j++)
+            {
+                float distanceToPlayer1 = Vector3.Distance(gameGrid[i, j].worldPos, GameManager.Instance.Players[0].transform.position);
+                float distanceToPlayer2 = Vector3.Distance(gameGrid[i, j].worldPos, GameManager.Instance.Players[1].transform.position);
+                if (distanceToPlayer1 <= mostDistanceToPlayer1 || distanceToPlayer2 <= mostDistanceToPlayer2) continue;
+                mostDistanceToPlayer1 = distanceToPlayer1;
+                mostDistanceToPlayer2 = distanceToPlayer2;
+                mostFar = gameGrid[i, j].worldPos;
+            }
         }
+
         return mostFar;
     }
 
