@@ -56,7 +56,7 @@ public class GameGrid : MonoBehaviour
 
     public Vector3 WorldPosFromGridPos(Vector2 gridPos)
     {
-        return new Vector3(gridPos.x * nodeDiameter + nodeRadius, 0, gridPos.y * nodeDiameter + nodeRadius);
+        return new Vector3(gridPos.x * nodeDiameter + nodeRadius, this.transform.position.y, gridPos.y * nodeDiameter + nodeRadius);
     }
 
     public Node NodeFromWorldPos(Vector3 worldPos)

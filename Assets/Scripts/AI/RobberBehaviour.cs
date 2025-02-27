@@ -193,38 +193,24 @@ public class RobberBehaviour : BTAgent
     private Vector3 GetMostFarPosition()
     {
         Vector3 mostFar = Vector3.zero;
-        /*float mostFarDistance1 = 0;
-        float mostFarDistance2 = 0;
-        Vector3 centerPlayers = (GameManager.Instance.Players[0].transform.position + GameManager.Instance.Players[1].transform.position) / 2f;
-        for (int i = 0; i < GameManager.Instance.MapCorners.Length; i++)
-        {
-            float distance1 = Vector3.Distance(GameManager.Instance.Players[0].transform.position, GameManager.Instance.MapCorners[i].position);
-            float distance2 = Vector3.Distance(GameManager.Instance.Players[1].transform.position, GameManager.Instance.MapCorners[i].position);
-            if (distance1 <= mostFarDistance1 || distance2 <= mostFarDistance2) continue;
-            mostFarDistance1 = distance1;
-            mostFarDistance2 = distance2;
-            mostFar = GameManager.Instance.MapCorners[i].position;
-
-        }*/
 
         Node[,] gameGrid = GameGrid.Instance.Grid;
 
-        float mostDistanceToPlayer1 = 0;
-        float mostDistanceToPlayer2 = 0;
+        float mostDistanceToPlayers = 0;
 
-        for (int i = 0; i < gameGrid.Length; i++)
+        for (int i = 0; i < gameGrid.GetLength(0); i++)
         {
-            for (int j = 0; j < gameGrid.Length; j++)
+            for (int j = 0; j < gameGrid.GetLength(1); j++)
             {
                 float distanceToPlayer1 = Vector3.Distance(gameGrid[i, j].worldPos, GameManager.Instance.Players[0].transform.position);
                 float distanceToPlayer2 = Vector3.Distance(gameGrid[i, j].worldPos, GameManager.Instance.Players[1].transform.position);
-                if (distanceToPlayer1 <= mostDistanceToPlayer1 || distanceToPlayer2 <= mostDistanceToPlayer2) continue;
-                mostDistanceToPlayer1 = distanceToPlayer1;
-                mostDistanceToPlayer2 = distanceToPlayer2;
+                float distanceToPlayers = distanceToPlayer1 + distanceToPlayer2;
+                if (distanceToPlayers <= mostDistanceToPlayers) continue;
+                mostDistanceToPlayers = distanceToPlayers;
                 mostFar = gameGrid[i, j].worldPos;
             }
         }
-
+        
         return mostFar;
     }
 

@@ -36,16 +36,22 @@ public class RobberManager : MonoBehaviour
 
     public void SpawnRobber()
     {
-        for(int i = 0; i < _maxSpawnRobberAttempt; i++)
+        Vector3 spawnPosition = Vector3.zero;
+        for (int i = 0; i < GameGrid.Instance.Grid.GetLength(0); i++)
         {
-            Vector3 spawnPosition = new Vector3(
+            for (int j = 0; j < GameGrid.Instance.Grid.GetLength(1); j++)
+            {
+                spawnPosition = GameGrid.Instance.Grid[i, j].worldPos;
+                if (!IsValidSpawnPosition(spawnPosition)) continue;
+                Instantiate(_robber, spawnPosition, Quaternion.identity);
+                return;
+            }
+        }
+        spawnPosition = new Vector3(
                 Random.Range(GameManager.Instance.MapMiddlePoint.position.x - _MapSize.x, GameManager.Instance.MapMiddlePoint.position.x + _MapSize.x),
                 GameManager.Instance.MapMiddlePoint.position.y,
                 Random.Range(GameManager.Instance.MapMiddlePoint.position.z - _MapSize.z, GameManager.Instance.MapMiddlePoint.position.z + _MapSize.z));
-            if (!IsValidSpawnPosition(spawnPosition) && i < _maxSpawnRobberAttempt - 1) continue;
-            Instantiate(_robber, spawnPosition, Quaternion.identity);
-            break;
-        }
+        Instantiate(_robber, spawnPosition, Quaternion.identity);
         
     }
     private bool IsValidSpawnPosition(Vector3 position)
