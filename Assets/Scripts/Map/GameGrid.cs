@@ -1,3 +1,4 @@
+using JetBrains.Annotations;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEditor.Build.Content;
@@ -21,6 +22,8 @@ public class GameGrid : MonoBehaviour
     private int gameGridSizeY;
     private float nodeDiameter;
     public Node[,] Grid => gameGrid;
+    public int GameGridSizeX => gameGridSizeX;
+    public int GameGridSizeY => gameGridSizeY;
 
     private void Awake()
     {

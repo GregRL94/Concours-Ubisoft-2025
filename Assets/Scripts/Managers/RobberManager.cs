@@ -18,10 +18,6 @@ public class RobberManager : MonoBehaviour
 
     [SerializeField, Tooltip("Distance between robber and all traps")]
     private float _minDistanceToTraps = 0;
-
-    [SerializeField, Tooltip("Size of the map")]
-    private Vector3 _MapSize = new Vector3(10f, 0f, 10f);
-
     
 
     private MuseumObjects[] _museumObjects;
@@ -47,10 +43,16 @@ public class RobberManager : MonoBehaviour
                 return;
             }
         }
+
+        //random spawn in game map when no grid are suitable to spawn
+        int gameGridSizeX = GameGrid.Instance.GameGridSizeX;
+        int gameGridSizeY = GameGrid.Instance.GameGridSizeY;
+        Vector3 mapSize = new Vector3(gameGridSizeX, 0, gameGridSizeY);
+        Vector3 mapMiddlePoint = GameGrid.Instance.Grid[gameGridSizeX / 2, gameGridSizeY / 2].worldPos;
         spawnPosition = new Vector3(
-                Random.Range(GameManager.Instance.MapMiddlePoint.position.x - _MapSize.x, GameManager.Instance.MapMiddlePoint.position.x + _MapSize.x),
-                GameManager.Instance.MapMiddlePoint.position.y,
-                Random.Range(GameManager.Instance.MapMiddlePoint.position.z - _MapSize.z, GameManager.Instance.MapMiddlePoint.position.z + _MapSize.z));
+                Random.Range(mapMiddlePoint.x - mapSize.x, mapMiddlePoint.x + mapSize.x),
+                mapMiddlePoint.y,
+                Random.Range(mapMiddlePoint.z - mapSize.z, mapMiddlePoint.z + mapSize.z));
         Instantiate(_robber, spawnPosition, Quaternion.identity);
         
     }
