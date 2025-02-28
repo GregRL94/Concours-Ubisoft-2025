@@ -1,0 +1,98 @@
+using System.Collections;
+using System.Collections.Generic;
+using UnityEngine;
+using UnityEngine.InputSystem;
+
+public class PlayerActions : MonoBehaviour
+{
+    [Header("INTERACTIONS PARAMETERS")]
+    [SerializeField, Range(0f, 5f)] private float interactionDistance;
+    [Space]
+    [Header("ABILITIES BINDING")]
+    [SerializeField] private AbilitiesEnum rJoystickUPBind;
+    [SerializeField] private AbilitiesEnum rJoystickDOWNBind;
+    [SerializeField] private AbilitiesEnum rJoystickLEFTBind;
+    [SerializeField] private AbilitiesEnum rJoystickRIGHTBind;
+    [Space]
+    [Header("ABILITIES COOLDOWN")]
+    [SerializeField, Range(0f, 10f)] private float whistleCD;
+    [SerializeField, Range(0f, 10f)] private float alarmTrapCD;
+    [SerializeField, Range(0f, 10f)] private float pushTrapCD;
+    [SerializeField, Range(0f, 10f)] private float captureTrapCD;
+
+    private GameGrid gameGrid;
+    private PlayerInputActions playerInputAction;
+    private AbilitiesEnum selectedAbility;
+
+    private Dictionary<R_JoystickDirection, AbilitiesEnum> bindingDict;
+    private Vector3 interactionPoint;
+    private Vector3 snappedInteractionPoint;
+    
+
+    void Start()
+    {
+        gameGrid = GameGrid.Instance;
+        playerInputAction = new PlayerInputActions();
+        bindingDict = new Dictionary<R_JoystickDirection, AbilitiesEnum> {
+            [R_JoystickDirection.UP] = rJoystickUPBind,
+            [R_JoystickDirection.DOWN] = rJoystickDOWNBind,
+            [R_JoystickDirection.LEFT] = rJoystickLEFTBind,
+            [R_JoystickDirection.RIGHT] = rJoystickRIGHTBind,
+            [R_JoystickDirection.NONE] = AbilitiesEnum.NONE,
+        };
+        EnablePlayerInputs();
+    }
+
+    void Update()
+    {
+        interactionPoint = transform.position + interactionDistance * transform.forward;
+        snappedInteractionPoint = gameGrid.SnapToGridPos(interactionPoint);
+    }
+
+    private void ActionSelection(InputAction.CallbackContext callback)
+    {
+        Vector2 rightJoystickInput = callback.ReadValue<Vector2>();
+        R_JoystickDirection r_joystick_dir = R_JoystickDirection.NONE;
+
+        if (rightJoystickInput.x == 1f)
+        {
+            r_joystick_dir = R_JoystickDirection.RIGHT;
+        }
+        else if (rightJoystickInput.x == -1f)
+        {
+            r_joystick_dir = R_JoystickDirection.LEFT;
+        }
+        else if (rightJoystickInput.y == 1f)
+        {
+            r_joystick_dir = R_JoystickDirection.UP;
+        }
+        else if (rightJoystickInput.y == -1f)
+        {
+            r_joystick_dir = R_JoystickDirection.DOWN;
+        }
+
+        if (!(bindingDict[r_joystick_dir] == selectedAbility))
+        {
+            selectedAbility = bindingDict[r_joystick_dir];
+        }
+
+        Debug.Log(selectedAbility);
+    }
+
+    private void EnablePlayerInputs()
+    {
+        playerInputAction.PlayerActions.Enable();
+        playerInputAction.PlayerActions.ActionSelection.performed += ActionSelection;
+    }
+
+    private void DisablePlayerInputs()
+    {
+        playerInputAction.PlayerActions.ActionSelection.performed -= ActionSelection;
+        playerInputAction.PlayerActions.Disable();
+    }
+
+    private void OnDestroy()
+    {
+        DisablePlayerInputs();
+    }
+}
