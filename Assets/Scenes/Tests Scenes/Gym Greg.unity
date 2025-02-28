@@ -624,6 +624,7 @@ GameObject:
   - component: {fileID: 1212272577}
   - component: {fileID: 1212272576}
   - component: {fileID: 1212272580}
+  - component: {fileID: 1212272582}
   - component: {fileID: 1212272581}
   m_Layer: 6
   m_Name: Player1
@@ -761,6 +762,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   interactionDistance: 0
+  gameAgentsmask:
+    serializedVersion: 2
+    m_Bits: 64
   rJoystickUPBind: 2
   rJoystickDOWNBind: 1
   rJoystickLEFTBind: 3
@@ -769,6 +773,20 @@ MonoBehaviour:
   alarmTrapCD: 0
   pushTrapCD: 0
   captureTrapCD: 0
+--- !u!114 &1212272582
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1212272575}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d8ab37c6fa84df247b33dd1bfa544eca, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  speed: 6
+  rotationSpeed: 8
 --- !u!1 &1644886428
 GameObject:
   m_ObjectHideFlags: 0

@@ -7,6 +7,7 @@ public class PlayerActions : MonoBehaviour
 {
     [Header("INTERACTIONS PARAMETERS")]
     [SerializeField, Range(0f, 5f)] private float interactionDistance;
+    [SerializeField] private LayerMask gameAgentsmask;
     [Space]
     [Header("ABILITIES BINDING")]
     [SerializeField] private AbilitiesEnum rJoystickUPBind;
@@ -25,8 +26,7 @@ public class PlayerActions : MonoBehaviour
     private AbilitiesEnum selectedAbility;
 
     private Dictionary<R_JoystickDirection, AbilitiesEnum> bindingDict;
-    private Vector3 interactionPoint;
-    private Vector3 snappedInteractionPoint;
+    private GameObject currentTrap;
     
 
     void Start()
@@ -45,8 +45,27 @@ public class PlayerActions : MonoBehaviour
 
     void Update()
     {
-        interactionPoint = transform.position + interactionDistance * transform.forward;
-        snappedInteractionPoint = gameGrid.SnapToGridPos(interactionPoint);
+        Vector3 interactionPoint = transform.position + interactionDistance * transform.forward;
+        Vector3 snappedInteractionPoint = gameGrid.SnapToGridPos(interactionPoint);
+
+        Ray ray = new Ray(transform.position, transform.forward);
+        RaycastHit hit;
+
+        if (Physics.Raycast(ray, out hit, interactionDistance, gameAgentsmask))
+        {
+            if (hit.collider.gameObject.CompareTag("TRAP"))
+            {
+                currentTrap = gameObject;
+            }
+            else if (currentTrap != null)
+            {
+                currentTrap = null;
+            }
+        }
+        else if (currentTrap != null)
+        {
+            currentTrap = null;
+        }
     }
 
     private void ActionSelection(InputAction.CallbackContext callback)
@@ -79,15 +98,39 @@ public class PlayerActions : MonoBehaviour
         Debug.Log(selectedAbility);
     }
 
+    private void RotateTrap(InputAction.CallbackContext callback)
+    {
+        float shoulderPressed = callback.ReadValue<float>();
+        int rotationDirection = 0;
+
+        if (shoulderPressed < 0)
+        {
+            Debug.Log("LEFT SHOULDER PRESSED");
+            rotationDirection = -1;
+        }
+        else if (shoulderPressed > 0)
+        {
+            Debug.Log("RIGHT SHOULDER PRESSED");
+            rotationDirection = 1;
+        }
+
+        if (currentTrap != null && rotationDirection != 0)
+        {
+            currentTrap.transform.Rotate(new Vector3(0f, rotationDirection * 90f, 0f));
+        }        
+    }
+
     private void EnablePlayerInputs()
     {
         playerInputAction.PlayerActions.Enable();
         playerInputAction.PlayerActions.ActionSelection.performed += ActionSelection;
+        playerInputAction.PlayerActions.TrapRotation.performed += RotateTrap;
     }
 
     private void DisablePlayerInputs()
     {
         playerInputAction.PlayerActions.ActionSelection.performed -= ActionSelection;
+        playerInputAction.PlayerActions.TrapRotation.performed -= RotateTrap;
         playerInputAction.PlayerActions.Disable();
     }
 
