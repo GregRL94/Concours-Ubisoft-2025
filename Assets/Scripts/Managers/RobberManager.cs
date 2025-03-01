@@ -21,14 +21,21 @@ public class RobberManager : MonoBehaviour
     
 
     private MuseumObjects[] _museumObjects;
+    private GameObject[] _traps;
 
     // Start is called before the first frame update
     void Start()
     {
+        //get all museum objects
         _museumObjects = FindObjectsOfType<MuseumObjects>();
+        //get all traps, use before round start
+        GetAllTraps();
 
+        //spawn robber, use before round start
         SpawnRobber();
     }
+
+    public void GetAllTraps() => _traps = GameObject.FindGameObjectsWithTag("TRAP");
 
     public void SpawnRobber()
     {
@@ -70,7 +77,11 @@ public class RobberManager : MonoBehaviour
                 return false;
         }
 
-        //TO DO : same with traps
+        for (int i = 0; i < _traps.Length; i++)
+        {
+            if (Vector3.Distance(position, _traps[i].transform.position) < _minDistanceToTraps)
+                return false;
+        }
         return true;
     }
 }
