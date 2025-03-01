@@ -43,13 +43,6 @@ public class EnemyTrapBehaviour : MonoBehaviour
     [SerializeField] float captureDuration = 5f;
 
 
-    private PlayerEnum trapOwner;
-    public PlayerEnum TrapOwner
-    {
-        get { return trapOwner; }
-        set { trapOwner = value; }
-    }
-
     private void Start()
     {
         agentInitialSpeed = agent.speed;

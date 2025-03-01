@@ -297,7 +297,7 @@ GameObject:
   - component: {fileID: 6319835258011833427}
   m_Layer: 8
   m_Name: EnemyTestForTraps
-  m_TagString: Enemy
+  m_TagString: ENEMY
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -409,7 +409,7 @@ GameObject:
   - component: {fileID: 4147374228550099874}
   m_Layer: 0
   m_Name: Capsule
-  m_TagString: Enemy
+  m_TagString: ENEMY
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0

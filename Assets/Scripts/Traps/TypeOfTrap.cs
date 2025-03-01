@@ -4,22 +4,26 @@ using UnityEngine;
 
 public class TypeOfTrap : MonoBehaviour, ITrap
 {
-    private enum TrapType { ALARM_TRAP, PUSH_TRAP, CAPTURE_TRAP}
-    [SerializeField]
-    private TrapType selectedTrap;
+    [SerializeField] AbilitiesEnum selectedTrap;
 
+    private PlayerEnum trapOwner;
+    public PlayerEnum TrapOwner
+    {
+        get { return trapOwner; }
+        set { trapOwner = value; }
+    }
 
     public void ActivateTrap(EnemyTrapBehaviour enemy)
     {
-        if(selectedTrap == TrapType.ALARM_TRAP)
+        if(selectedTrap == AbilitiesEnum.ALARM_TRAP)
         {
             enemy.TriggerAlarmTrap();
         }
-        else if (selectedTrap == TrapType.PUSH_TRAP)
+        else if (selectedTrap == AbilitiesEnum.PUSH_TRAP)
         {
             enemy.TriggerPushTrap();
         }
-        else if (selectedTrap == TrapType.CAPTURE_TRAP)
+        else if (selectedTrap == AbilitiesEnum.CAPTURE_TRAP)
         {
             enemy.TriggerCaptureTrap();
         }
@@ -27,7 +31,7 @@ public class TypeOfTrap : MonoBehaviour, ITrap
 
     private void OnTriggerEnter(Collider other)
     {
-        if (other.CompareTag("Enemy"))
+        if (other.CompareTag("ENEMY"))
         {
             ITrap trap = GetComponent<ITrap>();
             trap.ActivateTrap(other.GetComponentInParent<EnemyTrapBehaviour>());
