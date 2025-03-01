@@ -17,7 +17,7 @@ public class GameGrid : MonoBehaviour
     [SerializeField] private LayerMask gameAgentsMask;
 
     private static GameGrid instance;
-    public static GameGrid Instance {  get { return instance; } }
+    public static GameGrid Instance { get { return instance; } }
     private Node[,] gameGrid;
     private int gameGridSizeX;
     private int gameGridSizeY;

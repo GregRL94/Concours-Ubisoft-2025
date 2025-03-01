@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -7,8 +8,9 @@ public class PlayerActions : MonoBehaviour
 {
     [Header("INTERACTIONS PARAMETERS")]
     [SerializeField] private PlayerEnum playerID;
-    [SerializeField, Range(0f, 5f)] private float interactionDistance;
-    [SerializeField] private LayerMask gameAgentsmask;
+    [SerializeField, Range(0f, 10f)] private float raycastStartDistance;
+    [SerializeField, Range(0f, 10f)] private float interactionDistance;
+    [SerializeField] private LayerMask gameAgentsMask;
     [Space]
     [Header("ABILITIES BINDING")]
     [SerializeField] private AbilitiesEnum rJoystickUPBind;
@@ -28,6 +30,7 @@ public class PlayerActions : MonoBehaviour
 
     private Dictionary<R_JoystickDirection, AbilitiesEnum> bindingDict;
     private GameObject currentTrap;
+    private Vector3 snappedInteractionPoint;
     
 
     void Start()
@@ -46,16 +49,19 @@ public class PlayerActions : MonoBehaviour
 
     void Update()
     {
-        Vector3 interactionPoint = transform.position + interactionDistance * transform.forward;
-        Vector3 snappedInteractionPoint = gameGrid.SnapToGridPos(interactionPoint);
+        Vector3 raycastStartPoint = transform.position + transform.forward * raycastStartDistance;
+        Vector3 interactionPoint = raycastStartPoint + transform.forward * interactionDistance;
+        snappedInteractionPoint = gameGrid.SnapToGridPos(interactionPoint);
 
-        Ray ray = new Ray(transform.position, transform.forward);
+        Ray ray = new Ray(raycastStartPoint, transform.forward);
         RaycastHit hit;
 
-        if (Physics.Raycast(ray, out hit, interactionDistance, gameAgentsmask))
+        if (Physics.Raycast(ray, out hit, interactionDistance, gameAgentsMask))
         {
             if (hit.collider.gameObject.CompareTag("TRAP"))
             {
+                // TypeOfTrap trap = gameObject.GetComponent<TypeOfTrap>();
+                // try {if(trap.TrapOwner == playerID){currentTrap = gameObject;}} catch(NullReferenceException){Debug.Log("Could not retrieve TypeOfTrap script")}
                 currentTrap = gameObject;
             }
             else if (currentTrap != null)
@@ -138,5 +144,12 @@ public class PlayerActions : MonoBehaviour
     private void OnDestroy()
     {
         DisablePlayerInputs();
+    }
+
+    private void OnDrawGizmos()
+    {
+        Gizmos.color = Color.white;
+        Gizmos.DrawLine(transform.position + transform.forward * raycastStartDistance, transform.position + (interactionDistance + raycastStartDistance) * transform.forward);
+        Gizmos.DrawSphere(snappedInteractionPoint, 0.25f);
     }
 }
