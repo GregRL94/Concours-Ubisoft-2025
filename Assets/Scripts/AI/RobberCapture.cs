@@ -25,11 +25,14 @@ public class RobberCapture : MonoBehaviour
 
     public void GetSifled(float captureValue)
     {
-        if (!_robberBehaviour.IsVulnerable) return;
+        //if (!_robberBehaviour.IsVulnerable) return;
         _captureGauge += captureValue;
         _robberBehaviour.StartFleeState();
         if (_captureGauge < 100f) return;
         _isCaptured = true;
         this.gameObject.SetActive(false);
     }
+
+    public void StartVulnerability() => _robberBehaviour.StartVulnerableState();
+    public void StopVulnerability() => _robberBehaviour.StopVunerableState();
 }

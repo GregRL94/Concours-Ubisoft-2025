@@ -23,11 +23,17 @@ public class RobberBehaviour : BTAgent
     private float _stealRange = 2f;
     [SerializeField, Tooltip("Robber stealing list")]
     private List<MuseumObjects.ObjectType> _stealingList;
-
-
-    [Header("DEBUG READING")]
+    
+    [SerializeField]
+    private GameObject _indicator;
+    [SerializeField]
+    private Rigidbody _rb;
     [SerializeField]
     private NavMeshAgent _robberAgent;
+    [SerializeField]
+    private RobberCapture _robberCapture;
+
+    [Header("DEBUG READING")]
     [SerializeField]
     private MuseumObjects _currentTargetObject;
     private BTNode.Status _hasStolen = BTNode.Status.RUNNING;
@@ -50,8 +56,11 @@ public class RobberBehaviour : BTAgent
         base.Start();
         _currentVision = _radialVision;
         if(!_robberAgent)_robberAgent = GetComponent<NavMeshAgent>();
-        _robberAgent.speed = _vBase;
+        if(!_rb)_rb = GetComponent<Rigidbody>();
+        if(!_robberCapture) _robberCapture = GetComponent<RobberCapture>();
 
+        _robberAgent.speed = _vBase;
+        TrapManager.Instance.SetRobber(_robberAgent, _rb, _indicator, _robberCapture);
 
         //Flee state
         BTLeaf isFleeing = new BTLeaf("Is fleeing", IsFleeing);
@@ -235,7 +244,7 @@ public class RobberBehaviour : BTAgent
     #endregion
 
     #region States
-    private void StartVulnerableState()
+    public void StartVulnerableState()
     {
         _isVulnerable = true;
         _robberAgent.speed = 0;
@@ -243,8 +252,9 @@ public class RobberBehaviour : BTAgent
         Debug.Log("Vulnerable State");
     }
 
-    private void StopVunerableState()
+    public void StopVunerableState()
     {
+        if (!_isVulnerable) return;
         _isVulnerable = false;
         _robberAgent.speed = _vBase;
         _currentVision = _radialVision;
