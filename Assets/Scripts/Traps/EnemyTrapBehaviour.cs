@@ -42,14 +42,12 @@ public class EnemyTrapBehaviour : MonoBehaviour
     [SerializeField] float timeTillCaptureIndicatorAppear = 0f;
     [SerializeField] float captureDuration = 5f;
 
-    public enum TrapOwner { PLAYER };
 
-    private TrapOwner owner;
-
-    public TrapOwner Owner
+    private PlayerEnum trapOwner;
+    public PlayerEnum TrapOwner
     {
-        get { return owner; }
-        set { owner = value; }
+        get { return trapOwner; }
+        set { trapOwner = value; }
     }
 
     private void Start()
@@ -111,16 +109,15 @@ public class EnemyTrapBehaviour : MonoBehaviour
 
     private void Update()
     {
-        if (alarmTrap != null && alarmTrap.activeInHierarchy)
-            agent.SetDestination(alarmTrap.transform.position);
+        //if (alarmTrap != null && alarmTrap.activeInHierarchy)
+        //    agent.SetDestination(alarmTrap.transform.position);
 
-        if (pushTrap != null && pushTrap.activeInHierarchy && agent.enabled)
-            agent.SetDestination(pushTrap.transform.position);
+        //if (pushTrap != null && pushTrap.activeInHierarchy && agent.enabled)
+        //    agent.SetDestination(pushTrap.transform.position);
 
-        if (captureTrap != null && captureTrap.activeInHierarchy)
-            agent.SetDestination(captureTrap.transform.position);
+        //if (captureTrap != null && captureTrap.activeInHierarchy)
+        //    agent.SetDestination(captureTrap.transform.position);
     }
-
 
     #region Alarm Trigger Behaviour
     public void TriggerAlarmTrap()
