@@ -18,7 +18,7 @@ public enum AbilitiesEnum
 {
     NONE,
     WHISTLE,
-    TRAP1,
-    TRAP2,
-    TRAP3,
+    ALARM_TRAP,
+    PUSH_TRAP,
+    CAPTURE_TRAP,
 }
