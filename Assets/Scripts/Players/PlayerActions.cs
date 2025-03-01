@@ -6,6 +6,7 @@ using UnityEngine.InputSystem;
 public class PlayerActions : MonoBehaviour
 {
     [Header("INTERACTIONS PARAMETERS")]
+    [SerializeField] private PlayerEnum playerID;
     [SerializeField, Range(0f, 5f)] private float interactionDistance;
     [SerializeField] private LayerMask gameAgentsmask;
     [Space]
