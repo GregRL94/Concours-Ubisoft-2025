@@ -1,13 +1,10 @@
-using System.Collections;
-using System.Collections.Generic;
-using UnityEditor;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
 public class PlayerMovement : MonoBehaviour
 {
-    [Range(0f, 20f)] public float speed;
-    [Range(0f, 10f)] public float rotationSpeed;
+    [SerializeField, Range(0f, 20f)] private float speed;
+    [SerializeField, Range(0f, 10f)] private float rotationSpeed;
 
     private Rigidbody rb;
     private float joystickPointDisplayDistance = 2;

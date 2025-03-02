@@ -1,20 +1,23 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 public class GameGrid : MonoBehaviour
 {
+    [Header("GAME MAP SIZE")]
     public int gameGridWorldSizeX;
     public int gameGridWorldSizeZ;
+    [Space]
+    [Header("GRID CELL PARAMETERS")]
     public float nodeRadius;
-    [Range(0f, 1f)] public float nodeFreeTolerance;
-    [Range(10f, 50f)] public float raycastCheckHeight;
-    public LayerMask playerZonesMask;
-    public LayerMask gameAgentsMask;
-    public bool showNodesInfos;
+    [SerializeField, Range(0f, 1f)] private float nodeFreeTolerance;
+    [SerializeField, Range(10f, 50f)] private float raycastCheckHeight;
+    [SerializeField] private bool showNodesInfos;
+    [Space]
+    [Header("GAME OBJECTS LAYER MASK")]
+    [SerializeField] private LayerMask playerZonesMask;
+    [SerializeField] private LayerMask gameAgentsMask;
 
     private static GameGrid instance;
-    public static GameGrid Instance {  get { return instance; } }
+    public static GameGrid Instance { get { return instance; } }
     private Node[,] gameGrid;
     private int gameGridSizeX;
     private int gameGridSizeY;
@@ -125,7 +128,7 @@ public class GameGrid : MonoBehaviour
                         Gizmos.color = Color.red;
                     }
 
-                    Gizmos.DrawCube(node.worldPos, Vector3.one * (nodeDiameter - nodeDiameter / 10));
+                    Gizmos.DrawCube(node.worldPos, new Vector3(nodeDiameter - nodeDiameter / 10, 1, nodeDiameter - nodeDiameter / 10));
                 }
             }
         }
