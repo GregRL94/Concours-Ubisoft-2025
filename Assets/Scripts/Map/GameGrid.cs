@@ -22,6 +22,9 @@ public class GameGrid : MonoBehaviour
     private int gameGridSizeX;
     private int gameGridSizeY;
     private float nodeDiameter;
+    public Node[,] Grid => gameGrid;
+    public int GameGridSizeX => gameGridSizeX;
+    public int GameGridSizeY => gameGridSizeY;
 
     private void Awake()
     {
@@ -57,7 +60,7 @@ public class GameGrid : MonoBehaviour
 
     public Vector3 WorldPosFromGridPos(Vector2 gridPos)
     {
-        return new Vector3(gridPos.x * nodeDiameter + nodeRadius, 0, gridPos.y * nodeDiameter + nodeRadius);
+        return new Vector3(gridPos.x * nodeDiameter + nodeRadius, this.transform.position.y, gridPos.y * nodeDiameter + nodeRadius);
     }
 
     public Node NodeFromWorldPos(Vector3 worldPos)

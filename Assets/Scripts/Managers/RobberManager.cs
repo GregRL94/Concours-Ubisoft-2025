@@ -18,34 +18,49 @@ public class RobberManager : MonoBehaviour
 
     [SerializeField, Tooltip("Distance between robber and all traps")]
     private float _minDistanceToTraps = 0;
-
-    [SerializeField, Tooltip("Size of the map")]
-    private Vector3 _MapSize = new Vector3(10f, 0f, 10f);
-
     
 
     private MuseumObjects[] _museumObjects;
+    private GameObject[] _traps;
 
     // Start is called before the first frame update
     void Start()
     {
+        //get all museum objects
         _museumObjects = FindObjectsOfType<MuseumObjects>();
+        //get all traps, use before round start
+        GetAllTraps();
 
+        //spawn robber, use before round start
         SpawnRobber();
     }
 
+    public void GetAllTraps() => _traps = GameObject.FindGameObjectsWithTag("TRAP");
+
     public void SpawnRobber()
     {
-        for(int i = 0; i < _maxSpawnRobberAttempt; i++)
+        Vector3 spawnPosition = Vector3.zero;
+        for (int i = 0; i < GameGrid.Instance.Grid.GetLength(0); i++)
         {
-            Vector3 spawnPosition = new Vector3(
-                Random.Range(GameManager.Instance.MapMiddlePoint.position.x - _MapSize.x, GameManager.Instance.MapMiddlePoint.position.x + _MapSize.x),
-                GameManager.Instance.MapMiddlePoint.position.y,
-                Random.Range(GameManager.Instance.MapMiddlePoint.position.z - _MapSize.z, GameManager.Instance.MapMiddlePoint.position.z + _MapSize.z));
-            if (!IsValidSpawnPosition(spawnPosition) && i < _maxSpawnRobberAttempt - 1) continue;
-            Instantiate(_robber, spawnPosition, Quaternion.identity);
-            break;
+            for (int j = 0; j < GameGrid.Instance.Grid.GetLength(1); j++)
+            {
+                spawnPosition = GameGrid.Instance.Grid[i, j].worldPos;
+                if (!IsValidSpawnPosition(spawnPosition)) continue;
+                Instantiate(_robber, spawnPosition, Quaternion.identity);
+                return;
+            }
         }
+
+        //random spawn in game map when no grid are suitable to spawn
+        int gameGridSizeX = GameGrid.Instance.GameGridSizeX;
+        int gameGridSizeY = GameGrid.Instance.GameGridSizeY;
+        Vector3 mapSize = new Vector3(gameGridSizeX, 0, gameGridSizeY);
+        Vector3 mapMiddlePoint = GameGrid.Instance.Grid[gameGridSizeX / 2, gameGridSizeY / 2].worldPos;
+        spawnPosition = new Vector3(
+                Random.Range(mapMiddlePoint.x - mapSize.x, mapMiddlePoint.x + mapSize.x),
+                mapMiddlePoint.y,
+                Random.Range(mapMiddlePoint.z - mapSize.z, mapMiddlePoint.z + mapSize.z));
+        Instantiate(_robber, spawnPosition, Quaternion.identity);
         
     }
     private bool IsValidSpawnPosition(Vector3 position)
@@ -62,7 +77,11 @@ public class RobberManager : MonoBehaviour
                 return false;
         }
 
-        //TO DO : same with traps
+        for (int i = 0; i < _traps.Length; i++)
+        {
+            if (Vector3.Distance(position, _traps[i].transform.position) < _minDistanceToTraps)
+                return false;
+        }
         return true;
     }
 }
