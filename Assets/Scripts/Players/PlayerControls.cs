@@ -121,9 +121,9 @@ public class PlayerControls : MonoBehaviour
     #endregion
 
     #region Actions
-    public void ActionSelection(InputAction.CallbackContext callback)
+    public void ActionSelection(InputAction.CallbackContext context)
     {
-        Vector2 rightJoystickInput = callback.ReadValue<Vector2>();
+        Vector2 rightJoystickInput = context.ReadValue<Vector2>();
         R_JoystickDirection r_joystick_dir = R_JoystickDirection.NONE;
 
         if (rightJoystickInput.x == 1f)
@@ -150,24 +150,30 @@ public class PlayerControls : MonoBehaviour
         }        
     }
 
-    public void ActionDeselection(InputAction.CallbackContext callback)
+    public void ActionDeselection(InputAction.CallbackContext context)
     {
-        selectedAbility = AbilitiesEnum.NONE;
-        Debug.Log(selectedAbility);
+        if (context.performed)
+        {
+            selectedAbility = AbilitiesEnum.NONE;
+            Debug.Log(selectedAbility);
+        }        
     }
 
-    public void ActionActivation(InputAction.CallbackContext callback)
+    public void ActionActivation(InputAction.CallbackContext context)
     {
-        Debug.Log(selectedAbility + " ACTIVATED");
+        if (context.performed)
+        {
+            Debug.Log(selectedAbility + " ACTIVATED");
+        }        
     }
     #endregion
 
     #region Traps
-    public void RotateTrap(InputAction.CallbackContext callback)
+    public void RotateTrap(InputAction.CallbackContext context)
     {
-        if (callback.performed)
+        if (context.performed)
         {
-            float shoulderPressed = callback.ReadValue<float>();
+            float shoulderPressed = context.ReadValue<float>();
             int rotationDirection = 0;
 
             if (shoulderPressed < 0)
