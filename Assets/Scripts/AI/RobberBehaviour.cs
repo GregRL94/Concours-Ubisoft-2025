@@ -109,7 +109,7 @@ public class RobberBehaviour : BTAgent
     }
     public BTNode.Status GoToObjectListed()
     {
-        if (_currentTargetObject == null) GetNearestObject();
+        if (_currentTargetObject == null) GetNearestObject(false);
         BTNode.Status s = GoToPosition(_currentTargetObject.transform.position);
         if (s == BTNode.Status.SUCCESS)
         {
@@ -119,17 +119,27 @@ public class RobberBehaviour : BTAgent
         return s;
     }
 
-    private void GetNearestObject()
+    //Get the nearest object possible
+    //if all objects are in cd, bypass cd condition
+    private void GetNearestObject(bool bypassObjectCDCondition)
     {
         MuseumObjects[] museumObjects = MuseumObjectsManager.Instance?.GetObjectList(_stealingList[0]);
         float minDistance = float.MaxValue;
         MuseumObjects nearestObject = null;
+        int objectsInCd = 0;
         for (int i = 0; i < museumObjects.Length; i++)
         {
             //skip already stealed objects
             MuseumObjects nearest = museumObjects[i];
             if (!nearest.gameObject.activeSelf)
                 continue;
+            
+            //skip objects in cd
+            if(!nearest.IsObjectStealable() && !bypassObjectCDCondition)
+            {
+                objectsInCd++;
+                continue;
+            }
 
             float distance = Vector3.Distance(this.transform.position, museumObjects[i].transform.position);
             //skip not nearest objects
@@ -141,12 +151,19 @@ public class RobberBehaviour : BTAgent
         }
         //Debug.Log($"Nearest Object : {nearestObject.gameObject.name}");
         _currentTargetObject = nearestObject;
+        if (objectsInCd >= museumObjects.Length)
+        {
+            _currentTargetObject = null;
+            GetNearestObject(true);
+        }
+
     }
 
     private IEnumerator StealTimer(float time)
     {
         state = ActionState.WORKING;
         StartVulnerableState();
+        _currentTargetObject.SetObjectStealableCD();
         while (_hasStolen == BTNode.Status.RUNNING)
         {
             //Debug.Log("WAIT");
