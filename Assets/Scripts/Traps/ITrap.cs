@@ -5,5 +5,5 @@ using UnityEngine;
 // Interface for Trap usages 
 public interface ITrap
 {
-    void ActivateTrap(EnemyTrapBehaviour enemy);
+    void ActivateTrap();
 }

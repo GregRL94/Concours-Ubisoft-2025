@@ -1,0 +1,205 @@
+using System;
+using System.Collections;
+using System.Collections.Generic;
+using Unity.VisualScripting;
+using UnityEngine;
+using UnityEngine.InputSystem;
+
+public class PlayerControls : MonoBehaviour
+{
+    [Header("MOVEMENT PARAMETERS")]
+    [SerializeField, Range(0f, 20f)] private float speed;
+    [SerializeField, Range(0f, 10f)] private float rotationSpeed;
+    [Space]
+    [Header("INTERACTIONS PARAMETERS")]
+    [SerializeField] private PlayerEnum playerID;
+    [SerializeField, Range(0f, 10f)] private float raycastStartDistance;
+    [SerializeField, Range(0f, 10f)] private float interactionDistance;
+    [SerializeField] private LayerMask gameAgentsMask;
+    [Space]
+    [Header("ABILITIES BINDING")]
+    [SerializeField] private AbilitiesEnum rJoystickUPBind;
+    [SerializeField] private AbilitiesEnum rJoystickDOWNBind;
+    [SerializeField] private AbilitiesEnum rJoystickLEFTBind;
+    [SerializeField] private AbilitiesEnum rJoystickRIGHTBind;
+    [Space]
+    [Header("ABILITIES COOLDOWN")]
+    [SerializeField, Range(0f, 10f)] private float whistleCD;
+    [SerializeField, Range(0f, 10f)] private float alarmTrapCD;
+    [SerializeField, Range(0f, 10f)] private float pushTrapCD;
+    [SerializeField, Range(0f, 10f)] private float captureTrapCD;
+    [Space]
+    [Header("GIZMOS PARAMETERS")]
+    [SerializeField] private bool drawGizmos;
+    [SerializeField, Range(0.1f, 0.5f)] private float pointsRadii = 0.25f;
+
+    private GameGrid gameGrid;
+    private Vector3 snappedInteractionPoint;
+    private GameObject currentTrap;
+
+    private Dictionary<R_JoystickDirection, AbilitiesEnum> bindingDict;
+    private AbilitiesEnum selectedAbility = AbilitiesEnum.NONE;
+
+    private Rigidbody rb;
+    private Vector2 leftJoystickInput;
+    private Vector3 leftjoystickVirtualPoint;
+
+    private float joystickPointDisplayDistance = 2f;
+
+    void Start()
+    {
+        gameGrid = GameGrid.Instance;
+        bindingDict = new Dictionary<R_JoystickDirection, AbilitiesEnum>
+        {
+            [R_JoystickDirection.UP] = rJoystickUPBind,
+            [R_JoystickDirection.DOWN] = rJoystickDOWNBind,
+            [R_JoystickDirection.LEFT] = rJoystickLEFTBind,
+            [R_JoystickDirection.RIGHT] = rJoystickRIGHTBind,
+            [R_JoystickDirection.NONE] = AbilitiesEnum.NONE,
+        };
+        rb = GetComponent<Rigidbody>();
+    }
+
+    private void FixedUpdate()
+    {
+        float joystickInputMagnitude = Mathf.Sqrt(leftJoystickInput.x * leftJoystickInput.x + leftJoystickInput.y * leftJoystickInput.y);
+
+        leftjoystickVirtualPoint = new Vector3(transform.position.x + leftJoystickInput.x * joystickPointDisplayDistance, transform.position.y, transform.position.z + leftJoystickInput.y * joystickPointDisplayDistance);
+        transform.rotation = Quaternion.LookRotation(Vector3.RotateTowards(transform.forward, leftjoystickVirtualPoint - transform.position, rotationSpeed * Time.deltaTime, 0.0f));
+        rb.velocity = transform.forward * joystickInputMagnitude * speed;
+    }
+
+    private void Update()
+    {
+        Vector3 raycastStartPoint = transform.position + transform.forward * raycastStartDistance;
+        Vector3 interactionPoint = raycastStartPoint + transform.forward * interactionDistance;
+        snappedInteractionPoint = gameGrid.SnapToGridPos(interactionPoint);
+
+        Ray ray = new Ray(raycastStartPoint, transform.forward);
+        RaycastHit hit;
+
+        if (Physics.Raycast(ray, out hit, interactionDistance, gameAgentsMask))
+        {
+            if (hit.collider.gameObject.CompareTag("TRAP"))
+            {
+                if (currentTrap != hit.collider.gameObject)
+                {
+                    TypeOfTrap trap = hit.collider.gameObject.GetComponentInChildren<TypeOfTrap>();
+
+                    try
+                    {
+                        if (trap.TrapOwner == playerID)
+                        {
+                            currentTrap = hit.collider.gameObject;
+                            Debug.Log("GATHERED TRAP");
+                        }
+                    }
+                    catch (NullReferenceException)
+                    {
+                        Debug.Log("Could not retrieve TypeOfTrap script");
+                    }
+                }                
+            }
+            else if (currentTrap != null)
+            {
+                currentTrap = null;
+                Debug.Log("CLEARED TRAP");
+            }
+        }
+        else if (currentTrap != null)
+        {
+            currentTrap = null;
+            Debug.Log("CLEARED TRAP");
+        }
+    }
+
+    #region Movement
+    public void Move(InputAction.CallbackContext context)
+    {
+        leftJoystickInput = context.ReadValue<Vector2>();        
+    }
+    #endregion
+
+    #region Actions
+    public void ActionSelection(InputAction.CallbackContext callback)
+    {
+        Vector2 rightJoystickInput = callback.ReadValue<Vector2>();
+        R_JoystickDirection r_joystick_dir = R_JoystickDirection.NONE;
+
+        if (rightJoystickInput.x == 1f)
+        {
+            r_joystick_dir = R_JoystickDirection.RIGHT;
+        }
+        else if (rightJoystickInput.x == -1f)
+        {
+            r_joystick_dir = R_JoystickDirection.LEFT;
+        }
+        else if (rightJoystickInput.y == 1f)
+        {
+            r_joystick_dir = R_JoystickDirection.UP;
+        }
+        else if (rightJoystickInput.y == -1f)
+        {
+            r_joystick_dir = R_JoystickDirection.DOWN;
+        }
+
+        if ((r_joystick_dir != R_JoystickDirection.NONE) && !(bindingDict[r_joystick_dir] == selectedAbility))
+        {
+            selectedAbility = bindingDict[r_joystick_dir];
+            Debug.Log(selectedAbility);
+        }        
+    }
+
+    public void ActionDeselection(InputAction.CallbackContext callback)
+    {
+        selectedAbility = AbilitiesEnum.NONE;
+        Debug.Log(selectedAbility);
+    }
+
+    public void ActionActivation(InputAction.CallbackContext callback)
+    {
+        Debug.Log(selectedAbility + " ACTIVATED");
+    }
+    #endregion
+
+    #region Traps
+    public void RotateTrap(InputAction.CallbackContext callback)
+    {
+        if (callback.performed)
+        {
+            float shoulderPressed = callback.ReadValue<float>();
+            int rotationDirection = 0;
+
+            if (shoulderPressed < 0)
+            {
+                Debug.Log("LEFT SHOULDER PRESSED");
+                rotationDirection = -1;
+            }
+            else if (shoulderPressed > 0)
+            {
+                Debug.Log("RIGHT SHOULDER PRESSED");
+                rotationDirection = 1;
+            }
+
+            if (currentTrap != null && rotationDirection != 0)
+            {
+                Debug.Log("Rotating Trap");
+                currentTrap.transform.Rotate(new Vector3(0f, rotationDirection * 90f, 0f));
+            }
+        }        
+    }
+    #endregion
+
+    private void OnDrawGizmos()
+    {
+        if (drawGizmos)
+        {
+            Gizmos.color = Color.red;
+            Gizmos.DrawWireSphere(leftjoystickVirtualPoint, pointsRadii);
+
+            Gizmos.color = Color.white;
+            Gizmos.DrawLine(transform.position + transform.forward * raycastStartDistance, transform.position + (interactionDistance + raycastStartDistance) * transform.forward);
+            Gizmos.DrawSphere(snappedInteractionPoint, pointsRadii);
+        }
+    }
+}
