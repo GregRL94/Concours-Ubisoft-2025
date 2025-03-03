@@ -7,8 +7,6 @@ using UnityEngine.AI;
 
 public class RobberBehaviour : BTAgent
 {
-    private GameManager _gameManager;
-
     [Header("Metrics")]
     [SerializeField, Tooltip("Robber base speed")]
     private float _vBase = 10f;
@@ -25,11 +23,17 @@ public class RobberBehaviour : BTAgent
     private float _stealRange = 2f;
     [SerializeField, Tooltip("Robber stealing list")]
     private List<MuseumObjects.ObjectType> _stealingList;
-
-
-    [Header("DEBUG READING")]
+    
+    [SerializeField]
+    private GameObject _indicator;
+    [SerializeField]
+    private Rigidbody _rb;
     [SerializeField]
     private NavMeshAgent _robberAgent;
+    [SerializeField]
+    private RobberCapture _robberCapture;
+
+    [Header("DEBUG READING")]
     [SerializeField]
     private MuseumObjects _currentTargetObject;
     private BTNode.Status _hasStolen = BTNode.Status.RUNNING;
@@ -52,8 +56,11 @@ public class RobberBehaviour : BTAgent
         base.Start();
         _currentVision = _radialVision;
         if(!_robberAgent)_robberAgent = GetComponent<NavMeshAgent>();
-        _robberAgent.speed = _vBase;
+        if(!_rb)_rb = GetComponent<Rigidbody>();
+        if(!_robberCapture) _robberCapture = GetComponent<RobberCapture>();
 
+        _robberAgent.speed = _vBase;
+        TrapManager.Instance.SetRobber(_robberAgent, _rb, _indicator, _robberCapture);
 
         //Flee state
         BTLeaf isFleeing = new BTLeaf("Is fleeing", IsFleeing);
@@ -195,19 +202,24 @@ public class RobberBehaviour : BTAgent
     private Vector3 GetMostFarPosition()
     {
         Vector3 mostFar = Vector3.zero;
-        float mostFarDistance1 = 0;
-        float mostFarDistance2 = 0;
-        Vector3 centerPlayers = (GameManager.Instance.Players[0].transform.position + GameManager.Instance.Players[1].transform.position) / 2f;
-        for (int i = 0; i < GameManager.Instance.MapCorners.Length; i++)
-        {
-            float distance1 = Vector3.Distance(GameManager.Instance.Players[0].transform.position, GameManager.Instance.MapCorners[i].position);
-            float distance2 = Vector3.Distance(GameManager.Instance.Players[1].transform.position, GameManager.Instance.MapCorners[i].position);
-            if (distance1 <= mostFarDistance1 || distance2 <= mostFarDistance2) continue;
-            mostFarDistance1 = distance1;
-            mostFarDistance2 = distance2;
-            mostFar = GameManager.Instance.MapCorners[i].position;
 
+        Node[,] gameGrid = GameGrid.Instance.Grid;
+
+        float mostDistanceToPlayers = 0;
+
+        for (int i = 0; i < gameGrid.GetLength(0); i++)
+        {
+            for (int j = 0; j < gameGrid.GetLength(1); j++)
+            {
+                float distanceToPlayer1 = Vector3.Distance(gameGrid[i, j].worldPos, GameManager.Instance.Players[0].transform.position);
+                float distanceToPlayer2 = Vector3.Distance(gameGrid[i, j].worldPos, GameManager.Instance.Players[1].transform.position);
+                float distanceToPlayers = distanceToPlayer1 + distanceToPlayer2;
+                if (distanceToPlayers <= mostDistanceToPlayers) continue;
+                mostDistanceToPlayers = distanceToPlayers;
+                mostFar = gameGrid[i, j].worldPos;
+            }
         }
+        
         return mostFar;
     }
 
@@ -232,7 +244,7 @@ public class RobberBehaviour : BTAgent
     #endregion
 
     #region States
-    private void StartVulnerableState()
+    public void StartVulnerableState()
     {
         _isVulnerable = true;
         _robberAgent.speed = 0;
@@ -240,8 +252,9 @@ public class RobberBehaviour : BTAgent
         Debug.Log("Vulnerable State");
     }
 
-    private void StopVunerableState()
+    public void StopVunerableState()
     {
+        if (!_isVulnerable) return;
         _isVulnerable = false;
         _robberAgent.speed = _vBase;
         _currentVision = _radialVision;

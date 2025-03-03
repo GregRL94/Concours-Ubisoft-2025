@@ -1,24 +1,30 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 public class GameGrid : MonoBehaviour
 {
+    [Header("GAME MAP SIZE")]
     public int gameGridWorldSizeX;
     public int gameGridWorldSizeZ;
+    [Space]
+    [Header("GRID CELL PARAMETERS")]
     public float nodeRadius;
-    [Range(0f, 1f)] public float nodeFreeTolerance;
-    [Range(10f, 50f)] public float raycastCheckHeight;
-    public LayerMask playerZonesMask;
-    public LayerMask gameAgentsMask;
-    public bool showNodesInfos;
+    [SerializeField, Range(0f, 1f)] private float nodeFreeTolerance;
+    [SerializeField, Range(10f, 50f)] private float raycastCheckHeight;
+    [SerializeField] private bool showNodesInfos;
+    [Space]
+    [Header("GAME OBJECTS LAYER MASK")]
+    [SerializeField] private LayerMask playerZonesMask;
+    [SerializeField] private LayerMask gameAgentsMask;
 
     private static GameGrid instance;
-    public static GameGrid Instance {  get { return instance; } }
+    public static GameGrid Instance { get { return instance; } }
     private Node[,] gameGrid;
     private int gameGridSizeX;
     private int gameGridSizeY;
     private float nodeDiameter;
+    public Node[,] Grid => gameGrid;
+    public int GameGridSizeX => gameGridSizeX;
+    public int GameGridSizeY => gameGridSizeY;
 
     private void Awake()
     {
@@ -54,7 +60,7 @@ public class GameGrid : MonoBehaviour
 
     public Vector3 WorldPosFromGridPos(Vector2 gridPos)
     {
-        return new Vector3(gridPos.x * nodeDiameter + nodeRadius, 0, gridPos.y * nodeDiameter + nodeRadius);
+        return new Vector3(gridPos.x * nodeDiameter + nodeRadius, this.transform.position.y, gridPos.y * nodeDiameter + nodeRadius);
     }
 
     public Node NodeFromWorldPos(Vector3 worldPos)
@@ -125,7 +131,7 @@ public class GameGrid : MonoBehaviour
                         Gizmos.color = Color.red;
                     }
 
-                    Gizmos.DrawCube(node.worldPos, Vector3.one * (nodeDiameter - nodeDiameter / 10));
+                    Gizmos.DrawCube(node.worldPos, new Vector3(nodeDiameter - nodeDiameter / 10, 1, nodeDiameter - nodeDiameter / 10));
                 }
             }
         }

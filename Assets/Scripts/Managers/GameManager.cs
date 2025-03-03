@@ -9,13 +9,6 @@ public class GameManager : MonoBehaviour
     [SerializeField]
     private GameObject[] _players;
     public GameObject[] Players => _players;
-    [SerializeField, Tooltip("Middle of the map")]
-    private Transform _mapMiddlePoint;
-    public Transform MapMiddlePoint => _mapMiddlePoint;
-    
-    [SerializeField]
-    private Transform[] _mapCorners;
-    public Transform[] MapCorners => _mapCorners;
 
     public static GameManager Instance;
     private void Awake()
