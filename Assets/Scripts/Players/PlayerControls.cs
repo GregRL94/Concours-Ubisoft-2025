@@ -7,6 +7,7 @@ using UnityEngine.InputSystem;
 
 public class PlayerControls : MonoBehaviour
 {
+    #region Variables
     [Header("MOVEMENT PARAMETERS")]
     [SerializeField, Range(0f, 20f)] private float speed;
     [SerializeField, Range(0f, 10f)] private float rotationSpeed;
@@ -32,11 +33,13 @@ public class PlayerControls : MonoBehaviour
     [Header("GIZMOS PARAMETERS")]
     [SerializeField] private bool drawGizmos;
     [SerializeField, Range(0.1f, 0.5f)] private float pointsRadii = 0.25f;
-
+    
     private GameGrid gameGrid;
     private Vector3 snappedInteractionPoint;
     private GameObject currentTrap;
 
+    private InputActionAsset inputAsset;
+    private InputActionMap playerControls;
     private Dictionary<R_JoystickDirection, AbilitiesEnum> bindingDict;
     private AbilitiesEnum selectedAbility = AbilitiesEnum.NONE;
 
@@ -45,6 +48,13 @@ public class PlayerControls : MonoBehaviour
     private Vector3 leftjoystickVirtualPoint;
 
     private float joystickPointDisplayDistance = 2f;
+    #endregion
+
+    private void Awake()
+    {
+        inputAsset = GetComponent<PlayerInput>().actions;
+        playerControls = inputAsset.FindActionMap("PlayerControls");
+    }
 
     void Start()
     {
@@ -58,6 +68,7 @@ public class PlayerControls : MonoBehaviour
             [R_JoystickDirection.NONE] = AbilitiesEnum.NONE,
         };
         rb = GetComponent<Rigidbody>();
+        EnablePlayerInputs(true);
     }
 
     private void FixedUpdate()
@@ -114,9 +125,16 @@ public class PlayerControls : MonoBehaviour
     }
 
     #region Movement
-    public void Move(InputAction.CallbackContext context)
+    public void Movement(InputAction.CallbackContext context)
     {
-        leftJoystickInput = context.ReadValue<Vector2>();        
+        leftJoystickInput = context.ReadValue<Vector2>();
+        Debug.Log(leftJoystickInput);
+    }
+
+    public void Stop(InputAction.CallbackContext context)
+    {
+        leftJoystickInput = Vector2.zero;
+        Debug.Log(leftJoystickInput);
     }
     #endregion
 
@@ -192,9 +210,52 @@ public class PlayerControls : MonoBehaviour
                 Debug.Log("Rotating Trap");
                 currentTrap.transform.Rotate(new Vector3(0f, rotationDirection * 90f, 0f));
             }
-        }        
+        }
     }
     #endregion
+
+    #region Enable & Disable
+    private void EnablePlayerInputs(bool enableState)
+    {
+        InputAction movementAction = playerControls.FindAction("Movement");
+
+        if (enableState)
+        {
+            playerControls.Enable();
+            movementAction.performed += Movement;
+            movementAction.canceled += Stop;
+            playerControls.FindAction("ActionSelection").performed += ActionSelection;
+            playerControls.FindAction("ActionDeselection").performed += ActionDeselection;
+            playerControls.FindAction("ActionActivation").performed += ActionActivation;
+            playerControls.FindAction("TrapRotation").performed += RotateTrap;
+        }
+        else
+        {
+            movementAction.performed -= Movement;
+            movementAction.canceled -= Stop;
+            playerControls.FindAction("ActionSelection").performed -= ActionSelection;
+            playerControls.FindAction("ActionDeselection").performed -= ActionDeselection;
+            playerControls.FindAction("ActionActivation").performed -= ActionActivation;
+            playerControls.FindAction("TrapRotation").performed -= RotateTrap;
+            playerControls.Disable();
+        }
+
+    }
+    private void OnEnable()
+    {
+        EnablePlayerInputs(true);
+    }
+
+    private void OnDisable()
+    {
+        EnablePlayerInputs(false);
+    }
+
+    private void OnDestroy()
+    {
+        EnablePlayerInputs(false);
+    }
+#endregion
 
     private void OnDrawGizmos()
     {

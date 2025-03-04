@@ -44,7 +44,7 @@ public class PlayerActions : MonoBehaviour
             [R_JoystickDirection.RIGHT] = rJoystickRIGHTBind,
             [R_JoystickDirection.NONE] = AbilitiesEnum.NONE,
         };
-        EnablePlayerInputs();
+        // EnablePlayerInputs();
     }
 
     void Update()
@@ -127,23 +127,23 @@ public class PlayerActions : MonoBehaviour
         }        
     }
 
-    private void EnablePlayerInputs()
-    {
-        playerInputAction.PlayerActions.Enable();
-        playerInputAction.PlayerActions.ActionSelection.performed += ActionSelection;
-        playerInputAction.PlayerActions.TrapRotation.performed += RotateTrap;
-    }
+    //private void EnablePlayerInputs()
+    //{
+    //    playerInputAction.PlayerActions.Enable();
+    //    playerInputAction.PlayerActions.ActionSelection.performed += ActionSelection;
+    //    playerInputAction.PlayerActions.TrapRotation.performed += RotateTrap;
+    //}
 
-    private void DisablePlayerInputs()
-    {
-        playerInputAction.PlayerActions.ActionSelection.performed -= ActionSelection;
-        playerInputAction.PlayerActions.TrapRotation.performed -= RotateTrap;
-        playerInputAction.PlayerActions.Disable();
-    }
+    //private void DisablePlayerInputs()
+    //{
+    //    playerInputAction.PlayerActions.ActionSelection.performed -= ActionSelection;
+    //    playerInputAction.PlayerActions.TrapRotation.performed -= RotateTrap;
+    //    playerInputAction.PlayerActions.Disable();
+    //}
 
     private void OnDestroy()
     {
-        DisablePlayerInputs();
+        // DisablePlayerInputs();
     }
 
     private void OnDrawGizmos()
