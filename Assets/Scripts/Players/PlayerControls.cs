@@ -1,7 +1,5 @@
 using System;
-using System.Collections;
 using System.Collections.Generic;
-using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
@@ -50,6 +48,7 @@ public class PlayerControls : MonoBehaviour
     private float joystickPointDisplayDistance = 2f;
     #endregion
 
+    #region MonoBehaviour Flow
     private void Awake()
     {
         inputAsset = GetComponent<PlayerInput>().actions;
@@ -123,18 +122,17 @@ public class PlayerControls : MonoBehaviour
             Debug.Log("CLEARED TRAP");
         }
     }
+    #endregion
 
     #region Movement
     public void Movement(InputAction.CallbackContext context)
     {
         leftJoystickInput = context.ReadValue<Vector2>();
-        Debug.Log(leftJoystickInput);
     }
 
     public void Stop(InputAction.CallbackContext context)
     {
         leftJoystickInput = Vector2.zero;
-        Debug.Log(leftJoystickInput);
     }
     #endregion
 
@@ -255,8 +253,9 @@ public class PlayerControls : MonoBehaviour
     {
         EnablePlayerInputs(false);
     }
-#endregion
+    #endregion
 
+    #region Gizmos
     private void OnDrawGizmos()
     {
         if (drawGizmos)
@@ -269,4 +268,5 @@ public class PlayerControls : MonoBehaviour
             Gizmos.DrawSphere(snappedInteractionPoint, pointsRadii);
         }
     }
+    #endregion
 }
