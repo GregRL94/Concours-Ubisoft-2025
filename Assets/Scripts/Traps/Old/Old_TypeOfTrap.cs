@@ -2,36 +2,30 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class TypeOfTrapTest : MonoBehaviour, ITrapTest
+public class Old_TypeOfTrap : MonoBehaviour, Old_ITrap
 {
     [SerializeField] AbilitiesEnum selectedTrap;
 
-    private PlayerEnum trapOwner;
+    [SerializeField] private PlayerEnum trapOwner;
     public PlayerEnum TrapOwner
     {
         get { return trapOwner; }
         set { trapOwner = value; }
     }
 
-    private ITrapTest trap;
-    private void Start()
-    {
-        trap = GetComponent<ITrapTest>();
-    }
-
-    public void ActivateTrap()
+    public void ActivateTrap(EnemyTrapBehaviour enemy)
     {
         if(selectedTrap == AbilitiesEnum.ALARM_TRAP)
         {
-            TrapManager.Instance.TriggerAlarmTrap();
+            enemy.TriggerAlarmTrap();
         }
         else if (selectedTrap == AbilitiesEnum.PUSH_TRAP)
         {
-            TrapManager.Instance.TriggerPushTrap();
+            enemy.TriggerPushTrap();
         }
         else if (selectedTrap == AbilitiesEnum.CAPTURE_TRAP)
         {
-            TrapManager.Instance.TriggerCaptureTrap();
+            enemy.TriggerCaptureTrap();
         }
     }
 
@@ -39,7 +33,8 @@ public class TypeOfTrapTest : MonoBehaviour, ITrapTest
     {
         if (other.CompareTag("ENEMY"))
         {
-            trap.ActivateTrap();
+            Old_ITrap trap = GetComponent<Old_ITrap>();
+            trap.ActivateTrap(other.GetComponentInParent<EnemyTrapBehaviour>());
         }
     }
 }

@@ -5,27 +5,33 @@ using UnityEngine;
 public class TypeOfTrap : MonoBehaviour, ITrap
 {
     [SerializeField] AbilitiesEnum selectedTrap;
+    [SerializeField] private PlayerEnum trapOwner;
 
-    private PlayerEnum trapOwner;
     public PlayerEnum TrapOwner
     {
         get { return trapOwner; }
         set { trapOwner = value; }
     }
 
-    public void ActivateTrap(EnemyTrapBehaviour enemy)
+    private ITrap trap;
+    private void Start()
+    {
+        trap = GetComponent<ITrap>();
+    }
+
+    public void ActivateTrap()
     {
         if(selectedTrap == AbilitiesEnum.ALARM_TRAP)
         {
-            enemy.TriggerAlarmTrap();
+            TrapManager.Instance.TriggerAlarmTrap();
         }
         else if (selectedTrap == AbilitiesEnum.PUSH_TRAP)
         {
-            enemy.TriggerPushTrap();
+            TrapManager.Instance.TriggerPushTrap();
         }
         else if (selectedTrap == AbilitiesEnum.CAPTURE_TRAP)
         {
-            enemy.TriggerCaptureTrap();
+            TrapManager.Instance.TriggerCaptureTrap();
         }
     }
 
@@ -33,8 +39,7 @@ public class TypeOfTrap : MonoBehaviour, ITrap
     {
         if (other.CompareTag("ENEMY"))
         {
-            ITrap trap = GetComponent<ITrap>();
-            trap.ActivateTrap(other.GetComponentInParent<EnemyTrapBehaviour>());
+            trap.ActivateTrap();
         }
     }
 }
