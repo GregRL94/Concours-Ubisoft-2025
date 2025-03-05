@@ -2,12 +2,14 @@ using UnityEngine;
 
 public class GameGrid : MonoBehaviour
 {
+    private static GameGrid instance;
+
     [Header("GAME MAP SIZE")]
-    public int gameGridWorldSizeX;
-    public int gameGridWorldSizeZ;
+    [SerializeField] private int gameGridWorldSizeX;    
+    [SerializeField] private int gameGridWorldSizeZ;    
     [Space]
     [Header("GRID CELL PARAMETERS")]
-    public float nodeRadius;
+    [SerializeField] private float nodeRadius;
     [SerializeField, Range(0f, 1f)] private float nodeFreeTolerance;
     [SerializeField, Range(10f, 50f)] private float raycastCheckHeight;
     [SerializeField] private bool showNodesInfos;
@@ -16,12 +18,15 @@ public class GameGrid : MonoBehaviour
     [SerializeField] private LayerMask playerZonesMask;
     [SerializeField] private LayerMask gameAgentsMask;
 
-    private static GameGrid instance;
-    public static GameGrid Instance { get { return instance; } }
     private Node[,] gameGrid;
     private int gameGridSizeX;
     private int gameGridSizeY;
     private float nodeDiameter;
+
+    public static GameGrid Instance { get { return instance; } }
+    public int GameGridWorldSizeX => gameGridWorldSizeX;
+    public int GameGridWorldSizeZ => gameGridWorldSizeZ;
+    public float NodeRadius => nodeRadius;
     public Node[,] Grid => gameGrid;
     public int GameGridSizeX => gameGridSizeX;
     public int GameGridSizeY => gameGridSizeY;
@@ -101,6 +106,12 @@ public class GameGrid : MonoBehaviour
             }
         }
         return PlayerEnum.NONE;
+    }
+
+    public void UpdateNode(Vector3 worldPos)
+    {
+        Node node = NodeFromWorldPos(worldPos);
+        node.isFree = IsNodeFree(worldPos);
     }
 
     private void OnDrawGizmos()

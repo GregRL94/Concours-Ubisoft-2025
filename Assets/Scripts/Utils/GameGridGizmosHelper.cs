@@ -12,9 +12,9 @@ public class GameGridGizmosHelper : MonoBehaviour
     private void OnDrawGizmosSelected()
     {
         gameGrid = GetComponent<GameGrid>();
-        gridWorldSizeX = gameGrid.gameGridWorldSizeX;
-        gridWorldSizeZ = gameGrid.gameGridWorldSizeZ;
-        cellRadius = gameGrid.nodeRadius;
+        gridWorldSizeX = gameGrid.GameGridWorldSizeX;
+        gridWorldSizeZ = gameGrid.GameGridWorldSizeZ;
+        cellRadius = gameGrid.NodeRadius;
 
         int gizmosGridX = Mathf.RoundToInt(gridWorldSizeX / (2 * cellRadius));
         int gizmosGridZ = Mathf.RoundToInt(gridWorldSizeZ / (2 * cellRadius));
