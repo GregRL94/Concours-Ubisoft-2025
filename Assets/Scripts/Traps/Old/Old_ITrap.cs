@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 
 // Interface for Trap usages 
-public interface ITrapTest
+public interface Old_ITrap
 {
-    void ActivateTrap();
+    void ActivateTrap(EnemyTrapBehaviour enemy);
 }

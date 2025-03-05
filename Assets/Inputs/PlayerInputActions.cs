@@ -24,50 +24,40 @@ public partial class @PlayerInputActions: IInputActionCollection2, IDisposable
     ""name"": ""PlayerInputActions"",
     ""maps"": [
         {
-            ""name"": ""PlayerMovements"",
-            ""id"": ""300cdae6-eb4a-4307-bf68-c934ef7a3438"",
+            ""name"": ""PlayerControls"",
+            ""id"": ""a1a70a49-f049-405d-962b-097957427f37"",
             ""actions"": [
                 {
                     ""name"": ""Movement"",
                     ""type"": ""Value"",
-                    ""id"": ""ba8455fb-6b64-4e20-ab08-ee846604f62c"",
-                    ""expectedControlType"": ""Stick"",
-                    ""processors"": """",
-                    ""interactions"": """",
-                    ""initialStateCheck"": true
-                }
-            ],
-            ""bindings"": [
-                {
-                    ""name"": """",
-                    ""id"": ""80b4b228-ef51-4c82-94c4-a846d58bb5a2"",
-                    ""path"": ""<Joystick>/stick"",
-                    ""interactions"": """",
-                    ""processors"": """",
-                    ""groups"": """",
-                    ""action"": ""Movement"",
-                    ""isComposite"": false,
-                    ""isPartOfComposite"": false
-                }
-            ]
-        },
-        {
-            ""name"": ""PlayerActions"",
-            ""id"": ""45b5e85d-3c91-4817-a483-564b4eebe515"",
-            ""actions"": [
-                {
-                    ""name"": ""ActionSelection"",
-                    ""type"": ""Value"",
-                    ""id"": ""253cf28b-2777-4766-96c1-b92d5261a44e"",
+                    ""id"": ""c0a2bed0-b1d3-4245-8377-1b0a537817a1"",
                     ""expectedControlType"": ""Stick"",
                     ""processors"": """",
                     ""interactions"": """",
                     ""initialStateCheck"": true
                 },
                 {
-                    ""name"": ""TrapDeselection"",
+                    ""name"": ""ActionSelection"",
+                    ""type"": ""Value"",
+                    ""id"": ""7122b041-87bd-4a97-9123-87543bfa1d99"",
+                    ""expectedControlType"": ""Stick"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": true
+                },
+                {
+                    ""name"": ""ActionDeselection"",
                     ""type"": ""Button"",
-                    ""id"": ""4f68de44-c7c3-4852-946f-cc5cd364153b"",
+                    ""id"": ""20dea63c-c033-49db-b686-bd1178c95674"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""ActionActivation"",
+                    ""type"": ""Button"",
+                    ""id"": ""366e6752-cb71-4a14-b00a-d75533255cec"",
                     ""expectedControlType"": ""Button"",
                     ""processors"": """",
                     ""interactions"": """",
@@ -76,7 +66,7 @@ public partial class @PlayerInputActions: IInputActionCollection2, IDisposable
                 {
                     ""name"": ""TrapRotation"",
                     ""type"": ""Button"",
-                    ""id"": ""d8a9f2e5-8ee5-4b77-96ad-6b5060b7d054"",
+                    ""id"": ""5e826a64-5d0a-4b56-845c-2da73db23afb"",
                     ""expectedControlType"": ""Button"",
                     ""processors"": """",
                     ""interactions"": """",
@@ -86,7 +76,7 @@ public partial class @PlayerInputActions: IInputActionCollection2, IDisposable
             ""bindings"": [
                 {
                     ""name"": ""2D Vector"",
-                    ""id"": ""5234ef2f-7266-4d86-bcd4-94362970fbd9"",
+                    ""id"": ""a2c52ada-1aa3-494d-900e-f653b9ce451a"",
                     ""path"": ""2DVector"",
                     ""interactions"": """",
                     ""processors"": """",
@@ -97,7 +87,7 @@ public partial class @PlayerInputActions: IInputActionCollection2, IDisposable
                 },
                 {
                     ""name"": ""up"",
-                    ""id"": ""b26dc067-8de6-41de-adb9-bbbeb9ad03ae"",
+                    ""id"": ""4be2b047-9258-40e3-bc03-52a0e0feed31"",
                     ""path"": ""<Gamepad>/rightStick/up"",
                     ""interactions"": """",
                     ""processors"": """",
@@ -108,7 +98,7 @@ public partial class @PlayerInputActions: IInputActionCollection2, IDisposable
                 },
                 {
                     ""name"": ""down"",
-                    ""id"": ""7f8c8452-bf73-49a6-863b-83f3f5af577d"",
+                    ""id"": ""2ce1cb35-2174-4d02-b3ac-40293cea1e06"",
                     ""path"": ""<Gamepad>/rightStick/down"",
                     ""interactions"": """",
                     ""processors"": """",
@@ -119,7 +109,7 @@ public partial class @PlayerInputActions: IInputActionCollection2, IDisposable
                 },
                 {
                     ""name"": ""left"",
-                    ""id"": ""4f4129c6-c213-43cd-9262-114bc6340c6e"",
+                    ""id"": ""4522143d-ef9a-4843-8e80-d88f47c8f08d"",
                     ""path"": ""<Gamepad>/rightStick/left"",
                     ""interactions"": """",
                     ""processors"": """",
@@ -130,7 +120,7 @@ public partial class @PlayerInputActions: IInputActionCollection2, IDisposable
                 },
                 {
                     ""name"": ""right"",
-                    ""id"": ""4aeb6bf5-8362-40e3-91cb-04bebe358cea"",
+                    ""id"": ""9b640049-b30f-468a-884c-f86558b09551"",
                     ""path"": ""<Gamepad>/rightStick/right"",
                     ""interactions"": """",
                     ""processors"": """",
@@ -141,18 +131,29 @@ public partial class @PlayerInputActions: IInputActionCollection2, IDisposable
                 },
                 {
                     ""name"": """",
-                    ""id"": ""3f74c67b-49cf-4c67-972a-e121f6856b1d"",
+                    ""id"": ""dea9835f-9da3-4872-8ed9-6c4e7b48ce70"",
+                    ""path"": ""<Gamepad>/buttonWest"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""ActionActivation"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""b890df56-04f9-4a0b-8652-bdd1f51444e1"",
                     ""path"": ""<Gamepad>/rightStickPress"",
                     ""interactions"": """",
                     ""processors"": """",
                     ""groups"": """",
-                    ""action"": ""TrapDeselection"",
+                    ""action"": ""ActionDeselection"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
                 },
                 {
                     ""name"": ""1D Axis"",
-                    ""id"": ""57c5ecb4-6cc9-4296-9b7d-4b27912750f7"",
+                    ""id"": ""da0ff006-be0f-4a34-b379-0c004305c7a9"",
                     ""path"": ""1DAxis"",
                     ""interactions"": """",
                     ""processors"": """",
@@ -163,7 +164,7 @@ public partial class @PlayerInputActions: IInputActionCollection2, IDisposable
                 },
                 {
                     ""name"": ""negative"",
-                    ""id"": ""86dcd5a4-fec1-4f4f-bdbb-3e3112604656"",
+                    ""id"": ""cd9734b6-84bd-4f0c-a597-a715285ed6c0"",
                     ""path"": ""<Gamepad>/leftShoulder"",
                     ""interactions"": """",
                     ""processors"": """",
@@ -174,7 +175,7 @@ public partial class @PlayerInputActions: IInputActionCollection2, IDisposable
                 },
                 {
                     ""name"": ""positive"",
-                    ""id"": ""2f0e0d5c-b796-4f25-9f9b-0f8f2143b947"",
+                    ""id"": ""2b5bba68-ded3-43a0-9844-1c422c2d8fbe"",
                     ""path"": ""<Gamepad>/rightShoulder"",
                     ""interactions"": """",
                     ""processors"": """",
@@ -182,20 +183,97 @@ public partial class @PlayerInputActions: IInputActionCollection2, IDisposable
                     ""action"": ""TrapRotation"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": true
+                },
+                {
+                    ""name"": ""2D Vector"",
+                    ""id"": ""bf87ae4e-31e1-4a6d-8696-2f6821da01d7"",
+                    ""path"": ""2DVector(mode=2)"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""Movement"",
+                    ""isComposite"": true,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": ""up"",
+                    ""id"": ""d6838b2f-63aa-4aef-b12b-16a742231e29"",
+                    ""path"": ""<Gamepad>/leftStick/up"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""Movement"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": true
+                },
+                {
+                    ""name"": ""down"",
+                    ""id"": ""a3177047-b50f-47b9-a3fb-ee59f053bd93"",
+                    ""path"": ""<Gamepad>/leftStick/down"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""Movement"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": true
+                },
+                {
+                    ""name"": ""left"",
+                    ""id"": ""d110074c-636b-49c9-a56e-e57520332a6f"",
+                    ""path"": ""<Gamepad>/leftStick/left"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""Movement"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": true
+                },
+                {
+                    ""name"": ""right"",
+                    ""id"": ""e7ceb0a0-89e0-46a4-9edd-801c69cf46e5"",
+                    ""path"": ""<Gamepad>/leftStick/right"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""Movement"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": true
                 }
             ]
         }
     ],
-    ""controlSchemes"": []
+    ""controlSchemes"": [
+        {
+            ""name"": ""Gamepad"",
+            ""bindingGroup"": ""Gamepad"",
+            ""devices"": [
+                {
+                    ""devicePath"": ""<Gamepad>"",
+                    ""isOptional"": false,
+                    ""isOR"": false
+                }
+            ]
+        },
+        {
+            ""name"": ""Keyboard"",
+            ""bindingGroup"": ""Keyboard"",
+            ""devices"": [
+                {
+                    ""devicePath"": ""<Keyboard>"",
+                    ""isOptional"": true,
+                    ""isOR"": false
+                }
+            ]
+        }
+    ]
 }");
-        // PlayerMovements
-        m_PlayerMovements = asset.FindActionMap("PlayerMovements", throwIfNotFound: true);
-        m_PlayerMovements_Movement = m_PlayerMovements.FindAction("Movement", throwIfNotFound: true);
-        // PlayerActions
-        m_PlayerActions = asset.FindActionMap("PlayerActions", throwIfNotFound: true);
-        m_PlayerActions_ActionSelection = m_PlayerActions.FindAction("ActionSelection", throwIfNotFound: true);
-        m_PlayerActions_TrapDeselection = m_PlayerActions.FindAction("TrapDeselection", throwIfNotFound: true);
-        m_PlayerActions_TrapRotation = m_PlayerActions.FindAction("TrapRotation", throwIfNotFound: true);
+        // PlayerControls
+        m_PlayerControls = asset.FindActionMap("PlayerControls", throwIfNotFound: true);
+        m_PlayerControls_Movement = m_PlayerControls.FindAction("Movement", throwIfNotFound: true);
+        m_PlayerControls_ActionSelection = m_PlayerControls.FindAction("ActionSelection", throwIfNotFound: true);
+        m_PlayerControls_ActionDeselection = m_PlayerControls.FindAction("ActionDeselection", throwIfNotFound: true);
+        m_PlayerControls_ActionActivation = m_PlayerControls.FindAction("ActionActivation", throwIfNotFound: true);
+        m_PlayerControls_TrapRotation = m_PlayerControls.FindAction("TrapRotation", throwIfNotFound: true);
     }
 
     public void Dispose()
@@ -254,121 +332,107 @@ public partial class @PlayerInputActions: IInputActionCollection2, IDisposable
         return asset.FindBinding(bindingMask, out action);
     }
 
-    // PlayerMovements
-    private readonly InputActionMap m_PlayerMovements;
-    private List<IPlayerMovementsActions> m_PlayerMovementsActionsCallbackInterfaces = new List<IPlayerMovementsActions>();
-    private readonly InputAction m_PlayerMovements_Movement;
-    public struct PlayerMovementsActions
+    // PlayerControls
+    private readonly InputActionMap m_PlayerControls;
+    private List<IPlayerControlsActions> m_PlayerControlsActionsCallbackInterfaces = new List<IPlayerControlsActions>();
+    private readonly InputAction m_PlayerControls_Movement;
+    private readonly InputAction m_PlayerControls_ActionSelection;
+    private readonly InputAction m_PlayerControls_ActionDeselection;
+    private readonly InputAction m_PlayerControls_ActionActivation;
+    private readonly InputAction m_PlayerControls_TrapRotation;
+    public struct PlayerControlsActions
     {
         private @PlayerInputActions m_Wrapper;
-        public PlayerMovementsActions(@PlayerInputActions wrapper) { m_Wrapper = wrapper; }
-        public InputAction @Movement => m_Wrapper.m_PlayerMovements_Movement;
-        public InputActionMap Get() { return m_Wrapper.m_PlayerMovements; }
+        public PlayerControlsActions(@PlayerInputActions wrapper) { m_Wrapper = wrapper; }
+        public InputAction @Movement => m_Wrapper.m_PlayerControls_Movement;
+        public InputAction @ActionSelection => m_Wrapper.m_PlayerControls_ActionSelection;
+        public InputAction @ActionDeselection => m_Wrapper.m_PlayerControls_ActionDeselection;
+        public InputAction @ActionActivation => m_Wrapper.m_PlayerControls_ActionActivation;
+        public InputAction @TrapRotation => m_Wrapper.m_PlayerControls_TrapRotation;
+        public InputActionMap Get() { return m_Wrapper.m_PlayerControls; }
         public void Enable() { Get().Enable(); }
         public void Disable() { Get().Disable(); }
         public bool enabled => Get().enabled;
-        public static implicit operator InputActionMap(PlayerMovementsActions set) { return set.Get(); }
-        public void AddCallbacks(IPlayerMovementsActions instance)
+        public static implicit operator InputActionMap(PlayerControlsActions set) { return set.Get(); }
+        public void AddCallbacks(IPlayerControlsActions instance)
         {
-            if (instance == null || m_Wrapper.m_PlayerMovementsActionsCallbackInterfaces.Contains(instance)) return;
-            m_Wrapper.m_PlayerMovementsActionsCallbackInterfaces.Add(instance);
+            if (instance == null || m_Wrapper.m_PlayerControlsActionsCallbackInterfaces.Contains(instance)) return;
+            m_Wrapper.m_PlayerControlsActionsCallbackInterfaces.Add(instance);
             @Movement.started += instance.OnMovement;
             @Movement.performed += instance.OnMovement;
             @Movement.canceled += instance.OnMovement;
-        }
-
-        private void UnregisterCallbacks(IPlayerMovementsActions instance)
-        {
-            @Movement.started -= instance.OnMovement;
-            @Movement.performed -= instance.OnMovement;
-            @Movement.canceled -= instance.OnMovement;
-        }
-
-        public void RemoveCallbacks(IPlayerMovementsActions instance)
-        {
-            if (m_Wrapper.m_PlayerMovementsActionsCallbackInterfaces.Remove(instance))
-                UnregisterCallbacks(instance);
-        }
-
-        public void SetCallbacks(IPlayerMovementsActions instance)
-        {
-            foreach (var item in m_Wrapper.m_PlayerMovementsActionsCallbackInterfaces)
-                UnregisterCallbacks(item);
-            m_Wrapper.m_PlayerMovementsActionsCallbackInterfaces.Clear();
-            AddCallbacks(instance);
-        }
-    }
-    public PlayerMovementsActions @PlayerMovements => new PlayerMovementsActions(this);
-
-    // PlayerActions
-    private readonly InputActionMap m_PlayerActions;
-    private List<IPlayerActionsActions> m_PlayerActionsActionsCallbackInterfaces = new List<IPlayerActionsActions>();
-    private readonly InputAction m_PlayerActions_ActionSelection;
-    private readonly InputAction m_PlayerActions_TrapDeselection;
-    private readonly InputAction m_PlayerActions_TrapRotation;
-    public struct PlayerActionsActions
-    {
-        private @PlayerInputActions m_Wrapper;
-        public PlayerActionsActions(@PlayerInputActions wrapper) { m_Wrapper = wrapper; }
-        public InputAction @ActionSelection => m_Wrapper.m_PlayerActions_ActionSelection;
-        public InputAction @TrapDeselection => m_Wrapper.m_PlayerActions_TrapDeselection;
-        public InputAction @TrapRotation => m_Wrapper.m_PlayerActions_TrapRotation;
-        public InputActionMap Get() { return m_Wrapper.m_PlayerActions; }
-        public void Enable() { Get().Enable(); }
-        public void Disable() { Get().Disable(); }
-        public bool enabled => Get().enabled;
-        public static implicit operator InputActionMap(PlayerActionsActions set) { return set.Get(); }
-        public void AddCallbacks(IPlayerActionsActions instance)
-        {
-            if (instance == null || m_Wrapper.m_PlayerActionsActionsCallbackInterfaces.Contains(instance)) return;
-            m_Wrapper.m_PlayerActionsActionsCallbackInterfaces.Add(instance);
             @ActionSelection.started += instance.OnActionSelection;
             @ActionSelection.performed += instance.OnActionSelection;
             @ActionSelection.canceled += instance.OnActionSelection;
-            @TrapDeselection.started += instance.OnTrapDeselection;
-            @TrapDeselection.performed += instance.OnTrapDeselection;
-            @TrapDeselection.canceled += instance.OnTrapDeselection;
+            @ActionDeselection.started += instance.OnActionDeselection;
+            @ActionDeselection.performed += instance.OnActionDeselection;
+            @ActionDeselection.canceled += instance.OnActionDeselection;
+            @ActionActivation.started += instance.OnActionActivation;
+            @ActionActivation.performed += instance.OnActionActivation;
+            @ActionActivation.canceled += instance.OnActionActivation;
             @TrapRotation.started += instance.OnTrapRotation;
             @TrapRotation.performed += instance.OnTrapRotation;
             @TrapRotation.canceled += instance.OnTrapRotation;
         }
 
-        private void UnregisterCallbacks(IPlayerActionsActions instance)
+        private void UnregisterCallbacks(IPlayerControlsActions instance)
         {
+            @Movement.started -= instance.OnMovement;
+            @Movement.performed -= instance.OnMovement;
+            @Movement.canceled -= instance.OnMovement;
             @ActionSelection.started -= instance.OnActionSelection;
             @ActionSelection.performed -= instance.OnActionSelection;
             @ActionSelection.canceled -= instance.OnActionSelection;
-            @TrapDeselection.started -= instance.OnTrapDeselection;
-            @TrapDeselection.performed -= instance.OnTrapDeselection;
-            @TrapDeselection.canceled -= instance.OnTrapDeselection;
+            @ActionDeselection.started -= instance.OnActionDeselection;
+            @ActionDeselection.performed -= instance.OnActionDeselection;
+            @ActionDeselection.canceled -= instance.OnActionDeselection;
+            @ActionActivation.started -= instance.OnActionActivation;
+            @ActionActivation.performed -= instance.OnActionActivation;
+            @ActionActivation.canceled -= instance.OnActionActivation;
             @TrapRotation.started -= instance.OnTrapRotation;
             @TrapRotation.performed -= instance.OnTrapRotation;
             @TrapRotation.canceled -= instance.OnTrapRotation;
         }
 
-        public void RemoveCallbacks(IPlayerActionsActions instance)
+        public void RemoveCallbacks(IPlayerControlsActions instance)
         {
-            if (m_Wrapper.m_PlayerActionsActionsCallbackInterfaces.Remove(instance))
+            if (m_Wrapper.m_PlayerControlsActionsCallbackInterfaces.Remove(instance))
                 UnregisterCallbacks(instance);
         }
 
-        public void SetCallbacks(IPlayerActionsActions instance)
+        public void SetCallbacks(IPlayerControlsActions instance)
         {
-            foreach (var item in m_Wrapper.m_PlayerActionsActionsCallbackInterfaces)
+            foreach (var item in m_Wrapper.m_PlayerControlsActionsCallbackInterfaces)
                 UnregisterCallbacks(item);
-            m_Wrapper.m_PlayerActionsActionsCallbackInterfaces.Clear();
+            m_Wrapper.m_PlayerControlsActionsCallbackInterfaces.Clear();
             AddCallbacks(instance);
         }
     }
-    public PlayerActionsActions @PlayerActions => new PlayerActionsActions(this);
-    public interface IPlayerMovementsActions
+    public PlayerControlsActions @PlayerControls => new PlayerControlsActions(this);
+    private int m_GamepadSchemeIndex = -1;
+    public InputControlScheme GamepadScheme
+    {
+        get
+        {
+            if (m_GamepadSchemeIndex == -1) m_GamepadSchemeIndex = asset.FindControlSchemeIndex("Gamepad");
+            return asset.controlSchemes[m_GamepadSchemeIndex];
+        }
+    }
+    private int m_KeyboardSchemeIndex = -1;
+    public InputControlScheme KeyboardScheme
+    {
+        get
+        {
+            if (m_KeyboardSchemeIndex == -1) m_KeyboardSchemeIndex = asset.FindControlSchemeIndex("Keyboard");
+            return asset.controlSchemes[m_KeyboardSchemeIndex];
+        }
+    }
+    public interface IPlayerControlsActions
     {
         void OnMovement(InputAction.CallbackContext context);
-    }
-    public interface IPlayerActionsActions
-    {
         void OnActionSelection(InputAction.CallbackContext context);
-        void OnTrapDeselection(InputAction.CallbackContext context);
+        void OnActionDeselection(InputAction.CallbackContext context);
+        void OnActionActivation(InputAction.CallbackContext context);
         void OnTrapRotation(InputAction.CallbackContext context);
     }
 }
