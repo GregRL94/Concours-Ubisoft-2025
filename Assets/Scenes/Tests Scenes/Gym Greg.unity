@@ -698,6 +698,16 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 2739413269039021040, guid: ee979d01f82d14248b8b645c6877a5bd,
+        type: 3}
+      propertyPath: whistleFleeDistance
+      value: 4
+      objectReference: {fileID: 0}
+    - target: {fileID: 2739413269039021040, guid: ee979d01f82d14248b8b645c6877a5bd,
+        type: 3}
+      propertyPath: whistleCaptureDistance
+      value: 2
+      objectReference: {fileID: 0}
     - target: {fileID: 5142340575786913339, guid: ee979d01f82d14248b8b645c6877a5bd,
         type: 3}
       propertyPath: m_LocalPosition.x

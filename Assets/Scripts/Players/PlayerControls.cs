@@ -14,6 +14,8 @@ public class PlayerControls : MonoBehaviour
     [SerializeField] private PlayerEnum playerID;
     [SerializeField, Range(0f, 10f)] private float raycastStartDistance;
     [SerializeField, Range(0f, 10f)] private float interactionDistance;
+    [SerializeField, Range(0f, 10f)] private float whistleFleeDistance;
+    [SerializeField, Range(0f, 10f)] private float whistleCaptureDistance;
     [SerializeField] private LayerMask gameAgentsMask;
     [Space]
     [Header("ABILITIES BINDING")]
@@ -27,6 +29,11 @@ public class PlayerControls : MonoBehaviour
     [SerializeField, Range(0f, 10f)] private float alarmTrapCD;
     [SerializeField, Range(0f, 10f)] private float pushTrapCD;
     [SerializeField, Range(0f, 10f)] private float captureTrapCD;
+    [Space]
+    [Header("TRAPS PREFABS")]
+    [SerializeField] private GameObject alarmTrap;
+    [SerializeField] private GameObject pushTrap;
+    [SerializeField] private GameObject captureTrap;
     [Space]
     [Header("GIZMOS PARAMETERS")]
     [SerializeField] private bool drawGizmos;
@@ -180,11 +187,34 @@ public class PlayerControls : MonoBehaviour
         if (context.performed)
         {
             Debug.Log(selectedAbility + " ACTIVATED");
-        }        
+        }
     }
     #endregion
 
     #region Traps
+
+    private void Whistle()
+    {
+        Collider[] agents = Physics.OverlapSphere(transform.position, whistleFleeDistance, gameAgentsMask);
+        if (agents.Length > 0)
+        {
+            foreach (Collider collider in agents)
+            {
+                if (collider.gameObject.CompareTag("ENEMY"))
+                {
+                    if (Vector3.Distance(transform.position, collider.gameObject.transform.position) <= whistleCaptureDistance)
+                    {
+                        // Capture Robber
+                    }
+                    else
+                    {
+                        // Robber Flees
+                    }
+                }
+            }
+        }
+    }
+
     public void RotateTrap(InputAction.CallbackContext context)
     {
         if (context.performed)
@@ -263,9 +293,13 @@ public class PlayerControls : MonoBehaviour
             Gizmos.color = Color.red;
             Gizmos.DrawWireSphere(leftjoystickVirtualPoint, pointsRadii);
 
-            Gizmos.color = Color.white;
+            Gizmos.color = Color.green;
             Gizmos.DrawLine(transform.position + transform.forward * raycastStartDistance, transform.position + (interactionDistance + raycastStartDistance) * transform.forward);
             Gizmos.DrawSphere(snappedInteractionPoint, pointsRadii);
+
+            Gizmos.color = Color.white;
+            Gizmos.DrawWireSphere(transform.position, whistleFleeDistance);
+            Gizmos.DrawWireSphere(transform.position, whistleCaptureDistance);
         }
     }
     #endregion
