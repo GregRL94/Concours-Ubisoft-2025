@@ -192,9 +192,9 @@ public class PlayerControls : MonoBehaviour
     #endregion
 
     #region Traps
-
     private void Whistle()
     {
+        // Play sound
         Collider[] agents = Physics.OverlapSphere(transform.position, whistleFleeDistance, gameAgentsMask);
         if (agents.Length > 0)
         {
@@ -202,13 +202,15 @@ public class PlayerControls : MonoBehaviour
             {
                 if (collider.gameObject.CompareTag("ENEMY"))
                 {
+                    RobberCapture robber = collider.gameObject.GetComponent<RobberCapture>();
+
                     if (Vector3.Distance(transform.position, collider.gameObject.transform.position) <= whistleCaptureDistance)
                     {
-                        // Capture Robber
+                        robber.GetSifled(25f);
                     }
                     else
                     {
-                        // Robber Flees
+                        robber.GetSifled(0f);
                     }
                 }
             }
@@ -236,6 +238,7 @@ public class PlayerControls : MonoBehaviour
             if (currentTrap != null && rotationDirection != 0)
             {
                 Debug.Log("Rotating Trap");
+                // Play sound
                 currentTrap.transform.Rotate(new Vector3(0f, rotationDirection * 90f, 0f));
             }
         }
