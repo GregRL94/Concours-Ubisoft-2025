@@ -23,15 +23,15 @@ public class TypeOfTrap : MonoBehaviour, ITrap
     {
         if(selectedTrap == AbilitiesEnum.ALARM_TRAP)
         {
-            TrapManager.Instance.TriggerAlarmTrap();
+            GameManager.Instance.TrapManager.TriggerAlarmTrap();
         }
         else if (selectedTrap == AbilitiesEnum.PUSH_TRAP)
         {
-            TrapManager.Instance.TriggerPushTrap();
+            GameManager.Instance.TrapManager.TriggerPushTrap();
         }
         else if (selectedTrap == AbilitiesEnum.CAPTURE_TRAP)
         {
-            TrapManager.Instance.TriggerCaptureTrap();
+            GameManager.Instance.TrapManager.TriggerCaptureTrap();
         }
     }
 
