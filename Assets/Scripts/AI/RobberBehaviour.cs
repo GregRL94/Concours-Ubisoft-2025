@@ -43,7 +43,7 @@ public class RobberBehaviour : BTAgent
     private bool _isFleeing = false;
     [SerializeField]
     private float _robberTimeFleeing = 5f;
-
+    
     //Coroutines
     private Coroutine _stealingObjectTimer;
     private Coroutine _fleeingTimer;
@@ -266,6 +266,7 @@ public class RobberBehaviour : BTAgent
         _isVulnerable = true;
         _robberAgent.speed = 0;
         _currentVision = 0;
+        _rb.velocity = Vector3.zero;
         Debug.Log("Vulnerable State");
     }
 
@@ -309,11 +310,13 @@ public class RobberBehaviour : BTAgent
         }
         else if (Vector3.Distance(agent.pathEndPosition, destination) >= _stealRange)
         {
+            _rb.velocity = Vector3.zero;
             state = ActionState.IDLE;
             return BTNode.Status.FAILURE;
         }
         else if (distanceToTarget < _stealRange)
         {
+            _rb.velocity = Vector3.zero;
             state = ActionState.IDLE;
             return BTNode.Status.SUCCESS;
         }

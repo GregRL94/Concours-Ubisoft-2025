@@ -11,6 +11,7 @@ public class BTSelector : BTNode
 
     public override Status Process()
     {
+        name = children[currentChild].name;
         Status childstatus = children[currentChild].Process();
         if (childstatus == Status.RUNNING) return Status.RUNNING;
 
