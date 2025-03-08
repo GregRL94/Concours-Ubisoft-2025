@@ -224,11 +224,11 @@ public class PlayerControls : MonoBehaviour
 
                     if (Vector3.Distance(transform.position, collider.gameObject.transform.position) <= whistleCaptureDistance)
                     {
-                        robber.GetSifled(25f);
+                        robber.GetSifled(playerID, 25f);
                     }
                     else
                     {
-                        robber.GetSifled(0f);
+                        robber.GetSifled(playerID, 0f);
                     }
                 }
             }
