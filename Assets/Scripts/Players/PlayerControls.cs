@@ -14,6 +14,8 @@ public class PlayerControls : MonoBehaviour
     [SerializeField] private PlayerEnum playerID;
     [SerializeField, Range(0f, 10f)] private float raycastStartDistance;
     [SerializeField, Range(0f, 10f)] private float interactionDistance;
+    [SerializeField, Range(0f, 10f)] private float whistleFleeDistance;
+    [SerializeField, Range(0f, 10f)] private float whistleCaptureDistance;
     [SerializeField] private LayerMask gameAgentsMask;
     [Space]
     [Header("ABILITIES BINDING")]
@@ -28,11 +30,18 @@ public class PlayerControls : MonoBehaviour
     [SerializeField, Range(0f, 10f)] private float pushTrapCD;
     [SerializeField, Range(0f, 10f)] private float captureTrapCD;
     [Space]
+    [Header("TRAPS PREFABS")]
+    [SerializeField] private GameObject alarmTrap;
+    [SerializeField] private GameObject pushTrap;
+    [SerializeField] private GameObject captureTrap;
+    [Space]
     [Header("GIZMOS PARAMETERS")]
     [SerializeField] private bool drawGizmos;
     [SerializeField, Range(0.1f, 0.5f)] private float pointsRadii = 0.25f;
     
     private GameGrid gameGrid;
+    private Node previousNode;
+    private Node currentNode;
     private Vector3 snappedInteractionPoint;
     private GameObject currentTrap;
 
@@ -46,6 +55,8 @@ public class PlayerControls : MonoBehaviour
     private Vector3 leftjoystickVirtualPoint;
 
     private float joystickPointDisplayDistance = 2f;
+
+    public PlayerEnum PlayerID => playerID;
     #endregion
 
     #region MonoBehaviour Flow
@@ -68,6 +79,9 @@ public class PlayerControls : MonoBehaviour
         };
         rb = GetComponent<Rigidbody>();
         EnablePlayerInputs(true);
+        currentNode = gameGrid.NodeFromWorldPos(transform.position);
+        previousNode = currentNode;
+        gameGrid.UpdateNode(currentNode);
     }
 
     private void FixedUpdate()
@@ -77,6 +91,17 @@ public class PlayerControls : MonoBehaviour
         leftjoystickVirtualPoint = new Vector3(transform.position.x + leftJoystickInput.x * joystickPointDisplayDistance, transform.position.y, transform.position.z + leftJoystickInput.y * joystickPointDisplayDistance);
         transform.rotation = Quaternion.LookRotation(Vector3.RotateTowards(transform.forward, leftjoystickVirtualPoint - transform.position, rotationSpeed * Time.deltaTime, 0.0f));
         rb.velocity = transform.forward * joystickInputMagnitude * speed;
+
+        Node node = gameGrid.NodeFromWorldPos(transform.position);
+
+        if (node != currentNode)
+        {
+            previousNode = currentNode;
+            currentNode = node;
+        }
+
+        gameGrid.UpdateNode(currentNode);
+        gameGrid.UpdateNode(previousNode);
     }
 
     private void Update()
@@ -127,7 +152,7 @@ public class PlayerControls : MonoBehaviour
     #region Movement
     public void Movement(InputAction.CallbackContext context)
     {
-        leftJoystickInput = context.ReadValue<Vector2>();
+        leftJoystickInput = context.ReadValue<Vector2>();        
     }
 
     public void Stop(InputAction.CallbackContext context)
@@ -180,11 +205,36 @@ public class PlayerControls : MonoBehaviour
         if (context.performed)
         {
             Debug.Log(selectedAbility + " ACTIVATED");
-        }        
+        }
     }
     #endregion
 
     #region Traps
+    private void Whistle()
+    {
+        // Play sound
+        Collider[] agents = Physics.OverlapSphere(transform.position, whistleFleeDistance, gameAgentsMask);
+        if (agents.Length > 0)
+        {
+            foreach (Collider collider in agents)
+            {
+                if (collider.gameObject.CompareTag("ENEMY"))
+                {
+                    RobberCapture robber = collider.gameObject.GetComponent<RobberCapture>();
+
+                    if (Vector3.Distance(transform.position, collider.gameObject.transform.position) <= whistleCaptureDistance)
+                    {
+                        robber.GetSifled(playerID, 25f);
+                    }
+                    else
+                    {
+                        robber.GetSifled(playerID, 0f);
+                    }
+                }
+            }
+        }
+    }
+
     public void RotateTrap(InputAction.CallbackContext context)
     {
         if (context.performed)
@@ -206,6 +256,7 @@ public class PlayerControls : MonoBehaviour
             if (currentTrap != null && rotationDirection != 0)
             {
                 Debug.Log("Rotating Trap");
+                // Play sound
                 currentTrap.transform.Rotate(new Vector3(0f, rotationDirection * 90f, 0f));
             }
         }
@@ -263,9 +314,13 @@ public class PlayerControls : MonoBehaviour
             Gizmos.color = Color.red;
             Gizmos.DrawWireSphere(leftjoystickVirtualPoint, pointsRadii);
 
-            Gizmos.color = Color.white;
+            Gizmos.color = Color.green;
             Gizmos.DrawLine(transform.position + transform.forward * raycastStartDistance, transform.position + (interactionDistance + raycastStartDistance) * transform.forward);
             Gizmos.DrawSphere(snappedInteractionPoint, pointsRadii);
+
+            Gizmos.color = Color.white;
+            Gizmos.DrawWireSphere(transform.position, whistleFleeDistance);
+            Gizmos.DrawWireSphere(transform.position, whistleCaptureDistance);
         }
     }
     #endregion

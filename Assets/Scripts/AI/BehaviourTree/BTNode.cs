@@ -19,6 +19,7 @@ public class BTNode
 
     public virtual Status Process()
     {
+        name = children[currentChild].name;
         return children[currentChild].Process();
     }
 

@@ -95,7 +95,7 @@ GameObject:
   - component: {fileID: 3366349237684137108}
   - component: {fileID: 182579714823430696}
   - component: {fileID: 1620196012226260135}
-  - component: {fileID: 1780455535920692412}
+  - component: {fileID: 4315998531015729924}
   m_Layer: 6
   m_Name: 'PushTrap '
   m_TagString: TRAP
@@ -192,7 +192,7 @@ CapsuleCollider:
   m_Height: 2
   m_Direction: 1
   m_Center: {x: 0, y: 0, z: 0}
---- !u!114 &1780455535920692412
+--- !u!114 &4315998531015729924
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -201,7 +201,8 @@ MonoBehaviour:
   m_GameObject: {fileID: 2770947862988725122}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: e2d3416adec39f8439900dc3722b1130, type: 3}
+  m_Script: {fileID: 11500000, guid: c01b7f8aa85a48c4ba547f4dfb14106e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   selectedTrap: 3
+  trapOwner: 0

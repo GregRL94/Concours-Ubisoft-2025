@@ -46,17 +46,8 @@ public class TrapManager : MonoBehaviour
     [SerializeField] float timeTillCaptureIndicatorAppear = 0f;
     [SerializeField] float captureDuration = 5f;
 
-    public static TrapManager Instance;
     [SerializeField]
     public RobberCapture robberCapture;
-
-    private void Awake()
-    {
-        if (Instance == null)
-            Instance = this;
-        else
-            Destroy(this.gameObject);
-    }
 
     private void Start()
     {
@@ -149,10 +140,12 @@ public class TrapManager : MonoBehaviour
     private IEnumerator RunAwayDelay()
     {
         yield return new WaitForSeconds(timeTillAlarmIndicatorAppear);
-        _indicator.SetActive(true);
+        Destroy(alarmTrap);
+        if (_indicator == null) yield break;
+        _indicator?.SetActive(true);
 
         //Run Away for RobberBehaviour
-        robberCapture.GetSifled(10);
+        robberCapture?.GetSifled(PlayerEnum.NONE, 10);
 
         // Optional - Reaction to alarm -> Turning right to left
         /*yield return new WaitForSeconds(0.5f);
@@ -242,7 +235,7 @@ public class TrapManager : MonoBehaviour
 
         // Pushes enemy from a forward direction and apply a force instant force 
         Vector3 pushDirection = _agent.transform.forward * pushDistance; 
-        _rb.AddForce(pushDirection , ForceMode.Impulse); 
+        _rb?.AddForce(pushDirection , ForceMode.Impulse); 
 
         StartCoroutine(StunAfterPush());
     }
@@ -250,30 +243,33 @@ public class TrapManager : MonoBehaviour
     IEnumerator StunAfterPush()
     {
         yield return new WaitForSeconds(timeTillPushIndicatorAppear);
+        if(_indicator == null)yield break;
         _indicator?.SetActive(true);
 
         // Push duration till Enemy freezes
         yield return new WaitForSeconds(timeTillEnemyStop);
+        Destroy(pushTrap);
 
 
         if (_rb != null)
         {
-            _rb.velocity = Vector3.zero; 
+            _rb.velocity = Vector3.zero;
             //rb.isKinematic = true;
         }
+        else yield break;
 
-        Destroy(pushTrap);
 
         // Stun duration after being pushed 
-        yield return new WaitForSeconds(stunPushDuration); 
+        yield return new WaitForSeconds(stunPushDuration);
 
         if (_agent != null)
         {
-            _agent.isStopped = false; 
+            _agent.isStopped = false;
         }
+        else yield break;
 
         _indicator?.SetActive(false);
-        robberCapture.GetSifled(20);
+        robberCapture?.GetSifled(PlayerEnum.NONE, 20);
     }
     #endregion
   
@@ -299,25 +295,28 @@ public class TrapManager : MonoBehaviour
     IEnumerator StunFromCapture()
     {
         yield return new WaitForSeconds(timeTillCaptureIndicatorAppear);
+        if(_indicator == null) yield break;
         _indicator?.SetActive(true);
 
         // Capture for certain amount of seconds
         robberCapture.StartVulnerability();
         yield return new WaitForSeconds(captureDuration);
+        captureTrap.GetComponent<CapsuleCollider>().enabled = true;
+        Destroy(captureTrap);
 
         if (_agent != null)
         {
             _agent.isStopped = false;
         }
+        else yield break;
 
         if (_rb != null)
         {
             _rb.velocity = Vector3.zero;
         }
+        
         _indicator?.SetActive(false);
-        captureTrap.GetComponent<CapsuleCollider>().enabled = true;
-        robberCapture.StopVulnerability();
-        Destroy(captureTrap);
+        robberCapture?.StopVulnerability();
     }
     #endregion
 }

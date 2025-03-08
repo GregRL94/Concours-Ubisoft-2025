@@ -13,17 +13,7 @@ public class MuseumObjectsManager : MonoBehaviour
     [SerializeField]
     private Dictionary<MuseumObjects.ObjectType, MuseumObjects[]> _sortedObjects = new Dictionary<MuseumObjects.ObjectType, MuseumObjects[]>();
 
-    public static MuseumObjectsManager Instance;
-
     public MuseumObjects[] AllMuseumObjects => _allMuseumObjects;
-
-    private void Awake()
-    {
-        if(Instance == null)
-            Instance = this;
-        else
-            Destroy(this.gameObject);
-    }
 
     // Start is called before the first frame update
     void Start()

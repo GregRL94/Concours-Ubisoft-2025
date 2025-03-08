@@ -17,7 +17,9 @@ public class BTDependantSequence : BTNode
 
     public override Status Process()
     {
-        if(dependancy.Process() == Status.FAILURE)
+        name = children[currentChild].name;
+
+        if (dependancy.Process() == Status.FAILURE)
         {
             agent.ResetPath();
             foreach (BTNode n in children)

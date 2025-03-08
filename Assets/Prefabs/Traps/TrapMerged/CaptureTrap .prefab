@@ -95,7 +95,7 @@ GameObject:
   - component: {fileID: 1739749966234107246}
   - component: {fileID: 8619086334706857183}
   - component: {fileID: 4184247567497375263}
-  - component: {fileID: 5066672340676619647}
+  - component: {fileID: 1888220182278893424}
   m_Layer: 6
   m_Name: 'CaptureTrap '
   m_TagString: TRAP
@@ -192,7 +192,7 @@ CapsuleCollider:
   m_Height: 4.2903724
   m_Direction: 1
   m_Center: {x: 0, y: 0, z: 0}
---- !u!114 &5066672340676619647
+--- !u!114 &1888220182278893424
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -201,7 +201,8 @@ MonoBehaviour:
   m_GameObject: {fileID: 8493981246009426259}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: e2d3416adec39f8439900dc3722b1130, type: 3}
+  m_Script: {fileID: 11500000, guid: c01b7f8aa85a48c4ba547f4dfb14106e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   selectedTrap: 4
+  trapOwner: 0
