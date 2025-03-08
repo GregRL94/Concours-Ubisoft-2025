@@ -48,6 +48,8 @@ public class PlayerControls : MonoBehaviour
     private Vector3 leftjoystickVirtualPoint;
 
     private float joystickPointDisplayDistance = 2f;
+
+    public PlayerEnum PlayerID => playerID;
     #endregion
 
     #region MonoBehaviour Flow

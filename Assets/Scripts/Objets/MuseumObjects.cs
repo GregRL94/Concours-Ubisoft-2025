@@ -11,15 +11,17 @@ public class MuseumObjects : MonoBehaviour
     }
 
     [Header("Metrics")]
+    [SerializeField, Tooltip("Owner of object")]
+    protected PlayerEnum _objectOwner;
     [SerializeField, Tooltip("Type of stealable object")]
     protected ObjectType _objectType;
     [SerializeField, Tooltip("cd before object can be stealed again")]
     protected float _objectStealableCD = 10f;
-
     [Header("DEBUG")]
     [SerializeField]
     protected float _timeStealableCD;
     public ObjectType MuseumObjectType => _objectType;
+    public PlayerEnum ObjectOwner => _objectOwner;
 
     protected Coroutine _cdCoroutine;
 

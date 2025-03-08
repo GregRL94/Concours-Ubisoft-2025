@@ -60,7 +60,7 @@ public class RobberBehaviour : BTAgent
         if(!_robberCapture) _robberCapture = GetComponent<RobberCapture>();
 
         _robberAgent.speed = _vBase;
-        TrapManager.Instance.SetRobber(_robberAgent, _rb, _indicator, _robberCapture);
+        GameManager.Instance.TrapManager.SetRobber(_robberAgent, _rb, _indicator, _robberCapture);
 
         //Flee state
         BTLeaf isFleeing = new BTLeaf("Is fleeing", IsFleeing);
@@ -123,7 +123,7 @@ public class RobberBehaviour : BTAgent
     //if all objects are in cd, bypass cd condition
     private void GetNearestObject(bool bypassObjectCDCondition)
     {
-        MuseumObjects[] museumObjects = MuseumObjectsManager.Instance?.GetObjectList(_stealingList[0]);
+        MuseumObjects[] museumObjects = GameManager.Instance.MuseumObjectsManager.GetObjectList(_stealingList[0]);
         float minDistance = float.MaxValue;
         MuseumObjects nearestObject = null;
         int objectsInCd = 0;
@@ -171,7 +171,9 @@ public class RobberBehaviour : BTAgent
             _hasStolen = BTNode.Status.SUCCESS;
             state = ActionState.IDLE;
 
+            //steal object
             Debug.Log($"{_currentTargetObject.MuseumObjectType} STEALED !");
+            GameManager.Instance.LosePlayerReputation(_currentTargetObject.ObjectOwner, 1);
             _currentTargetObject.gameObject.SetActive(false);
             _currentTargetObject = null;
             _stealingList.RemoveAt(0);
