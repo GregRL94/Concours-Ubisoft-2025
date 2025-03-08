@@ -171,7 +171,9 @@ public class RobberBehaviour : BTAgent
             _hasStolen = BTNode.Status.SUCCESS;
             state = ActionState.IDLE;
 
+            //steal object
             Debug.Log($"{_currentTargetObject.MuseumObjectType} STEALED !");
+            GameManager.Instance.LosePlayerReputation(_currentTargetObject.ObjectOwner, 1);
             _currentTargetObject.gameObject.SetActive(false);
             _currentTargetObject = null;
             _stealingList.RemoveAt(0);

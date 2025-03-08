@@ -145,7 +145,7 @@ public class TrapManager : MonoBehaviour
         _indicator?.SetActive(true);
 
         //Run Away for RobberBehaviour
-        robberCapture?.GetSifled(10);
+        robberCapture?.GetSifled(PlayerEnum.NONE, 10);
 
         // Optional - Reaction to alarm -> Turning right to left
         /*yield return new WaitForSeconds(0.5f);
@@ -269,7 +269,7 @@ public class TrapManager : MonoBehaviour
         else yield break;
 
         _indicator?.SetActive(false);
-        robberCapture?.GetSifled(20);
+        robberCapture?.GetSifled(PlayerEnum.NONE, 20);
     }
     #endregion
   
