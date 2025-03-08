@@ -40,6 +40,8 @@ public class PlayerControls : MonoBehaviour
     [SerializeField, Range(0.1f, 0.5f)] private float pointsRadii = 0.25f;
     
     private GameGrid gameGrid;
+    private Node previousNode;
+    private Node currentNode;
     private Vector3 snappedInteractionPoint;
     private GameObject currentTrap;
 
@@ -53,6 +55,8 @@ public class PlayerControls : MonoBehaviour
     private Vector3 leftjoystickVirtualPoint;
 
     private float joystickPointDisplayDistance = 2f;
+
+    public PlayerEnum PlayerID => playerID;
     #endregion
 
     #region MonoBehaviour Flow
@@ -75,6 +79,9 @@ public class PlayerControls : MonoBehaviour
         };
         rb = GetComponent<Rigidbody>();
         EnablePlayerInputs(true);
+        currentNode = gameGrid.NodeFromWorldPos(transform.position);
+        previousNode = currentNode;
+        gameGrid.UpdateNode(currentNode);
     }
 
     private void FixedUpdate()
@@ -84,6 +91,17 @@ public class PlayerControls : MonoBehaviour
         leftjoystickVirtualPoint = new Vector3(transform.position.x + leftJoystickInput.x * joystickPointDisplayDistance, transform.position.y, transform.position.z + leftJoystickInput.y * joystickPointDisplayDistance);
         transform.rotation = Quaternion.LookRotation(Vector3.RotateTowards(transform.forward, leftjoystickVirtualPoint - transform.position, rotationSpeed * Time.deltaTime, 0.0f));
         rb.velocity = transform.forward * joystickInputMagnitude * speed;
+
+        Node node = gameGrid.NodeFromWorldPos(transform.position);
+
+        if (node != currentNode)
+        {
+            previousNode = currentNode;
+            currentNode = node;
+        }
+
+        gameGrid.UpdateNode(currentNode);
+        gameGrid.UpdateNode(previousNode);
     }
 
     private void Update()
@@ -134,7 +152,7 @@ public class PlayerControls : MonoBehaviour
     #region Movement
     public void Movement(InputAction.CallbackContext context)
     {
-        leftJoystickInput = context.ReadValue<Vector2>();
+        leftJoystickInput = context.ReadValue<Vector2>();        
     }
 
     public void Stop(InputAction.CallbackContext context)
