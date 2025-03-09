@@ -72,11 +72,11 @@ public class MuseumObjectsManagerTest : MonoBehaviour
             return;
         }
 
-        // Sélectionner une clé (catégorie) aléatoire A CHANGER POUR THOMAS!!!S
-        var randomKey = _sortedObjects.Keys.ElementAt(UnityEngine.Random.Range(0, _sortedObjects.Count));
+        // Select a random key in dict -  A CHANGER POUR THOMAS!!!
+        MuseumObjectsTest.ObjectType randomKey = _sortedObjects.Keys.ElementAt(UnityEngine.Random.Range(0, _sortedObjects.Count));
 
-        // Récupérer la liste des objets de cette catégorie
-        var objectList = _sortedObjects[randomKey].ToList();
+        // Get objects[] of this category key
+        List<MuseumObjectsTest> objectList = _sortedObjects[randomKey].ToList();
 
         if (objectList.Count == 0)
         {
@@ -85,27 +85,27 @@ public class MuseumObjectsManagerTest : MonoBehaviour
             return;
         }
 
-        // Sélectionner un objet aléatoire dans cette catégorie
+        // Select a random index in the List 
         int randomIndex = UnityEngine.Random.Range(0, objectList.Count);
         MuseumObjectsTest stolenObject = objectList[randomIndex];
 
-        // Retirer cet objet de la liste
+        // Remove oject to the List
         objectList.RemoveAt(randomIndex);
 
-        // Mettre à jour le dictionnaire avec la nouvelle liste
+        // Update dictionary with List 
         if (objectList.Count > 0)
         {
             _sortedObjects[randomKey] = objectList.ToArray();
         }
         else
         {
-            // Si la catégorie devient vide, on la supprime
+            // If List empty, delete key
             _sortedObjects.Remove(randomKey);
         }
 
-        // Afficher le résultat dans la console
         Debug.Log($"Vol réussi ! Objet volé : {stolenObject.name} de la catégorie {randomKey}.");
 
+        // Update UI List of Museum Artefacts
         uiManager.UpdateListOfMuseumArtefacts(_sortedObjects);
     }
 

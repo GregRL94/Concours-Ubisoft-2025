@@ -27,17 +27,18 @@ public class UIManager : MonoBehaviour
     #region Update Museum Actefacts Checklist UI 
     public void CreateListOfMuseumArtefactsUI(Dictionary<MuseumObjectsTest.ObjectType, MuseumObjectsTest[]> museumArtefactsDict)
     {
-        foreach (Transform child in Parent) // Supprime les anciens objets pour éviter les doublons
+        // Empty Parent Childs if not empty
+        foreach (Transform child in Parent)
         {
             Destroy(child.gameObject);
         }
 
+        // Extract all keys found in the dictionnary and showcase it in UI List
         foreach (var kvp in museumArtefactsDict)
         {
-            GameObject newObject = Instantiate(artefactText, Parent); // Instancie l'UI sous Parent directement
-            newObject.name = kvp.Key.ToString(); // Change le nom du GameObject
+            GameObject newObject = Instantiate(artefactText, Parent); 
+            newObject.name = kvp.Key.ToString(); 
             artefactNameCollection.Add(newObject);
-            // Met à jour le texte affiché
             TextMeshProUGUI textComponent = newObject.GetComponent<TextMeshProUGUI>();
             if (textComponent != null)
             {
@@ -80,17 +81,19 @@ public class UIManager : MonoBehaviour
     //}
     public void UpdateListOfMuseumArtefacts(Dictionary<MuseumObjectsTest.ObjectType, MuseumObjectsTest[]> museumArtefactsDict)
     {
-        foreach (var artefactObj in artefactNameCollection) // Parcourir tous les GameObjects créés
+        foreach (var artefactObj in artefactNameCollection) // Looping through all the gameobject artefacts created
         {
-            string artefactName = artefactObj.name; // Nom du GameObject = clé Enum
+            string artefactName = artefactObj.name;
 
-            if (Enum.TryParse(artefactName, out MuseumObjectsTest.ObjectType artefactType)) // Vérifier si le nom est une clé valide
+            // Verify if artifact name exist in the enum category
+            if (Enum.TryParse(artefactName, out MuseumObjectsTest.ObjectType artefactType)) 
             {
-                int amount = 0; // Par défaut, considérer qu'il n'y a aucun objet
+                int amount = 0; // Consider that amount = 0 for each artefact name
 
-                if (museumArtefactsDict.TryGetValue(artefactType, out MuseumObjectsTest[] artefacts)) // Vérifier si la clé existe
+                // Verify if key exist and get -> MuseumObjectsTest[] (ex: PAINTING, 3 Painting objects in MuseumObjectsTest[])
+                if (museumArtefactsDict.TryGetValue(artefactType, out MuseumObjectsTest[] artefacts)) 
                 {
-                    amount = artefacts.Length; // Nombre réel d'objets
+                    amount = artefacts.Length; // amount of MuseumObjects for each key
                 }
 
                 TextMeshProUGUI textComponent = artefactObj.GetComponent<TextMeshProUGUI>();
@@ -100,7 +103,7 @@ public class UIManager : MonoBehaviour
                     if (amount == 0)
                     {
                         textComponent.text = $"- {artefactType}";
-                        artefactObj.GetComponentInChildren<Image>().enabled = true; // Rayure rouge
+                        artefactObj.GetComponentInChildren<Image>().enabled = true; // Red line cross
                     }
                     else
                     {
