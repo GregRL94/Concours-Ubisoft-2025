@@ -1,4 +1,5 @@
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.InputSystem;
@@ -47,8 +48,10 @@ public class PlayerControls : MonoBehaviour
 
     private InputActionAsset inputAsset;
     private InputActionMap playerControls;
+    private PlayerActions playerActions;
     private Dictionary<R_JoystickDirection, AbilitiesEnum> bindingDict;
     private AbilitiesEnum selectedAbility = AbilitiesEnum.NONE;
+    private Coroutine currentCoroutine;
 
     private Rigidbody rb;
     private Vector2 leftJoystickInput;
@@ -64,6 +67,7 @@ public class PlayerControls : MonoBehaviour
     {
         inputAsset = GetComponent<PlayerInput>().actions;
         playerControls = inputAsset.FindActionMap("PlayerControls");
+        playerActions = GetComponent<PlayerActions>();
     }
 
     void Start()
@@ -162,7 +166,7 @@ public class PlayerControls : MonoBehaviour
     #endregion
 
     #region Actions
-    public void ActionSelection(InputAction.CallbackContext context)
+    private void ActionSelection(InputAction.CallbackContext context)
     {
         Vector2 rightJoystickInput = context.ReadValue<Vector2>();
         R_JoystickDirection r_joystick_dir = R_JoystickDirection.NONE;
@@ -191,51 +195,61 @@ public class PlayerControls : MonoBehaviour
         }        
     }
 
-    public void ActionDeselection(InputAction.CallbackContext context)
+    private void ActionDeselection(InputAction.CallbackContext context)
     {
         if (context.performed)
         {
             selectedAbility = AbilitiesEnum.NONE;
-            Debug.Log(selectedAbility);
+            playerActions.OnAbilityDeselection();
         }        
     }
 
-    public void ActionActivation(InputAction.CallbackContext context)
+    private void Whistle(InputAction.CallbackContext context)
     {
-        if (context.performed)
+        if (selectedAbility == AbilitiesEnum.WHISTLE)
         {
-            Debug.Log(selectedAbility + " ACTIVATED");
-        }
+            // Play sound
+            // Play Animation
+            Collider[] agents = Physics.OverlapSphere(transform.position, whistleFleeDistance, gameAgentsMask);
+            if (agents.Length > 0)
+            {
+                foreach (Collider collider in agents)
+                {
+                    if (collider.gameObject.CompareTag("ENEMY"))
+                    {
+                        RobberCapture robber = collider.gameObject.GetComponent<RobberCapture>();
+
+                        if (Vector3.Distance(transform.position, collider.gameObject.transform.position) <= whistleCaptureDistance)
+                        {
+                            robber.GetSifled(playerID, 25f);
+                        }
+                        else
+                        {
+                            robber.GetSifled(playerID, 0f);
+                        }
+                    }
+                }
+            }
+            Debug.Log("Whistled");
+        }        
     }
     #endregion
 
     #region Traps
-    private void Whistle()
+    private void StartTrapDeployment(InputAction.CallbackContext context)
     {
-        // Play sound
-        Collider[] agents = Physics.OverlapSphere(transform.position, whistleFleeDistance, gameAgentsMask);
-        if (agents.Length > 0)
-        {
-            foreach (Collider collider in agents)
-            {
-                if (collider.gameObject.CompareTag("ENEMY"))
-                {
-                    RobberCapture robber = collider.gameObject.GetComponent<RobberCapture>();
-
-                    if (Vector3.Distance(transform.position, collider.gameObject.transform.position) <= whistleCaptureDistance)
-                    {
-                        robber.GetSifled(playerID, 25f);
-                    }
-                    else
-                    {
-                        robber.GetSifled(playerID, 0f);
-                    }
-                }
-            }
-        }
+        Debug.Log("Started");
+        currentCoroutine = StartCoroutine(TrapSetupTimer());
     }
 
-    public void RotateTrap(InputAction.CallbackContext context)
+    private void CancelTrapDeployment(InputAction.CallbackContext context)
+    {
+        Debug.Log("Canceled");
+        StopCoroutine(currentCoroutine);
+        currentCoroutine = null;
+    }
+
+    private void RotateTrap(InputAction.CallbackContext context)
     {
         if (context.performed)
         {
@@ -244,18 +258,15 @@ public class PlayerControls : MonoBehaviour
 
             if (shoulderPressed < 0)
             {
-                Debug.Log("LEFT SHOULDER PRESSED");
                 rotationDirection = -1;
             }
             else if (shoulderPressed > 0)
             {
-                Debug.Log("RIGHT SHOULDER PRESSED");
                 rotationDirection = 1;
             }
 
             if (currentTrap != null && rotationDirection != 0)
             {
-                Debug.Log("Rotating Trap");
                 // Play sound
                 currentTrap.transform.Rotate(new Vector3(0f, rotationDirection * 90f, 0f));
             }
@@ -267,6 +278,7 @@ public class PlayerControls : MonoBehaviour
     private void EnablePlayerInputs(bool enableState)
     {
         InputAction movementAction = playerControls.FindAction("Movement");
+        InputAction actionActivation = playerControls.FindAction("ActionActivation");
 
         if (enableState)
         {
@@ -275,7 +287,9 @@ public class PlayerControls : MonoBehaviour
             movementAction.canceled += Stop;
             playerControls.FindAction("ActionSelection").performed += ActionSelection;
             playerControls.FindAction("ActionDeselection").performed += ActionDeselection;
-            playerControls.FindAction("ActionActivation").performed += ActionActivation;
+            actionActivation.performed += Whistle;
+            actionActivation.started += StartTrapDeployment;
+            actionActivation.canceled += CancelTrapDeployment;
             playerControls.FindAction("TrapRotation").performed += RotateTrap;
         }
         else
@@ -284,7 +298,9 @@ public class PlayerControls : MonoBehaviour
             movementAction.canceled -= Stop;
             playerControls.FindAction("ActionSelection").performed -= ActionSelection;
             playerControls.FindAction("ActionDeselection").performed -= ActionDeselection;
-            playerControls.FindAction("ActionActivation").performed -= ActionActivation;
+            actionActivation.performed -= Whistle;
+            actionActivation.started -= StartTrapDeployment;
+            actionActivation.canceled -= CancelTrapDeployment;
             playerControls.FindAction("TrapRotation").performed -= RotateTrap;
             playerControls.Disable();
         }
@@ -305,6 +321,12 @@ public class PlayerControls : MonoBehaviour
         EnablePlayerInputs(false);
     }
     #endregion
+
+    IEnumerator TrapSetupTimer(float setupTime=5f)
+    {
+        yield return new WaitForSeconds(setupTime);
+        Debug.Log("Done");
+    }
 
     #region Gizmos
     private void OnDrawGizmos()

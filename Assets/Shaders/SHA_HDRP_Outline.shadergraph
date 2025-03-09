@@ -815,8 +815,8 @@
     "m_RenderingPass": 4,
     "m_BlendMode": 0,
     "m_ZTest": 4,
-    "m_ZWrite": true,
-    "m_TransparentCullMode": 2,
+    "m_ZWrite": false,
+    "m_TransparentCullMode": 1,
     "m_OpaqueCullMode": 2,
     "m_SortPriority": 0,
     "m_AlphaTest": false,
@@ -1201,10 +1201,10 @@
     "m_TransparentWritesMotionVec": false,
     "m_DepthOffset": false,
     "m_ConservativeDepthOffset": false,
-    "m_TransparencyFog": true,
+    "m_TransparencyFog": false,
     "m_AlphaTestShadow": false,
     "m_BackThenFrontRendering": false,
-    "m_TransparentDepthPrepass": false,
+    "m_TransparentDepthPrepass": true,
     "m_TransparentDepthPostpass": false,
     "m_SupportLodCrossFade": false
 }
@@ -1574,7 +1574,7 @@
     "overrideHLSLDeclaration": false,
     "hlslDeclarationOverride": 0,
     "m_Hidden": false,
-    "m_Value": 0.0,
+    "m_Value": 0.5,
     "m_FloatType": 0,
     "m_RangeValues": {
         "x": 0.0,

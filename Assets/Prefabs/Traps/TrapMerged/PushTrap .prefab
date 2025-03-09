@@ -95,7 +95,8 @@ GameObject:
   - component: {fileID: 3366349237684137108}
   - component: {fileID: 182579714823430696}
   - component: {fileID: 1620196012226260135}
-  - component: {fileID: 4315998531015729924}
+  - component: {fileID: 4053819749181542601}
+  - component: {fileID: 8497420447530835987}
   m_Layer: 6
   m_Name: 'PushTrap '
   m_TagString: TRAP
@@ -112,7 +113,7 @@ Transform:
   m_GameObject: {fileID: 2770947862988725122}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 2.9, y: 1.3750019, z: 14.73}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 0.23308, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -148,6 +149,7 @@ MeshRenderer:
   m_RendererPriority: 0
   m_Materials:
   - {fileID: 2100000, guid: 15b3645cff3f47341bfe94f92c2b2a0c, type: 2}
+  - {fileID: 2100000, guid: ab33984eedd58ec4d84bb96ca0dc6945, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -192,7 +194,7 @@ CapsuleCollider:
   m_Height: 2
   m_Direction: 1
   m_Center: {x: 0, y: 0, z: 0}
---- !u!114 &4315998531015729924
+--- !u!114 &4053819749181542601
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -201,8 +203,20 @@ MonoBehaviour:
   m_GameObject: {fileID: 2770947862988725122}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: c01b7f8aa85a48c4ba547f4dfb14106e, type: 3}
+  m_Script: {fileID: 11500000, guid: e2d3416adec39f8439900dc3722b1130, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   selectedTrap: 3
   trapOwner: 0
+--- !u!114 &8497420447530835987
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2770947862988725122}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 248fa8d7cb1e31340a61cd30d600ab1f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 

@@ -26,11 +26,6 @@ public class PlayerActions : MonoBehaviour
         };
     }
 
-    public void Whistle()
-    {
-
-    }
-
     public void PreviewTrap(AbilitiesEnum trap, Vector3 previewPosition, bool dropable)
     {
         if (m_currentTrap != null)
@@ -77,12 +72,12 @@ public class PlayerActions : MonoBehaviour
         return false;
     }
 
-    public void OnAbilityDeselection(AbilitiesEnum ability)
+    public void OnAbilityDeselection()
     {
-        if (ability != AbilitiesEnum.WHISTLE)
+        if (m_currentTrap != null)
         {
             Destroy(m_currentTrap);
-            m_currentTrap = null;            
+            m_currentTrap = null;
         }
     }
 }
