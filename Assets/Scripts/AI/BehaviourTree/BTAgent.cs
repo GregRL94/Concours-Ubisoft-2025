@@ -2,9 +2,12 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.AI;
+using UnityEngine.Experimental.GlobalIllumination;
 
 public class BTAgent : MonoBehaviour
 {
+    [SerializeField]
+    protected string _actionName;
     public BehaviourTree tree;
     public NavMeshAgent agent;
 
@@ -29,6 +32,7 @@ public class BTAgent : MonoBehaviour
         while (true)
         {
             treeStatus = tree.Process();
+            _actionName = tree.name;
             yield return waitForSeconds;
         }
     }

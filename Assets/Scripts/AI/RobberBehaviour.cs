@@ -43,7 +43,7 @@ public class RobberBehaviour : BTAgent
     private bool _isFleeing = false;
     [SerializeField]
     private float _robberTimeFleeing = 5f;
-
+    
     //Coroutines
     private Coroutine _stealingObjectTimer;
     private Coroutine _fleeingTimer;
@@ -60,7 +60,7 @@ public class RobberBehaviour : BTAgent
         if(!_robberCapture) _robberCapture = GetComponent<RobberCapture>();
 
         _robberAgent.speed = _vBase;
-        TrapManager.Instance.SetRobber(_robberAgent, _rb, _indicator, _robberCapture);
+        GameManager.Instance.TrapManager.SetRobber(_robberAgent, _rb, _indicator, _robberCapture);
 
         //Flee state
         BTLeaf isFleeing = new BTLeaf("Is fleeing", IsFleeing);
@@ -109,7 +109,7 @@ public class RobberBehaviour : BTAgent
     }
     public BTNode.Status GoToObjectListed()
     {
-        if (_currentTargetObject == null) GetNearestObject();
+        if (_currentTargetObject == null) GetNearestObject(false);
         BTNode.Status s = GoToPosition(_currentTargetObject.transform.position);
         if (s == BTNode.Status.SUCCESS)
         {
@@ -119,17 +119,27 @@ public class RobberBehaviour : BTAgent
         return s;
     }
 
-    private void GetNearestObject()
+    //Get the nearest object possible
+    //if all objects are in cd, bypass cd condition
+    private void GetNearestObject(bool bypassObjectCDCondition)
     {
-        MuseumObjects[] museumObjects = MuseumObjectsManager.Instance?.GetObjectList(_stealingList[0]);
+        MuseumObjects[] museumObjects = GameManager.Instance.MuseumObjectsManager.GetObjectList(_stealingList[0]);
         float minDistance = float.MaxValue;
         MuseumObjects nearestObject = null;
+        int objectsInCd = 0;
         for (int i = 0; i < museumObjects.Length; i++)
         {
             //skip already stealed objects
             MuseumObjects nearest = museumObjects[i];
             if (!nearest.gameObject.activeSelf)
                 continue;
+            
+            //skip objects in cd
+            if(!nearest.IsObjectStealable() && !bypassObjectCDCondition)
+            {
+                objectsInCd++;
+                continue;
+            }
 
             float distance = Vector3.Distance(this.transform.position, museumObjects[i].transform.position);
             //skip not nearest objects
@@ -141,12 +151,19 @@ public class RobberBehaviour : BTAgent
         }
         //Debug.Log($"Nearest Object : {nearestObject.gameObject.name}");
         _currentTargetObject = nearestObject;
+        if (objectsInCd >= museumObjects.Length)
+        {
+            _currentTargetObject = null;
+            GetNearestObject(true);
+        }
+
     }
 
     private IEnumerator StealTimer(float time)
     {
         state = ActionState.WORKING;
         StartVulnerableState();
+        _currentTargetObject.SetObjectStealableCD();
         while (_hasStolen == BTNode.Status.RUNNING)
         {
             //Debug.Log("WAIT");
@@ -154,7 +171,9 @@ public class RobberBehaviour : BTAgent
             _hasStolen = BTNode.Status.SUCCESS;
             state = ActionState.IDLE;
 
+            //steal object
             Debug.Log($"{_currentTargetObject.MuseumObjectType} STEALED !");
+            GameManager.Instance.LosePlayerReputation(_currentTargetObject.ObjectOwner, 1);
             _currentTargetObject.gameObject.SetActive(false);
             _currentTargetObject = null;
             _stealingList.RemoveAt(0);
@@ -249,6 +268,7 @@ public class RobberBehaviour : BTAgent
         _isVulnerable = true;
         _robberAgent.speed = 0;
         _currentVision = 0;
+        _rb.velocity = Vector3.zero;
         Debug.Log("Vulnerable State");
     }
 
@@ -292,11 +312,13 @@ public class RobberBehaviour : BTAgent
         }
         else if (Vector3.Distance(agent.pathEndPosition, destination) >= _stealRange)
         {
+            _rb.velocity = Vector3.zero;
             state = ActionState.IDLE;
             return BTNode.Status.FAILURE;
         }
         else if (distanceToTarget < _stealRange)
         {
+            _rb.velocity = Vector3.zero;
             state = ActionState.IDLE;
             return BTNode.Status.SUCCESS;
         }

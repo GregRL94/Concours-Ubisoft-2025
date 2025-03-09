@@ -1,11 +1,13 @@
 using System.Collections;
 using System.Collections.Generic;
+using Unity.VisualScripting;
 using UnityEngine;
 
 public class RobberManager : MonoBehaviour
 {
     [SerializeField]
     private GameObject _robber;
+    private GameObject _currentRobber;
     [Header("Metrics")]
 
     [SerializeField, Tooltip("Number of attempt to spawn robber")]
@@ -30,9 +32,6 @@ public class RobberManager : MonoBehaviour
         _museumObjects = FindObjectsOfType<MuseumObjects>();
         //get all traps, use before round start
         GetAllTraps();
-
-        //spawn robber, use before round start
-        SpawnRobber();
     }
 
     public void GetAllTraps() => _traps = GameObject.FindGameObjectsWithTag("TRAP");
@@ -46,7 +45,7 @@ public class RobberManager : MonoBehaviour
             {
                 spawnPosition = GameGrid.Instance.Grid[i, j].worldPos;
                 if (!IsValidSpawnPosition(spawnPosition)) continue;
-                Instantiate(_robber, spawnPosition, Quaternion.identity);
+                _currentRobber = Instantiate(_robber, spawnPosition, Quaternion.identity);
                 return;
             }
         }
@@ -67,21 +66,27 @@ public class RobberManager : MonoBehaviour
     {
         for (int i = 0; i < GameManager.Instance.Players.Length; i++)
         {
-            if(Vector3.Distance(position, GameManager.Instance.Players[i].transform.position) < _minDistanceToPlayers)
-                return false;
+            if (GameManager.Instance.Players[i] != null)
+                if (Vector3.Distance(position, GameManager.Instance.Players[i].transform.position) < _minDistanceToPlayers)
+                    return false;
         }
 
         for (int i = 0; i < _museumObjects.Length; i++)
         {
-            if(Vector3.Distance(position, _museumObjects[i].transform.position) < _minDistanceToMuseumObjects)
-                return false;
+            if (_museumObjects[i] != null)
+                if (Vector3.Distance(position, _museumObjects[i].transform.position) < _minDistanceToMuseumObjects)
+                    return false;
         }
 
         for (int i = 0; i < _traps.Length; i++)
         {
-            if (Vector3.Distance(position, _traps[i].transform.position) < _minDistanceToTraps)
-                return false;
+            if (_traps[i] != null)
+                if (Vector3.Distance(position, _traps[i].transform.position) < _minDistanceToTraps)
+                    return false;
+            
         }
         return true;
     }
+
+    public void DispawnRobber() => Destroy(_currentRobber);
 }
