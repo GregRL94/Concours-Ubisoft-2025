@@ -8,24 +8,42 @@ public class DynamicOutline : MonoBehaviour
     {
         foreach (Material mat in GetComponent<Renderer>().materials)
         {
-            if (mat.HasProperty("_OutlineColor"))
-            {
-                m_outlineMaterial = mat;
-            }
+            if (mat.HasProperty("_OutlineColor")) { m_outlineMaterial = mat; }
         }
     }
 
-    public void SetOutlineThickness(float thickness)
+    public void SetOutlineInvalid()
+    {
+        SetOutlineThickness(0.1f);
+        SetOutlineColor(Color.red);
+        SetOutlineAlpha(0.5f);
+    }
+
+    public void SetOutlineValid()
+    {
+        SetOutlineThickness(0.1f);
+        SetOutlineColor(Color.green);
+        SetOutlineAlpha(0.5f);
+    }
+
+    public void SetOutlineDefault()
+    {
+        SetOutlineThickness(0.1f);
+        SetOutlineColor(Color.black);
+        SetOutlineAlpha(0f);
+    }
+
+    private void SetOutlineThickness(float thickness)
     {
         m_outlineMaterial.SetFloat("_OutlineThickness", thickness);
     }
 
-    public void SetOutlineColor(Color color)
+    private void SetOutlineColor(Color color)
     {
         m_outlineMaterial.SetColor("_OutlineColor", color);
     }
 
-    public void SetOutlineAlpha(float alpha)
+    private void SetOutlineAlpha(float alpha)
     {
         m_outlineMaterial.SetFloat("_OutlineAlpha", alpha);
     }
