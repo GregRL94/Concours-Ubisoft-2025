@@ -11,15 +11,15 @@ public class PlayerAbilities : MonoBehaviour
     [Serializable]
     public class Ability
     {
-        public int initialCount;
-        public TextMeshProUGUI countText;
+        public int initialAmountTrap;
         public float cooldownTime;
+        public TextMeshProUGUI countText;
         public Image fillImage;
         [HideInInspector] public int count;
         [HideInInspector] public Coroutine cooldownRoutine;
     }
 
-    // todo: Action Ability for player UI update 
+    // todo: Potential Action Ability for player UI update 
     public event Action<Ability> OnAbilityUsed;
     public event Action<Ability> OnAbilityCooldown;
     public event Action<Ability> OnAbilityDepleted;
@@ -39,7 +39,6 @@ public class PlayerAbilities : MonoBehaviour
     [SerializeField] private float warningTime;
     private Color initialColor = Color.white;
 
-    // Référence à PlayerAbilitiesUI
     [SerializeField] private PlayerAbilitiesUI playerAbilitiesUI;
 
     void Start() { InitializeAbilities(); }
@@ -53,7 +52,7 @@ public class PlayerAbilities : MonoBehaviour
 
     private void InitializeAbility(Ability ability)
     {
-        ability.count = ability.initialCount;
+        ability.count = ability.initialAmountTrap;
         playerAbilitiesUI.UpdateAbilityCountText(ability.countText, ability.count);
     }
 
@@ -86,13 +85,13 @@ public class PlayerAbilities : MonoBehaviour
             if (ability.count > 0)
             {
                 ability.count--;
-                OnAbilityUsed?.Invoke(ability);
+                //OnAbilityUsed?.Invoke(ability);
                 playerAbilitiesUI.UpdateAbilityCountText(ability.countText, ability.count); // Mise à jour UI
                 ability.cooldownRoutine = StartCoroutine(CooldownAbility(ability));
             }
             else
             {
-                OnAbilityDepleted?.Invoke(ability);
+                //OnAbilityDepleted?.Invoke(ability);
                 ShowWarning(ability.fillImage); // Affichage de l'avertissement via UIManager
             }
         }
@@ -114,15 +113,15 @@ public class PlayerAbilities : MonoBehaviour
     #region Player Abilities Cooldown UI
     private IEnumerator CooldownAbility(Ability ability)
     {
-        OnAbilityCooldown?.Invoke(ability);
-        playerAbilitiesUI.UpdateCooldownFill(ability.fillImage, ability.cooldownTime); // Mise à jour du cooldown via UIManager
+        //OnAbilityCooldown?.Invoke(ability);
+        playerAbilitiesUI.UpdateCooldownFill(ability.fillImage, ability.cooldownTime); 
         yield return new WaitForSeconds(ability.cooldownTime);
         ability.cooldownRoutine = null;
     }
 
     private IEnumerator CooldownWhistle()
     {
-        playerAbilitiesUI.UpdateCooldownFill(whistleFill, whistleCooldownTime); // Mise à jour du cooldown via UIManager
+        playerAbilitiesUI.UpdateCooldownFill(whistleFill, whistleCooldownTime); 
         yield return new WaitForSeconds(whistleCooldownTime);
         whistleCooldownRoutine = null;
         canWhistle = true;
@@ -130,7 +129,7 @@ public class PlayerAbilities : MonoBehaviour
 
     private void ShowWarning(Image fillImage)
     {
-        playerAbilitiesUI.ShowWarning(fillImage, warningTime, initialColor); // Avertissement via UIManager
+        playerAbilitiesUI.ShowWarning(fillImage, warningTime, initialColor);
     }
     #endregion
 

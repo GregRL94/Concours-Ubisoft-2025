@@ -18,6 +18,7 @@ public class UIManager : MonoBehaviour
     public Image fillCaptureGaugeImage;
     public Image fillCaptureGaugeIconImage;
     [HideInInspector] public Coroutine captureThiefRoutine;
+
     //todo: Debug - Thomas enleve et met tes var de reputation
     int currentCaptureThiefAmount;// enleve thomas
     const int maxCaptureThiefAmount = 100; // enleve thomas
@@ -25,7 +26,7 @@ public class UIManager : MonoBehaviour
     void Start() { captureThiefText.text = currentCaptureThiefAmount + "/" + maxCaptureThiefAmount; }
 
     #region Update Museum Actefacts Checklist UI 
-    public void CreateListOfMuseumArtefactsUI(Dictionary<MuseumObjectsTest.ObjectType, MuseumObjectsTest[]> museumArtefactsDict)
+    public void CreateListOfMuseumArtefactsUI(Dictionary<MuseumObjects.ObjectType, MuseumObjects[]> museumArtefactsDict)
     {
         // Empty Parent Childs if not empty
         foreach (Transform child in Parent)
@@ -47,51 +48,19 @@ public class UIManager : MonoBehaviour
         }
     }
 
-    //public void UpdateListOfMuseumArtefacts(Dictionary<MuseumObjectsTest.ObjectType, MuseumObjectsTest[]> museumArtefactsDict)
-    //{
-    //    foreach (var artefactObj in artefactNameCollection) // Parcourir tous les GameObjects créés
-    //    {
-    //        string artefactName = artefactObj.name; // Nom du GameObject = clé Enum
-
-    //        if (Enum.TryParse(artefactName, out MuseumObjectsTest.ObjectType artefactType)) // Vérifier si le nom est une clé valide
-    //        {
-    //            if (museumArtefactsDict.TryGetValue(artefactType, out MuseumObjectsTest[] artefacts)) // Vérifier si la clé existe dans le dictionnaire
-    //            {
-    //                int amount = artefacts.Length; // Nombre d'objets
-    //                TextMeshProUGUI textComponent = artefactObj.GetComponent<TextMeshProUGUI>();
-
-    //                if(amount == 0)
-    //                {
-    //                    if (textComponent != null)
-    //                    {
-    //                        textComponent.text = $"{artefactType} 0X"; // Mettre à jour le texte
-    //                    }
-    //                }
-    //                else
-    //                {
-    //                    if (textComponent != null)
-    //                    {
-    //                        textComponent.text = $"{artefactType} {amount}X"; // Mettre à jour le texte
-    //                    }
-    //                }
-
-    //            }
-    //        }
-    //    }
-    //}
-    public void UpdateListOfMuseumArtefacts(Dictionary<MuseumObjectsTest.ObjectType, MuseumObjectsTest[]> museumArtefactsDict)
+    public void UpdateListOfMuseumArtefacts(Dictionary<MuseumObjects.ObjectType, MuseumObjects[]> museumArtefactsDict)
     {
         foreach (var artefactObj in artefactNameCollection) // Looping through all the gameobject artefacts created
         {
             string artefactName = artefactObj.name;
 
             // Verify if artifact name exist in the enum category
-            if (Enum.TryParse(artefactName, out MuseumObjectsTest.ObjectType artefactType)) 
+            if (Enum.TryParse(artefactName, out MuseumObjects.ObjectType artefactType)) 
             {
                 int amount = 0; // Consider that amount = 0 for each artefact name
 
                 // Verify if key exist and get -> MuseumObjectsTest[] (ex: PAINTING, 3 Painting objects in MuseumObjectsTest[])
-                if (museumArtefactsDict.TryGetValue(artefactType, out MuseumObjectsTest[] artefacts)) 
+                if (museumArtefactsDict.TryGetValue(artefactType, out MuseumObjects[] artefacts)) 
                 {
                     amount = artefacts.Length; // amount of MuseumObjects for each key
                 }
