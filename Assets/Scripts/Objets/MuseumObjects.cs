@@ -7,7 +7,9 @@ public class MuseumObjects : MonoBehaviour
     public enum ObjectType
     {
         PAINTING,
-        JEWELRY
+        JEWELRY,
+        VASE,
+        SCULPTURE
     }
 
     [Header("Metrics")]
