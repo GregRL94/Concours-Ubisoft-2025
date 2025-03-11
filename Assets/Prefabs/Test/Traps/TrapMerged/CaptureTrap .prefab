@@ -207,7 +207,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   selectedTrap: 4
-  trapOwner: 1
+  trapOwner: 0
 --- !u!114 &302221609198060884
 MonoBehaviour:
   m_ObjectHideFlags: 0

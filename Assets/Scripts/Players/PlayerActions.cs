@@ -270,6 +270,8 @@ public class PlayerActions : MonoBehaviour
                 Debug.Log("Could not retrieve DynamicOutline script");
             }
 
+            TypeOfTrap trap = _currentTrap.GetComponentInChildren<TypeOfTrap>();
+            trap.TrapOwner = _playerControls.PlayerID;
             _playerControls.GameGrid.UpdateNode(dropAtNode);
             _currentTrap = null;
             _trapsCountDictionary[_currentAbility] -= 1;
