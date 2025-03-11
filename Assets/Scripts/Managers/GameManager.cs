@@ -12,6 +12,15 @@ public class GameManager : MonoBehaviour
         public float roundTime;
         public bool hasRoundStarted;
     }
+
+    [System.Serializable]
+    public struct TrapsPerPlayer
+    {
+        public int alarmTrapsCount;
+        public int pushTrapCount;
+        public int captureTrapCount;
+    }
+
     [System.Serializable]
     public struct PlayerReputation
     {
@@ -24,6 +33,9 @@ public class GameManager : MonoBehaviour
     [SerializeField]
     private Rounds _roundsParameter;
     public Rounds RoundParameter => _roundsParameter;
+    [SerializeField]
+    private TrapsPerPlayer _trapsCountPerPlayer;
+    public TrapsPerPlayer MaxTrapsCount => _trapsCountPerPlayer;
 
     [Header("Debug")]
     //stock all players at start of game
