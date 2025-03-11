@@ -120,11 +120,11 @@ MonoBehaviour:
   m_GameObject: {fileID: 3498075083092552529}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: e2d3416adec39f8439900dc3722b1130, type: 3}
+  m_Script: {fileID: 11500000, guid: e479c99f63e1bbb439a7946d65aebf9c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   selectedTrap: 2
-  trapOwner: 0
+  trapOwner: 1
 --- !u!114 &3229153349711733166
 MonoBehaviour:
   m_ObjectHideFlags: 0

@@ -670,7 +670,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &806228213
 Transform:
   m_ObjectHideFlags: 0
@@ -757,6 +757,69 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 4603702753971812300, guid: ee979d01f82d14248b8b645c6877a5bd,
+        type: 3}
+      propertyPath: _pushTrap
+      value: 
+      objectReference: {fileID: 2770947862988725122, guid: 52a1be5a9953ce0438137c3ddd843768,
+        type: 3}
+    - target: {fileID: 4603702753971812300, guid: ee979d01f82d14248b8b645c6877a5bd,
+        type: 3}
+      propertyPath: _alarmTrap
+      value: 
+      objectReference: {fileID: 3498075083092552529, guid: 0c7d6ea4032edde4aa33a556c706c1fd,
+        type: 3}
+    - target: {fileID: 4603702753971812300, guid: ee979d01f82d14248b8b645c6877a5bd,
+        type: 3}
+      propertyPath: _captureTrap
+      value: 
+      objectReference: {fileID: 8493981246009426259, guid: a86da0407480c6449933385c69ce7bea,
+        type: 3}
+    - target: {fileID: 4603702753971812300, guid: ee979d01f82d14248b8b645c6877a5bd,
+        type: 3}
+      propertyPath: _whistleCooldown
+      value: 5
+      objectReference: {fileID: 0}
+    - target: {fileID: 4603702753971812300, guid: ee979d01f82d14248b8b645c6877a5bd,
+        type: 3}
+      propertyPath: _pushTrapCooldown
+      value: 5
+      objectReference: {fileID: 0}
+    - target: {fileID: 4603702753971812300, guid: ee979d01f82d14248b8b645c6877a5bd,
+        type: 3}
+      propertyPath: _alarmTrapCooldown
+      value: 5
+      objectReference: {fileID: 0}
+    - target: {fileID: 4603702753971812300, guid: ee979d01f82d14248b8b645c6877a5bd,
+        type: 3}
+      propertyPath: _pushTrapSetupTime
+      value: 3
+      objectReference: {fileID: 0}
+    - target: {fileID: 4603702753971812300, guid: ee979d01f82d14248b8b645c6877a5bd,
+        type: 3}
+      propertyPath: _alarmTrapSetupTime
+      value: 3
+      objectReference: {fileID: 0}
+    - target: {fileID: 4603702753971812300, guid: ee979d01f82d14248b8b645c6877a5bd,
+        type: 3}
+      propertyPath: _captureTrapCooldown
+      value: 5
+      objectReference: {fileID: 0}
+    - target: {fileID: 4603702753971812300, guid: ee979d01f82d14248b8b645c6877a5bd,
+        type: 3}
+      propertyPath: _whistleFleeDistance
+      value: 4
+      objectReference: {fileID: 0}
+    - target: {fileID: 4603702753971812300, guid: ee979d01f82d14248b8b645c6877a5bd,
+        type: 3}
+      propertyPath: _captureTrapSetupTime
+      value: 3
+      objectReference: {fileID: 0}
+    - target: {fileID: 4603702753971812300, guid: ee979d01f82d14248b8b645c6877a5bd,
+        type: 3}
+      propertyPath: _whistleCaptureDistance
+      value: 2
+      objectReference: {fileID: 0}
     - target: {fileID: 5142340575786913339, guid: ee979d01f82d14248b8b645c6877a5bd,
         type: 3}
       propertyPath: m_LocalPosition.x

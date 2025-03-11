@@ -50,12 +50,24 @@ public class PlayerActions : MonoBehaviour
             [AbilitiesEnum.CAPTURE_TRAP] = _captureTrap        
         };
 
-        _trapsCountDictionary = new Dictionary<AbilitiesEnum, int>
+        if (_gameManager != null)
         {
-            [AbilitiesEnum.ALARM_TRAP] = _gameManager.MaxTrapsCount.alarmTrapsCount,
-            [AbilitiesEnum.PUSH_TRAP] = _gameManager.MaxTrapsCount.pushTrapCount,
-            [AbilitiesEnum.CAPTURE_TRAP] = _gameManager.MaxTrapsCount.captureTrapCount
-        };
+            _trapsCountDictionary = new Dictionary<AbilitiesEnum, int>
+            {
+                [AbilitiesEnum.ALARM_TRAP] = _gameManager.MaxTrapsCount.alarmTrapsCount,
+                [AbilitiesEnum.PUSH_TRAP] = _gameManager.MaxTrapsCount.pushTrapCount,
+                [AbilitiesEnum.CAPTURE_TRAP] = _gameManager.MaxTrapsCount.captureTrapCount
+            };
+        }
+        else
+        {
+            _trapsCountDictionary = new Dictionary<AbilitiesEnum, int>
+            {
+                [AbilitiesEnum.ALARM_TRAP] = 2,
+                [AbilitiesEnum.PUSH_TRAP] = 2,
+                [AbilitiesEnum.CAPTURE_TRAP] = 2
+            };
+        }
 
         _trapsSetupTimeDictionary = new Dictionary<AbilitiesEnum, float>
         {
