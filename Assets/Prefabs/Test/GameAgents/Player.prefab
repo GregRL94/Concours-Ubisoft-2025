@@ -16,6 +16,7 @@ GameObject:
   - component: {fileID: 6110393980353648050}
   - component: {fileID: 2739413269039021040}
   - component: {fileID: 4603702753971812300}
+  - component: {fileID: 6496361541630276210}
   m_Layer: 6
   m_Name: Player
   m_TagString: Player
@@ -352,21 +353,20 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a86ddb48ecf7e6648b6be8fe1d5d23e6, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  whistleFleeDistance: 4
-  whistleCaptureDistance: 2
-  m_whistleCooldown: 5
-  m_alarmTrap: {fileID: 3498075083092552529, guid: 0c7d6ea4032edde4aa33a556c706c1fd,
-    type: 3}
-  m_pushTrap: {fileID: 2770947862988725122, guid: 52a1be5a9953ce0438137c3ddd843768,
-    type: 3}
-  m_captureTrap: {fileID: 8493981246009426259, guid: a86da0407480c6449933385c69ce7bea,
-    type: 3}
-  m_alarmTrapSetupTime: 3
-  m_pushTrapSetupTime: 3
-  m_captureTrapSetupTime: 3
-  m_alarmTrapCooldown: 5
-  m_pushTrapCooldown: 5
-  m_captureTrapCooldown: 5
+--- !u!114 &6496361541630276210
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5631366469084749562}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e5cd05565b260dd419ee38e657e99d59, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  defaultWarningTime: 0.3
+  defaultWarningColor: {r: 1, g: 1, b: 1, a: 1}
 --- !u!1 &6093196710959670524
 GameObject:
   m_ObjectHideFlags: 0

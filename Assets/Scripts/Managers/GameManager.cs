@@ -1,11 +1,14 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
+using TMPro;
 using UnityEngine;
 using UnityEngine.Rendering;
+using UnityEngine.UI;
 
 public class GameManager : MonoBehaviour
 {
-    [System.Serializable]
+    [Serializable]
     public struct Rounds
     {
         public float timeBeforeRoundStart;
@@ -13,29 +16,81 @@ public class GameManager : MonoBehaviour
         public bool hasRoundStarted;
     }
 
-    [System.Serializable]
-    public struct TrapsPerPlayer
-    {
-        public int alarmTrapsCount;
-        public int pushTrapCount;
-        public int captureTrapCount;
-    }
-
-    [System.Serializable]
+    [Serializable]
     public struct PlayerReputation
     {
         public float reputationValue;
-        public bool isElimated;
+        public bool isEliminated;
     }
+
+    [Serializable]
+    public class TrapData
+    {
+        public GameObject trapPrefab;
+        [Range(0f, 10f)] public float setupTime;
+        [Range(0, 5)] public int initialCount;
+        [Range(0f, 10f)] public float cooldown;
+        public TextMeshProUGUI countText;
+        public Image fillImage;
+        [HideInInspector] public int count;
+        [HideInInspector] public float timer;
+
+        public TrapData() {}
+
+        public TrapData(GameObject trapPrefab, float setupTime, int initialCount, float cooldown, TextMeshProUGUI countText, Image fillImage)
+        {
+            this.trapPrefab = trapPrefab;
+            this.setupTime = setupTime;
+            this.initialCount = initialCount;
+            this.cooldown = cooldown;
+            this.countText = countText;
+            this.fillImage = fillImage;
+        }
+    }
+
+    [Serializable]
+    public class WhistleData
+    {
+        [Range(0f, 5f)] public float whistleFleeRange;
+        [Range(0f, 5f)] public float whistleCaptureRange;
+        [Range(0f, 10f)] public float whistleCooldown;
+        public Image fillImage;
+        [HideInInspector] public float timer;
+
+        public WhistleData() {}
+
+        public WhistleData(float whistleFleeRange, float whistleCaptureRange, float whistleCooldown, Image fillImage)
+        {
+            this.whistleFleeRange = whistleFleeRange;
+            this.whistleCaptureRange = whistleCaptureRange;
+            this.whistleCooldown = whistleCooldown;
+            this.fillImage = fillImage;
+        }
+    }    
+
     [Header("Metrics")]
     [SerializeField]
     private int _maxPlayersReputation = 10;
     [SerializeField]
     private Rounds _roundsParameter;
     public Rounds RoundParameter => _roundsParameter;
-    [SerializeField]
-    private TrapsPerPlayer _trapsCountPerPlayer;
-    public TrapsPerPlayer MaxTrapsCount => _trapsCountPerPlayer;
+
+    [Header("-- ABILITIES --")]
+    [Header("Whistle")]
+    [SerializeField] private WhistleData whistleBase;
+    public WhistleData WhistleBase => whistleBase;
+
+    [Header("Traps")]
+    [SerializeField] private TrapData alarmTrapBase;
+    public TrapData AlarmTrapBase => alarmTrapBase;
+
+    [SerializeField] private TrapData pushTrapBase;
+    public TrapData PushTrapBase => pushTrapBase;
+
+    [SerializeField] private TrapData captureTrapBase;
+    public TrapData CaptureTrapBase => captureTrapBase;
+
+    
 
     [Header("Debug")]
     //stock all players at start of game
@@ -132,7 +187,7 @@ public class GameManager : MonoBehaviour
         _playersReputation[index - 1].reputationValue -= loseValue;
         Debug.Log($"{_players[index - 1].name} has lose {loseValue}, and is now at {_playersReputation[index - 1].reputationValue} reputation !");
         if (_playersReputation[index - 1].reputationValue > 0) return;
-        _playersReputation[index - 1].isElimated = true;
+        _playersReputation[index - 1].isEliminated = true;
         CheckPlayersElimination();
     }
 
@@ -158,7 +213,7 @@ public class GameManager : MonoBehaviour
        
         for (int i = 0; i < _playersReputation.Length; i++)
         {
-            if (!_playersReputation[i].isElimated)
+            if (!_playersReputation[i].isEliminated)
             {
                 index = i;
                 continue;
