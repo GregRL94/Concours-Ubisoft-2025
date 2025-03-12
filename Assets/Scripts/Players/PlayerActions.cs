@@ -45,8 +45,8 @@ public class PlayerActions : MonoBehaviour
     {
         foreach (GameManager.TrapData _data in _trapsDict.Values)
         {
-            _data.count = _data.initialCount;
-            _pAbilitiesUI.UpdateAbilityCountText(_data.countText, _data.count);
+            _data.currentCount = _data.initialCount;
+            _pAbilitiesUI.UpdateAbilityCountText(_data.countText, _data.currentCount);
         }
     }
     #endregion
@@ -54,12 +54,14 @@ public class PlayerActions : MonoBehaviour
     #region Action Logic
     public void UpdateActionState(float deltaTime, Vector3 interactionPoint)
     {
+        // As we can not use a foreach - which is a numerator - to modify in place the content of a collection, we use a plain for loop
         List<KeyValuePair<AbilitiesEnum, GameManager.TrapData>> _trapsDictAsList = _trapsDict.ToList();
 
         for (int i = 0; i < _trapsDictAsList.Count; i++)
         {
             if (_trapsDict[_trapsDictAsList[i].Key].timer > 0) { _trapsDict[_trapsDictAsList[i].Key].timer -= deltaTime; }
         }
+        //
 
         if (_whistle.timer > 0) { _whistle.timer -= deltaTime; }
 
@@ -172,13 +174,15 @@ public class PlayerActions : MonoBehaviour
     {
         if (_currentAbility != AbilitiesEnum.NONE && _currentAbility != AbilitiesEnum.WHISTLE)
         {
-            if (deployTrapAtNode.isFree && _trapsDict[_currentAbility].count > 0 && _trapsDict[_currentAbility].timer <= 0)
+            GameManager.TrapData currentTrapData = _trapsDict[_currentAbility];
+
+            if (deployTrapAtNode.isFree && _trapsDict[_currentAbility].currentCount > 0 && _trapsDict[_currentAbility].timer <= 0)
             {
                 _trapSetupCoroutine = StartCoroutine(TrapSetupTimer(_trapsDict[_currentAbility].setupTime, deployTrapAtNode));
                 Debug.Log("Trap deployment started");
                 return;
             }
-            if (_trapsDict[_currentAbility].count <= 0)
+            if (_trapsDict[_currentAbility].currentCount <= 0)
             {
                 _pAbilitiesUI.ShowWarning(_trapsDict[_currentAbility].fillImage, _pAbilitiesUI.DefaultWarningTime, _pAbilitiesUI.DefaultWarningColor);
                 Debug.Log("No more " + _currentAbility + " left !");
@@ -235,8 +239,8 @@ public class PlayerActions : MonoBehaviour
             _currentTrap.GetComponentInChildren<TypeOfTrap>().TrapOwner = _playerControls.PlayerID;
             _currentTrap = null;
             _playerControls.GameGrid.UpdateNode(dropAtNode);
-            _trapsDict[_currentAbility].count -= 1;
-            _pAbilitiesUI.UpdateAbilityCountText(_trapsDict[_currentAbility].countText, _trapsDict[_currentAbility].count);
+            _trapsDict[_currentAbility].currentCount -= 1;
+            _pAbilitiesUI.UpdateAbilityCountText(_trapsDict[_currentAbility].countText, _trapsDict[_currentAbility].currentCount);
             _trapsDict[_currentAbility].timer += _trapsDict[_currentAbility].cooldown;
             _pAbilitiesUI.UpdateCooldownFill(_trapsDict[_currentAbility].fillImage, _trapsDict[_currentAbility].cooldown);
             _currentAbility = AbilitiesEnum.NONE;

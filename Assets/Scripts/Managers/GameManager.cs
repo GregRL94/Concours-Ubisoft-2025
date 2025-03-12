@@ -30,9 +30,9 @@ public class GameManager : MonoBehaviour
         [Range(0f, 10f)] public float setupTime;
         [Range(0, 5)] public int initialCount;
         [Range(0f, 10f)] public float cooldown;
-        public TextMeshProUGUI countText;
-        public Image fillImage;
-        [HideInInspector] public int count;
+        [HideInInspector] public TextMeshProUGUI countText;
+        [HideInInspector] public Image fillImage;
+        [HideInInspector] public int currentCount;
         [HideInInspector] public float timer;
 
         public TrapData() {}
@@ -54,7 +54,7 @@ public class GameManager : MonoBehaviour
         [Range(0f, 5f)] public float whistleFleeRange;
         [Range(0f, 5f)] public float whistleCaptureRange;
         [Range(0f, 10f)] public float whistleCooldown;
-        public Image fillImage;
+        [HideInInspector] public Image fillImage;
         [HideInInspector] public float timer;
 
         public WhistleData() {}
