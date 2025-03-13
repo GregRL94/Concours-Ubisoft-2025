@@ -176,19 +176,19 @@ public class PlayerActions : MonoBehaviour
         {
             GameManager.TrapData currentTrapData = _trapsDict[_currentAbility];
 
-            if (deployTrapAtNode.isFree && _trapsDict[_currentAbility].currentCount > 0 && _trapsDict[_currentAbility].timer <= 0)
+            if (deployTrapAtNode.isFree && currentTrapData.currentCount > 0 && currentTrapData.timer <= 0)
             {
-                _trapSetupCoroutine = StartCoroutine(TrapSetupTimer(_trapsDict[_currentAbility].setupTime, deployTrapAtNode));
+                _trapSetupCoroutine = StartCoroutine(TrapSetupTimer(currentTrapData.setupTime, deployTrapAtNode));
                 Debug.Log("Trap deployment started");
                 return;
             }
-            if (_trapsDict[_currentAbility].currentCount <= 0)
+            if (currentTrapData.currentCount <= 0)
             {
-                _pAbilitiesUI.ShowWarning(_trapsDict[_currentAbility].fillImage, _pAbilitiesUI.DefaultWarningTime, _pAbilitiesUI.DefaultWarningColor);
+                _pAbilitiesUI.ShowWarning(currentTrapData.fillImage, _pAbilitiesUI.DefaultWarningTime, _pAbilitiesUI.DefaultWarningColor);
                 Debug.Log("No more " + _currentAbility + " left !");
             }
             if (!deployTrapAtNode.isFree) { Debug.Log("Node is already occupied"); }
-            if (_trapsDict[_currentAbility].timer > 0) { Debug.Log(_currentAbility + " in cooldown !"); }
+            if (currentTrapData.timer > 0) { Debug.Log(_currentAbility + " in cooldown !"); }
         }        
     }
 
@@ -239,10 +239,12 @@ public class PlayerActions : MonoBehaviour
             _currentTrap.GetComponentInChildren<TypeOfTrap>().TrapOwner = _playerControls.PlayerID;
             _currentTrap = null;
             _playerControls.GameGrid.UpdateNode(dropAtNode);
-            _trapsDict[_currentAbility].currentCount -= 1;
-            _pAbilitiesUI.UpdateAbilityCountText(_trapsDict[_currentAbility].countText, _trapsDict[_currentAbility].currentCount);
-            _trapsDict[_currentAbility].timer += _trapsDict[_currentAbility].cooldown;
-            _pAbilitiesUI.UpdateCooldownFill(_trapsDict[_currentAbility].fillImage, _trapsDict[_currentAbility].cooldown);
+
+            GameManager.TrapData currentTrapData = _trapsDict[_currentAbility];
+            currentTrapData.currentCount -= 1;
+            _pAbilitiesUI.UpdateAbilityCountText(currentTrapData.countText, currentTrapData.currentCount);
+            currentTrapData.timer += currentTrapData.cooldown;
+            _pAbilitiesUI.UpdateCooldownFill(currentTrapData.fillImage, currentTrapData.cooldown);
             _currentAbility = AbilitiesEnum.NONE;
             return true;
         }
@@ -256,13 +258,6 @@ public class PlayerActions : MonoBehaviour
     {
         yield return new WaitForSeconds(setupTime);
         DropTrap(trapAtNode);
-    }
-
-    IEnumerator AbilityCooldown(float cooldownTime, Image image)
-    {
-        _pAbilitiesUI.UpdateCooldownFill(image, cooldownTime);
-        yield return new WaitForSeconds(cooldownTime);
-        Debug.Log("CD down");
     }
     #endregion
 
