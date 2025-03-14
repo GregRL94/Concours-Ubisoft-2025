@@ -16,7 +16,7 @@ public class PlayerAbilities : MonoBehaviour
         public TextMeshProUGUI countText;
         public Image fillImage;
         [HideInInspector] public int count;
-        [HideInInspector] public Coroutine cooldownRoutine;
+        [HideInInspector] public Coroutine cooldownCoroutine;
     }
 
     // todo: Potential Action Ability for player UI update 
@@ -80,14 +80,14 @@ public class PlayerAbilities : MonoBehaviour
     #region Player Abilities Action
     private void CheckAbilityInput(KeyCode key, Ability ability)
     {
-        if (Input.GetKeyDown(key) && ability.cooldownRoutine == null)
+        if (Input.GetKeyDown(key) && ability.cooldownCoroutine == null)
         {
             if (ability.count > 0)
             {
                 ability.count--;
                 //OnAbilityUsed?.Invoke(ability);
                 playerAbilitiesUI.UpdateAbilityCountText(ability.countText, ability.count); // Mise à jour UI
-                ability.cooldownRoutine = StartCoroutine(CooldownAbility(ability));
+                ability.cooldownCoroutine = StartCoroutine(CooldownAbility(ability));
             }
             else
             {
@@ -116,7 +116,7 @@ public class PlayerAbilities : MonoBehaviour
         //OnAbilityCooldown?.Invoke(ability);
         playerAbilitiesUI.UpdateCooldownFill(ability.fillImage, ability.cooldownTime); 
         yield return new WaitForSeconds(ability.cooldownTime);
-        ability.cooldownRoutine = null;
+        ability.cooldownCoroutine = null;
     }
 
     private IEnumerator CooldownWhistle()

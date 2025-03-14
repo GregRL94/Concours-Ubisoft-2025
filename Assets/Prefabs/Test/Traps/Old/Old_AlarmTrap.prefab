@@ -14,7 +14,7 @@ GameObject:
   - component: {fileID: 2812299703882327260}
   - component: {fileID: 8869534022593814011}
   m_Layer: 6
-  m_Name: AlarmTrap
+  m_Name: Old_AlarmTrap
   m_TagString: TRAP
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0

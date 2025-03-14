@@ -42,6 +42,43 @@ using UnityEngine.UI;
 
 public class PlayerAbilitiesUI : MonoBehaviour
 {
+    [Serializable]
+    public class AlarmTrapUI
+    {
+        public TextMeshProUGUI countText;
+        public Image fillImage;
+    }
+
+    [Serializable]
+    public class PushTrapUI
+    {
+        public TextMeshProUGUI countText;
+        public Image fillImage;
+    }
+
+    [Serializable]
+    public class CaptureTrapUI
+    {
+        public TextMeshProUGUI countText;
+        public Image fillImage;
+    }
+
+    [Header("Traps Displays")]
+    public AlarmTrapUI alarmTrapUI;
+    public PushTrapUI pushTrapUI;
+    public CaptureTrapUI captureTrapUI;
+    [Space]
+
+    [Header("Whistle Displays")]
+    public Image whistleFillImage;
+    [Space]
+
+    [Header("Warning parameters")]
+    [SerializeField] private float defaultWarningTime = 0.3f;
+    public float DefaultWarningTime => defaultWarningTime;
+
+    [SerializeField] private Color defaultWarningColor = Color.white;
+    public Color DefaultWarningColor => defaultWarningColor;
     #region Update Text UI 
     public void UpdateAbilityCountText(TextMeshProUGUI countText, int count)
     {

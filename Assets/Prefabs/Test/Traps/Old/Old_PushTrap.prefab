@@ -14,7 +14,7 @@ GameObject:
   - component: {fileID: 4269394548462001960}
   - component: {fileID: 2459921839968721659}
   m_Layer: 6
-  m_Name: 'PushTrap '
+  m_Name: Old_PushTrap
   m_TagString: TRAP
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0

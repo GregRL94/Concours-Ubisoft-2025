@@ -3,107 +3,67 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class PlayerActions : MonoBehaviour
 {
-    [Header("-- WHISTLE PARAMETERS --")]
-    [SerializeField, Range(0f, 10f)] private float _whistleFleeDistance;
-    [SerializeField, Range(0f, 10f)] private float _whistleCaptureDistance;
-    [SerializeField, Range(0f, 10f)] private float _whistleCooldown;
-    [Space]
-    [Header("-- TRAPS PARAMETERS --")]
-    [Header("Traps Prefabs")]
-    [SerializeField] private GameObject _alarmTrap;
-    [SerializeField] private GameObject _pushTrap;
-    [SerializeField] private GameObject _captureTrap;
-    [Space]
-    [Header("Traps Setup Time")]
-    [SerializeField, Range(0f, 10f)] private float _alarmTrapSetupTime;
-    [SerializeField, Range(0f, 10f)] private float _pushTrapSetupTime;
-    [SerializeField, Range(0f, 10f)] private float _captureTrapSetupTime;
-    [Space]
-    [Header("Traps Cooldown")]
-    [SerializeField, Range(0f, 10f)] private float _alarmTrapCooldown;
-    [SerializeField, Range(0f, 10f)] private float _pushTrapCooldown;
-    [SerializeField, Range(0f, 10f)] private float _captureTrapCooldown;
-
-    private GameObject _currentTrap;
-    private Dictionary<AbilitiesEnum, GameObject> _trapsDictionary;
-    private Dictionary<AbilitiesEnum, int> _trapsCountDictionary;
-    private Dictionary<AbilitiesEnum, float> _trapsSetupTimeDictionary;
-    private Dictionary<AbilitiesEnum, float> _cooldownsDictionary;
-    private Dictionary<AbilitiesEnum, float> _timersDictionary;
+    #region Variables
     private GameManager _gameManager;
     private PlayerControls _playerControls;
+    private PlayerAbilitiesUI _pAbilitiesUI;
     private AbilitiesEnum _currentAbility;
-    private Coroutine _currentCoroutine;
+    private GameManager.WhistleData _whistle;
+    private Dictionary<AbilitiesEnum, GameManager.TrapData> _trapsDict;
+    private GameObject _currentTrap;
+    private Coroutine _trapSetupCoroutine;
+    #endregion
 
-
+    #region MonoBehaviour Flow
     private void Start()
     {
         _gameManager = GameManager.Instance;
         _playerControls = GetComponent<PlayerControls>();
-        _trapsDictionary = new Dictionary<AbilitiesEnum, GameObject>
+        _pAbilitiesUI = GetComponent<PlayerAbilitiesUI>();
+
+        GameManager.WhistleData wBase = _gameManager.WhistleBase;
+        GameManager.TrapData aTBase = _gameManager.AlarmTrapBase;
+        GameManager.TrapData pTBase = _gameManager.PushTrapBase;
+        GameManager.TrapData cTBase = _gameManager.CaptureTrapBase;
+        
+        _whistle = new GameManager.WhistleData(wBase.whistleFleeRange, wBase.whistleCaptureRange, wBase.whistleCooldown, _pAbilitiesUI.whistleFillImage);
+        _trapsDict = new Dictionary<AbilitiesEnum, GameManager.TrapData>
         {
-            [AbilitiesEnum.ALARM_TRAP] = _alarmTrap,
-            [AbilitiesEnum.PUSH_TRAP] = _pushTrap,
-            [AbilitiesEnum.CAPTURE_TRAP] = _captureTrap        
+            [AbilitiesEnum.ALARM_TRAP] = new GameManager.TrapData(aTBase.trapPrefab, aTBase.setupTime, aTBase.initialCount, aTBase.cooldown, _pAbilitiesUI.alarmTrapUI.countText, _pAbilitiesUI.alarmTrapUI.fillImage),
+            [AbilitiesEnum.PUSH_TRAP] = new GameManager.TrapData(pTBase.trapPrefab, pTBase.setupTime, pTBase.initialCount, pTBase.cooldown, _pAbilitiesUI.pushTrapUI.countText, _pAbilitiesUI.pushTrapUI.fillImage),
+            [AbilitiesEnum.CAPTURE_TRAP] = new GameManager.TrapData(cTBase.trapPrefab, cTBase.setupTime, cTBase.initialCount, cTBase.cooldown, _pAbilitiesUI.captureTrapUI.countText, _pAbilitiesUI.captureTrapUI.fillImage)
         };
 
-        if (_gameManager != null)
-        {
-            _trapsCountDictionary = new Dictionary<AbilitiesEnum, int>
-            {
-                [AbilitiesEnum.ALARM_TRAP] = _gameManager.MaxTrapsCount.alarmTrapsCount,
-                [AbilitiesEnum.PUSH_TRAP] = _gameManager.MaxTrapsCount.pushTrapCount,
-                [AbilitiesEnum.CAPTURE_TRAP] = _gameManager.MaxTrapsCount.captureTrapCount
-            };
-        }
-        else
-        {
-            _trapsCountDictionary = new Dictionary<AbilitiesEnum, int>
-            {
-                [AbilitiesEnum.ALARM_TRAP] = 2,
-                [AbilitiesEnum.PUSH_TRAP] = 2,
-                [AbilitiesEnum.CAPTURE_TRAP] = 2
-            };
-        }
-
-        _trapsSetupTimeDictionary = new Dictionary<AbilitiesEnum, float>
-        {
-            [AbilitiesEnum.ALARM_TRAP] = _alarmTrapSetupTime,
-            [AbilitiesEnum.PUSH_TRAP] = _pushTrapSetupTime,
-            [AbilitiesEnum.CAPTURE_TRAP] = _captureTrapSetupTime,
-        };
-
-        _cooldownsDictionary = new Dictionary<AbilitiesEnum, float>
-        {
-            [AbilitiesEnum.WHISTLE] = _whistleCooldown,
-            [AbilitiesEnum.ALARM_TRAP] = _alarmTrapCooldown,
-            [AbilitiesEnum.PUSH_TRAP] = _pushTrapCooldown,
-            [AbilitiesEnum.CAPTURE_TRAP] = _captureTrapCooldown
-        };
-
-        _timersDictionary = new Dictionary<AbilitiesEnum, float>
-        {
-            [AbilitiesEnum.WHISTLE] = 0f,
-            [AbilitiesEnum.ALARM_TRAP] = 0f,
-            [AbilitiesEnum.PUSH_TRAP] = 0f,
-            [AbilitiesEnum.CAPTURE_TRAP] = 0f
-        };
+        InitializeAbilities();
     }
 
+    private void InitializeAbilities()
+    {
+        foreach (GameManager.TrapData _data in _trapsDict.Values)
+        {
+            _data.currentCount = _data.initialCount;
+            _pAbilitiesUI.UpdateAbilityCountText(_data.countText, _data.currentCount);
+        }
+    }
+    #endregion
+
+    #region Action Logic
     public void UpdateActionState(float deltaTime, Vector3 interactionPoint)
     {
-        List<KeyValuePair<AbilitiesEnum, float>> dictAsList = _timersDictionary.ToList();
+        // As we can not use a foreach - which is a numerator - to modify in place the content of a collection, we use a plain for loop
+        List<KeyValuePair<AbilitiesEnum, GameManager.TrapData>> _trapsDictAsList = _trapsDict.ToList();
 
-        for (int i = 0; i < _timersDictionary.Count; i++)
+        for (int i = 0; i < _trapsDictAsList.Count; i++)
         {
-            if (dictAsList[i].Value > 0)
-            {
-                _timersDictionary[dictAsList[i].Key] -= deltaTime;
-            }
+            if (_trapsDict[_trapsDictAsList[i].Key].timer > 0) { _trapsDict[_trapsDictAsList[i].Key].timer -= deltaTime; }
         }
+        //
+
+        if (_whistle.timer > 0) { _whistle.timer -= deltaTime; }
 
         if (_currentAbility != AbilitiesEnum.NONE && _currentAbility != AbilitiesEnum.WHISTLE)
         {
@@ -127,10 +87,10 @@ public class PlayerActions : MonoBehaviour
 
     public void DeselectAction()
     {
-        if (_currentCoroutine != null)
+        if (_trapSetupCoroutine != null)
         {
-            StopCoroutine(_currentCoroutine);
-            _currentCoroutine = null;
+            StopCoroutine(_trapSetupCoroutine);
+            _trapSetupCoroutine = null;
         }
         if (_currentTrap != null)
         {
@@ -143,11 +103,11 @@ public class PlayerActions : MonoBehaviour
 
     public void PerformWhistle(LayerMask gameAgentsMask)
     {
-        if (_currentAbility == AbilitiesEnum.WHISTLE && _timersDictionary[AbilitiesEnum.WHISTLE] <= 0)
+        if (_currentAbility == AbilitiesEnum.WHISTLE && _whistle.timer <= 0f)
         {
             // Play sound
             // Play Animation
-            Collider[] agents = Physics.OverlapSphere(transform.position, _whistleFleeDistance, gameAgentsMask);
+            Collider[] agents = Physics.OverlapSphere(transform.position, _whistle.whistleFleeRange, gameAgentsMask);
 
             if (agents.Length > 0)
             {
@@ -157,7 +117,7 @@ public class PlayerActions : MonoBehaviour
                     {
                         RobberCapture robber = collider.gameObject.GetComponent<RobberCapture>();
 
-                        if (Vector3.Distance(transform.position, collider.gameObject.transform.position) <= _whistleCaptureDistance)
+                        if (Vector3.Distance(transform.position, collider.gameObject.transform.position) <= _whistle.whistleCaptureRange)
                         {
                             robber.GetSifled(_playerControls.PlayerID, 25f);
                         }
@@ -168,15 +128,18 @@ public class PlayerActions : MonoBehaviour
                     }
                 }
             }
-            _timersDictionary[AbilitiesEnum.WHISTLE] += _cooldownsDictionary[AbilitiesEnum.WHISTLE];
+            _whistle.timer += _whistle.whistleCooldown;
+            _pAbilitiesUI.UpdateCooldownFill(_whistle.fillImage, _whistle.whistleCooldown);
             Debug.Log("Whistled");
         }
-        else if (_timersDictionary[AbilitiesEnum.WHISTLE] > 0)
+        else if (_currentAbility == AbilitiesEnum.WHISTLE && _whistle.timer > 0f)
         {
             Debug.Log(AbilitiesEnum.WHISTLE + " in cooldown !");
         }
     }
+    #endregion
 
+    #region Trap Logic
     public void PreviewTrap(AbilitiesEnum trap, Vector3 previewPosition, Node node)
     {
         if (_currentTrap != null)
@@ -185,7 +148,8 @@ public class PlayerActions : MonoBehaviour
         }
         else
         {
-            _currentTrap = Instantiate(_trapsDictionary[trap], previewPosition, Quaternion.identity, null);
+            _currentTrap = Instantiate(_trapsDict[trap].trapPrefab, previewPosition, Quaternion.identity, null);
+            _currentTrap.GetComponent<Collider>().enabled = false;
         }        
 
         try
@@ -210,29 +174,30 @@ public class PlayerActions : MonoBehaviour
     {
         if (_currentAbility != AbilitiesEnum.NONE && _currentAbility != AbilitiesEnum.WHISTLE)
         {
-            if (deployTrapAtNode.isFree && _trapsCountDictionary[_currentAbility] > 0 && _timersDictionary[_currentAbility] <= 0f)
+            GameManager.TrapData currentTrapData = _trapsDict[_currentAbility];
+
+            if (deployTrapAtNode.isFree && currentTrapData.currentCount > 0 && currentTrapData.timer <= 0)
             {
-                _currentCoroutine = StartCoroutine(TrapSetupTimer(_trapsSetupTimeDictionary[_currentAbility], deployTrapAtNode));
+                _trapSetupCoroutine = StartCoroutine(TrapSetupTimer(currentTrapData.setupTime, deployTrapAtNode));
                 Debug.Log("Trap deployment started");
                 return;
             }
-            if (!deployTrapAtNode.isFree)
+            if (currentTrapData.currentCount <= 0)
             {
-                Debug.Log("Node is already occupied");
+                _pAbilitiesUI.ShowWarning(currentTrapData.fillImage, _pAbilitiesUI.DefaultWarningTime, _pAbilitiesUI.DefaultWarningColor);
+                Debug.Log("No more " + _currentAbility + " left !");
             }
-            if (_timersDictionary[_currentAbility] > 0f)
-            {
-                Debug.Log(_currentAbility + " in cooldown ! time remaining: " + _timersDictionary[_currentAbility]);
-            }
+            if (!deployTrapAtNode.isFree) { Debug.Log("Node is already occupied"); }
+            if (currentTrapData.timer > 0) { Debug.Log(_currentAbility + " in cooldown !"); }
         }        
     }
 
     public void CancelTrapDeployment()
     {
-        if (_currentCoroutine != null)
+        if (_trapSetupCoroutine != null)
         {
-            StopCoroutine(_currentCoroutine);
-            _currentCoroutine = null;
+            StopCoroutine(_trapSetupCoroutine);
+            _trapSetupCoroutine = null;
             Debug.Log("Trap deployment canceled");
         }
     }
@@ -270,32 +235,41 @@ public class PlayerActions : MonoBehaviour
                 Debug.Log("Could not retrieve DynamicOutline script");
             }
 
-            TypeOfTrap trap = _currentTrap.GetComponentInChildren<TypeOfTrap>();
-            trap.TrapOwner = _playerControls.PlayerID;
-            _playerControls.GameGrid.UpdateNode(dropAtNode);
+            _currentTrap.GetComponent<Collider>().enabled = true;
+            _currentTrap.GetComponentInChildren<TypeOfTrap>().TrapOwner = _playerControls.PlayerID;
             _currentTrap = null;
-            _trapsCountDictionary[_currentAbility] -= 1;
-            _timersDictionary[_currentAbility] += _cooldownsDictionary[_currentAbility];
-            Debug.Log(_currentAbility + " set. Traps of type " + _currentAbility + " remaining: " + _trapsCountDictionary[_currentAbility]);
+            _playerControls.GameGrid.UpdateNode(dropAtNode);
+
+            GameManager.TrapData currentTrapData = _trapsDict[_currentAbility];
+            currentTrapData.currentCount -= 1;
+            _pAbilitiesUI.UpdateAbilityCountText(currentTrapData.countText, currentTrapData.currentCount);
+            currentTrapData.timer += currentTrapData.cooldown;
+            _pAbilitiesUI.UpdateCooldownFill(currentTrapData.fillImage, currentTrapData.cooldown);
             _currentAbility = AbilitiesEnum.NONE;
             return true;
         }
         Debug.Log("Failed to set " + _currentAbility);
         return false;
     }
+    #endregion
 
+    #region Coroutines
     IEnumerator TrapSetupTimer(float setupTime, Node trapAtNode)
     {
         yield return new WaitForSeconds(setupTime);
         DropTrap(trapAtNode);
     }
+    #endregion
 
     #region Gizmos
     public void OnDrawGizmos()
     {
-        Gizmos.color = Color.white;
-        Gizmos.DrawWireSphere(transform.position, _whistleFleeDistance);
-        Gizmos.DrawWireSphere(transform.position, _whistleCaptureDistance);
+        if (_whistle != null)
+        {
+            Gizmos.color = Color.white;
+            Gizmos.DrawWireSphere(transform.position, _whistle.whistleFleeRange);
+            Gizmos.DrawWireSphere(transform.position, _whistle.whistleCaptureRange);
+        }        
     }
     #endregion
 }

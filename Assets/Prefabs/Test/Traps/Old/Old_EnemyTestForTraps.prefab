@@ -296,7 +296,7 @@ GameObject:
   - component: {fileID: 3563813003675676386}
   - component: {fileID: 6319835258011833427}
   m_Layer: 8
-  m_Name: EnemyTestForTraps
+  m_Name: Old_EnemyTestForTraps
   m_TagString: ENEMY
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0

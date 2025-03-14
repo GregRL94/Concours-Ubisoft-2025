@@ -14,7 +14,7 @@ GameObject:
   - component: {fileID: 3766571656736979320}
   - component: {fileID: 7703012903370639125}
   m_Layer: 6
-  m_Name: 'CaptureTrap '
+  m_Name: Old_CaptureTrap
   m_TagString: TRAP
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
