@@ -15,7 +15,11 @@ public class MuseumObjectsManager : MonoBehaviour
 
     public MuseumObjects[] AllMuseumObjects => _allMuseumObjects;
 
-    // Start is called before the first frame update
+    public KeyCode stealInput;
+
+    public UIManager uiManager;
+
+
     void Start()
     {
         //we get all museum objects
@@ -26,37 +30,77 @@ public class MuseumObjectsManager : MonoBehaviour
         var objectTypes = Enum.GetValues(typeof(MuseumObjects.ObjectType));
         foreach (MuseumObjects.ObjectType objectType in objectTypes)
         {
-            //Debug.Log(objectType);
-            List<MuseumObjects> museumObjects = new List<MuseumObjects>();
-            for(int j = 0; j < _allMuseumObjects.Length; j++)
+            List<MuseumObjects> MuseumObjects = new List<MuseumObjects>();
+            for (int j = 0; j < _allMuseumObjects.Length; j++)
             {
                 if (_allMuseumObjects[j].MuseumObjectType != objectType)
                     continue;
-                /*{
-                    Debug.Log($"not {objectType} in index {j}, continue");
-                    continue;
-                }*/
-                
-                museumObjects.Add(_allMuseumObjects[j]);
+                MuseumObjects.Add(_allMuseumObjects[j]);
             }
-            MuseumObjects[] museumObjectsArray = museumObjects.ToArray();
-            museumObjectsArray.ToList();
-            _sortedObjects.Add(objectType, museumObjectsArray);
-            /*Debug.Log($"object type : {objectType} and list : {_sortedObjects.GetValueOrDefault(objectType)}");
-            Debug.Log($"all object in list : ");
-            foreach (MuseumObjects yes in _sortedObjects.GetValueOrDefault(objectType))
-            {
-                Debug.Log(yes.gameObject.name);
-            }
-            */
+            MuseumObjects[] MuseumObjectsArray = MuseumObjects.ToArray();
+            MuseumObjectsArray.ToList();
+            _sortedObjects.Add(objectType, MuseumObjectsArray);
+        }
+
+        uiManager.CreateListOfMuseumArtefactsUI(_sortedObjects);
+    }
+
+    void Update()
+    {
+
+        // todo: Debug for thief stealing artefacts (Randomizer)
+        if (Input.GetKeyDown(stealInput))
+        {
+            CheckArtefactStolen();
         }
     }
 
-    // Update is called once per frame
-    void Update()
+    public void CheckArtefactStolen()
     {
-        
+        if (_sortedObjects.Count == 0)
+        {
+            Debug.Log("Zero artefact to steal !");
+            return;
+        }
+
+        // Select a random key in dict -  A CHANGER POUR THOMAS (peut passer un type a laide d'un de tes AI script)!!!
+        MuseumObjects.ObjectType randomKey = _sortedObjects.Keys.ElementAt(UnityEngine.Random.Range(0, _sortedObjects.Count));
+
+        // Get objects[] of this category key
+        List<MuseumObjects> objectList = _sortedObjects[randomKey].ToList();
+
+        if (objectList.Count == 0)
+        {
+            Debug.Log($"No more artefact to steal in category (key) {randomKey}.");
+
+            return;
+        }
+
+        // Select a random index in the List 
+        int randomIndex = UnityEngine.Random.Range(0, objectList.Count);
+        MuseumObjects stolenObject = objectList[randomIndex];
+
+        // Remove oject to the List
+        objectList.RemoveAt(randomIndex);
+
+        // Update dictionary with List 
+        if (objectList.Count > 0)
+        {
+            _sortedObjects[randomKey] = objectList.ToArray();
+        }
+        else
+        {
+            // If List empty, delete key
+            _sortedObjects.Remove(randomKey);
+        }
+
+        Debug.Log($"Successfully ! Object Stolen : {stolenObject.name} in the  {randomKey} category.");
+
+        // Update UI List of Museum Artefacts
+        uiManager.UpdateListOfMuseumArtefacts(_sortedObjects);
     }
+
+
 
     public MuseumObjects[] GetObjectList(MuseumObjects.ObjectType objectType)
     {
