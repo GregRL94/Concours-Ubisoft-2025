@@ -19,11 +19,20 @@ public class BTNode
 
     public virtual Status Process()
     {
+        name = children[currentChild].name;
         return children[currentChild].Process();
     }
 
     public void AddChild(BTNode n)
     {
         children.Add(n);
+    }
+
+    public void Reset()
+    {
+        currentChild = 0;
+        foreach (BTNode n in children)
+            n.Reset();
+        
     }
 }

@@ -11,6 +11,7 @@ public class BTInverter : BTNode
 
     public override Status Process()
     {
+        name = children[currentChild].name;
         Status childstatus = children[0].Process();
         if (childstatus == Status.RUNNING) return Status.RUNNING;
         if (childstatus == Status.FAILURE)
