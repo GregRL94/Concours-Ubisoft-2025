@@ -12,7 +12,7 @@ GameObject:
   - component: {fileID: 2646560957171505299}
   - component: {fileID: 9135154254023023632}
   - component: {fileID: 2374686679235589369}
-  m_Layer: 5
+  m_Layer: 0
   m_Name: Canvas
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -113,7 +113,7 @@ GameObject:
   - component: {fileID: 3209081008124926412}
   - component: {fileID: 6451562464087146937}
   - component: {fileID: 9068570432166763980}
-  m_Layer: 5
+  m_Layer: 0
   m_Name: Indicateur (1)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -189,7 +189,7 @@ GameObject:
   - component: {fileID: 7470728487614340973}
   - component: {fileID: 5065975131926887332}
   - component: {fileID: 4470126901975182240}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: Direction
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -293,7 +293,7 @@ GameObject:
   - component: {fileID: 2276875864749485631}
   - component: {fileID: 3102070693659634927}
   - component: {fileID: 1495502181041455038}
-  m_Layer: 5
+  m_Layer: 0
   m_Name: Indicateur
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -374,7 +374,7 @@ GameObject:
   - component: {fileID: 1543242316697433222}
   - component: {fileID: 3566065139378272299}
   - component: {fileID: 3389639412683575569}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: Robber
   m_TagString: ENEMY
   m_Icon: {fileID: 0}
@@ -514,7 +514,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1c01e9e2e53eb0e44a8b75854ec6287a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _captureGauge: 0
+  _capturedLoseReputationValue: 1
   _isCaptured: 0
 --- !u!195 &3566065139378272299
 NavMeshAgent:

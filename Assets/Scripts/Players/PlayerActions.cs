@@ -30,7 +30,7 @@ public class PlayerActions : MonoBehaviour
         GameManager.TrapData pTBase = _gameManager.PushTrapBase;
         GameManager.TrapData cTBase = _gameManager.CaptureTrapBase;
         
-        _whistle = new GameManager.WhistleData(wBase.whistleFleeRange, wBase.whistleCaptureRange, wBase.whistleCooldown, _pAbilitiesUI.whistleFillImage);
+        _whistle = new GameManager.WhistleData(wBase.whistleFleeRange, wBase.whistleCaptureRange, wBase.whistleCapturePower, wBase.whistleCooldown, _pAbilitiesUI.whistleFillImage);
         _trapsDict = new Dictionary<AbilitiesEnum, GameManager.TrapData>
         {
             [AbilitiesEnum.ALARM_TRAP] = new GameManager.TrapData(aTBase.trapPrefab, aTBase.setupTime, aTBase.initialCount, aTBase.cooldown, _pAbilitiesUI.alarmTrapUI.countText, _pAbilitiesUI.alarmTrapUI.fillImage),
@@ -119,7 +119,7 @@ public class PlayerActions : MonoBehaviour
 
                         if (Vector3.Distance(transform.position, collider.gameObject.transform.position) <= _whistle.whistleCaptureRange)
                         {
-                            robber.GetSifled(_playerControls.PlayerID, 25f);
+                            robber.GetSifled(_playerControls.PlayerID, _whistle.whistleCapturePower);
                         }
                         else
                         {

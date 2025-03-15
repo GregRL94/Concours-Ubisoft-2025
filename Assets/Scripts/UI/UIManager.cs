@@ -4,6 +4,7 @@ using UnityEngine;
 using TMPro;
 using System;
 using UnityEngine.UI;
+using Unity.PlasticSCM.Editor.WebApi;
 
 public class UIManager : MonoBehaviour
 {
@@ -18,15 +19,20 @@ public class UIManager : MonoBehaviour
     public Image fillCaptureGaugeImage;
     public Image fillCaptureGaugeIconImage;
     [HideInInspector] public Coroutine captureThiefRoutine;
-
-    //todo: Debug - Thomas enleve et met tes var de reputation
-    int currentCaptureThiefAmount;// enleve thomas
-    const int maxCaptureThiefAmount = 100; // enleve thomas
+    
+    [Header("Metrics")]
+    [SerializeField]
+    const int maxCaptureThiefAmount = 100;
+    [Header("Debug")]
+    [SerializeField]
+    int currentCaptureThiefAmount;
+    public int GetCurrentCaptureThiefAmount => currentCaptureThiefAmount;
+    public int GetmaxCaptureThiefAmount => maxCaptureThiefAmount;
 
     void Start() { captureThiefText.text = currentCaptureThiefAmount + "/" + maxCaptureThiefAmount; }
 
     #region Update Museum Actefacts Checklist UI 
-    public void CreateListOfMuseumArtefactsUI(Dictionary<MuseumObjects.ObjectType, MuseumObjects[]> museumArtefactsDict)
+    public void CreateListOfMuseumArtefactsUI(Dictionary<ObjectType, MuseumObjects[]> museumArtefactsDict)
     {
         // Empty Parent Childs if not empty
         foreach (Transform child in Parent)
@@ -48,14 +54,14 @@ public class UIManager : MonoBehaviour
         }
     }
 
-    public void UpdateListOfMuseumArtefacts(Dictionary<MuseumObjects.ObjectType, MuseumObjects[]> museumArtefactsDict)
+    public void UpdateListOfMuseumArtefacts(Dictionary<ObjectType, MuseumObjects[]> museumArtefactsDict)
     {
         foreach (var artefactObj in artefactNameCollection) // Looping through all the gameobject artefacts created
         {
             string artefactName = artefactObj.name;
 
             // Verify if artifact name exist in the enum category
-            if (Enum.TryParse(artefactName, out MuseumObjects.ObjectType artefactType)) 
+            if (Enum.TryParse(artefactName, out ObjectType artefactType)) 
             {
                 int amount = 0; // Consider that amount = 0 for each artefact name
 
@@ -85,16 +91,6 @@ public class UIManager : MonoBehaviour
     #endregion
     
     #region Update Capture Thief UI
-    void Update()
-    {
-        // Todo: Debug-> Update Thief Bar UI after falling into a trap
-        if (Input.GetKeyDown(KeyCode.Z))
-        {
-            int randNumber = UnityEngine.Random.Range(1,16);
-            UpdateCaptureThiefGauge(randNumber);
-        }
-    }
-
     public void UpdateCaptureThiefGauge(int amount)
     {
         float previousAmount = currentCaptureThiefAmount;

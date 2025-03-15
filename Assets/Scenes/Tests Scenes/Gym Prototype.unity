@@ -1612,6 +1612,7 @@ MonoBehaviour:
   captureGaugeFillTime: 0
   fillCaptureGaugeImage: {fileID: 253500788}
   fillCaptureGaugeIconImage: {fileID: 253500787}
+  currentCaptureThiefAmount: 0
 --- !u!4 &453285057
 Transform:
   m_ObjectHideFlags: 0
@@ -5609,6 +5610,11 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 1308096671972412955, guid: 0fc8b0361f3adb04f9da3a1279eaf35d,
         type: 3}
+      propertyPath: _uiManager
+      value: 
+      objectReference: {fileID: 453285056}
+    - target: {fileID: 1308096671972412955, guid: 0fc8b0361f3adb04f9da3a1279eaf35d,
+        type: 3}
       propertyPath: pushTrapBase.cooldown
       value: 4
       objectReference: {fileID: 0}
@@ -5679,6 +5685,11 @@ PrefabInstance:
         type: 3}
       propertyPath: whistleBase.whistleFleeRange
       value: 4
+      objectReference: {fileID: 0}
+    - target: {fileID: 1308096671972412955, guid: 0fc8b0361f3adb04f9da3a1279eaf35d,
+        type: 3}
+      propertyPath: whistleBase.whistleCapturePower
+      value: 10
       objectReference: {fileID: 0}
     - target: {fileID: 1308096671972412955, guid: 0fc8b0361f3adb04f9da3a1279eaf35d,
         type: 3}
