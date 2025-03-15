@@ -53,16 +53,18 @@ public class GameManager : MonoBehaviour
     {
         [Range(0f, 5f)] public float whistleFleeRange;
         [Range(0f, 5f)] public float whistleCaptureRange;
+        [Range(0f, 100f)] public int whistleCapturePower;
         [Range(0f, 10f)] public float whistleCooldown;
         [HideInInspector] public Image fillImage;
         [HideInInspector] public float timer;
 
         public WhistleData() {}
 
-        public WhistleData(float whistleFleeRange, float whistleCaptureRange, float whistleCooldown, Image fillImage)
+        public WhistleData(float whistleFleeRange, float whistleCaptureRange, int whistleCapturePower, float whistleCooldown, Image fillImage)
         {
             this.whistleFleeRange = whistleFleeRange;
             this.whistleCaptureRange = whistleCaptureRange;
+            this.whistleCapturePower = whistleCapturePower;
             this.whistleCooldown = whistleCooldown;
             this.fillImage = fillImage;
         }
