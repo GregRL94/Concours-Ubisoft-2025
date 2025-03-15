@@ -8,12 +8,12 @@ using UnityEngine;
 public class MuseumObjectsManager : MonoBehaviour
 {
     [SerializeField]
-    private MuseumObjects[] _allMuseumObjects;
+    private List<MuseumObjects> _allMuseumObjects;
 
     [SerializeField]
-    private Dictionary<MuseumObjects.ObjectType, MuseumObjects[]> _sortedObjects = new Dictionary<MuseumObjects.ObjectType, MuseumObjects[]>();
+    private Dictionary<ObjectType, MuseumObjects[]> _sortedObjects = new Dictionary<ObjectType, MuseumObjects[]>();
 
-    public MuseumObjects[] AllMuseumObjects => _allMuseumObjects;
+    public List<MuseumObjects> AllMuseumObjects => _allMuseumObjects;
 
     public KeyCode stealInput;
 
@@ -23,15 +23,15 @@ public class MuseumObjectsManager : MonoBehaviour
     void Start()
     {
         //we get all museum objects
-        _allMuseumObjects = FindObjectsOfType<MuseumObjects>();
+        _allMuseumObjects = FindObjectsOfType<MuseumObjects>().ToList();
 
         //We sort all objects
         //and we assign them to dictionnary
-        var objectTypes = Enum.GetValues(typeof(MuseumObjects.ObjectType));
-        foreach (MuseumObjects.ObjectType objectType in objectTypes)
+        var objectTypes = Enum.GetValues(typeof(ObjectType));
+        foreach (ObjectType objectType in objectTypes)
         {
             List<MuseumObjects> MuseumObjects = new List<MuseumObjects>();
-            for (int j = 0; j < _allMuseumObjects.Length; j++)
+            for (int j = 0; j < _allMuseumObjects.Count; j++)
             {
                 if (_allMuseumObjects[j].MuseumObjectType != objectType)
                     continue;
@@ -45,16 +45,7 @@ public class MuseumObjectsManager : MonoBehaviour
         uiManager.CreateListOfMuseumArtefactsUI(_sortedObjects);
     }
 
-    void Update()
-    {
-        // todo: Debug - Thomas for thief stealing artefacts (Randomizer)
-        if (Input.GetKeyDown(stealInput))
-        {
-            CheckArtefactStolen();
-        }
-    }
-
-    public void CheckArtefactStolen()
+    public void CheckArtefactStolen(MuseumObjects objectStolen)
     {
         if (_sortedObjects.Count == 0)
         {
@@ -62,38 +53,30 @@ public class MuseumObjectsManager : MonoBehaviour
             return;
         }
 
-        // Select a random key in dict -  A CHANGER POUR THOMAS (peut passer un type a laide d'un de tes AI script)!!!
-        MuseumObjects.ObjectType randomKey = _sortedObjects.Keys.ElementAt(UnityEngine.Random.Range(0, _sortedObjects.Count));
-
-        // Get objects[] of this category key
-        List<MuseumObjects> objectList = _sortedObjects[randomKey].ToList();
+        List<MuseumObjects> objectList = _sortedObjects[objectStolen.MuseumObjectType].ToList();
 
         if (objectList.Count == 0)
         {
-            Debug.Log($"No more artefact to steal in category (key) {randomKey}.");
+            Debug.Log($"No more artefact to steal in category (key) {objectStolen.MuseumObjectType}.");
 
             return;
         }
 
-        // Select a random index in the List 
-        int randomIndex = UnityEngine.Random.Range(0, objectList.Count);
-        MuseumObjects stolenObject = objectList[randomIndex];
-
-        // Remove oject to the List
-        objectList.RemoveAt(randomIndex);
-
+        // Remove object to the List
+        objectList.Remove(objectStolen);
+        _allMuseumObjects.Remove(objectStolen);
         // Update dictionary with List 
         if (objectList.Count > 0)
         {
-            _sortedObjects[randomKey] = objectList.ToArray();
+            _sortedObjects[objectStolen.MuseumObjectType] = objectList.ToArray();
         }
         else
         {
             // If List empty, delete key
-            _sortedObjects.Remove(randomKey);
+            _sortedObjects.Remove(objectStolen.MuseumObjectType);
         }
 
-        Debug.Log($"Successfully ! Object Stolen : {stolenObject.name} in the  {randomKey} category.");
+        Debug.Log($"Successfully ! Object Stolen : {objectStolen.name} in the  {objectStolen.MuseumObjectType} category.");
 
         // Update UI List of Museum Artefacts
         uiManager.UpdateListOfMuseumArtefacts(_sortedObjects);
@@ -101,7 +84,7 @@ public class MuseumObjectsManager : MonoBehaviour
 
 
 
-    public MuseumObjects[] GetObjectList(MuseumObjects.ObjectType objectType)
+    public MuseumObjects[] GetObjectList(ObjectType objectType)
     {
         return _sortedObjects.GetValueOrDefault(objectType);
     }

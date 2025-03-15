@@ -66,7 +66,16 @@ public class GameManager : MonoBehaviour
             this.whistleCooldown = whistleCooldown;
             this.fillImage = fillImage;
         }
-    }    
+    }
+    [Header("ALL MANAGERS")]
+    [SerializeField]
+    private MuseumObjectsManager _museumObjectManager;
+    [SerializeField]
+    private RobberManager _robberManager;
+    [SerializeField]
+    private TrapManager _trapManager;
+    [SerializeField]
+    private UIManager _uiManager;
 
     [Header("Metrics")]
     [SerializeField]
@@ -98,19 +107,13 @@ public class GameManager : MonoBehaviour
     private PlayerControls[] _players;
     [SerializeField]
     private PlayerReputation[] _playersReputation;
-
-    [SerializeField]
-    private MuseumObjectsManager _museumObjectManager;
-    [SerializeField]
-    private RobberManager _robberManager;
-    [SerializeField]
-    private TrapManager _trapManager;
     
     //getter
     public PlayerControls[] Players => _players;
     public MuseumObjectsManager MuseumObjectsManager => _museumObjectManager;
     public RobberManager RobberManager => _robberManager;
     public TrapManager TrapManager => _trapManager;
+    public UIManager UIManager => _uiManager;
 
 
     public static GameManager Instance;
