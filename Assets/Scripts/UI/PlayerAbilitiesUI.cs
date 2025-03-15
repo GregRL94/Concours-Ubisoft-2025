@@ -79,6 +79,7 @@ public class PlayerAbilitiesUI : MonoBehaviour
 
     [SerializeField] private Color defaultWarningColor = Color.white;
     public Color DefaultWarningColor => defaultWarningColor;
+
     #region Update Text UI 
     public void UpdateAbilityCountText(TextMeshProUGUI countText, int count)
     {

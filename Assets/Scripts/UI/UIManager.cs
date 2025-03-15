@@ -41,7 +41,7 @@ public class UIManager : MonoBehaviour
             newObject.name = kvp.Key.ToString(); 
             artefactNameCollection.Add(newObject);
             TextMeshProUGUI textComponent = newObject.GetComponent<TextMeshProUGUI>();
-            if (textComponent != null)
+            if (textComponent != null && kvp.Value.Length > 0)
             {
                 textComponent.text = $"- {kvp.Key} {kvp.Value.Length}X";
             }
@@ -87,7 +87,7 @@ public class UIManager : MonoBehaviour
     #region Update Capture Thief UI
     void Update()
     {
-        // Todo: Debug-> Update Thief Bar UI after falling into a trap
+        // Todo: Debug - Thomas Update Thief Bar UI after falling into a trap
         if (Input.GetKeyDown(KeyCode.Z))
         {
             int randNumber = UnityEngine.Random.Range(1,16);

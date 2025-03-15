@@ -47,8 +47,7 @@ public class MuseumObjectsManager : MonoBehaviour
 
     void Update()
     {
-
-        // todo: Debug for thief stealing artefacts (Randomizer)
+        // todo: Debug - Thomas for thief stealing artefacts (Randomizer)
         if (Input.GetKeyDown(stealInput))
         {
             CheckArtefactStolen();
