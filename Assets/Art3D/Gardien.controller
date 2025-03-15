@@ -199,7 +199,7 @@ AnimatorController:
     m_Type: 4
     m_DefaultFloat: 0
     m_DefaultInt: 0
-    m_DefaultBool: 0
+    m_DefaultBool: 1
     m_Controller: {fileID: 9100000}
   - m_Name: Siffle
     m_Type: 9
@@ -432,8 +432,8 @@ AnimatorStateMachine:
   m_StateMachineTransitions: {}
   m_StateMachineBehaviours: []
   m_AnyStatePosition: {x: 250, y: -190, z: 0}
-  m_EntryPosition: {x: 630, y: 110, z: 0}
-  m_ExitPosition: {x: -100, y: 130, z: 0}
+  m_EntryPosition: {x: 570, y: 120, z: 0}
+  m_ExitPosition: {x: 50, y: 160, z: 0}
   m_ParentStateMachinePosition: {x: 800, y: 20, z: 0}
   m_DefaultState: {fileID: 6117832923700620109}
 --- !u!1101 &7950348894812572422
