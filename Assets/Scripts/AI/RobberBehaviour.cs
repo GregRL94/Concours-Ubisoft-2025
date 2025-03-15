@@ -22,7 +22,7 @@ public class RobberBehaviour : BTAgent
     [SerializeField, Tooltip("Robber stealing range")]
     private float _stealRange = 2f;
     [SerializeField, Tooltip("Robber stealing list")]
-    private List<MuseumObjects.ObjectType> _stealingList;
+    private List<ObjectType> _stealingList;
     
     [SerializeField]
     private GameObject _indicator;
@@ -172,9 +172,10 @@ public class RobberBehaviour : BTAgent
             state = ActionState.IDLE;
 
             //steal object
-            Debug.Log($"{_currentTargetObject.MuseumObjectType} STEALED !");
+            GameManager.Instance.MuseumObjectsManager.CheckArtefactStolen(_currentTargetObject);
+            
             GameManager.Instance.LosePlayerReputation(_currentTargetObject.ObjectOwner, 1);
-            _currentTargetObject.gameObject.SetActive(false);
+            Destroy(_currentTargetObject.gameObject);
             _currentTargetObject = null;
             _stealingList.RemoveAt(0);
             StopVunerableState();
