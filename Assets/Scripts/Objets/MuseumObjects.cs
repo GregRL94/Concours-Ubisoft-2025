@@ -4,14 +4,6 @@ using UnityEngine;
 
 public class MuseumObjects : MonoBehaviour
 {
-    public enum ObjectType
-    {
-        PAINTING,
-        JEWELRY,
-        VASE,
-        SCULPTURE
-    }
-
     [Header("Metrics")]
     [SerializeField, Tooltip("Owner of object")]
     protected PlayerEnum _objectOwner;
