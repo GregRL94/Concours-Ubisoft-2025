@@ -65,10 +65,10 @@ public class PlayerActions : MonoBehaviour
 
         if (_whistle.timer > 0) { _whistle.timer -= deltaTime; }
 
-        if (_currentAbility != AbilitiesEnum.NONE && _currentAbility != AbilitiesEnum.WHISTLE)
-        {
-            PreviewTrap(_currentAbility, interactionPoint, _playerControls.GameGrid.NodeFromWorldPos(interactionPoint));
-        }
+        if (_currentAbility == AbilitiesEnum.NONE || _currentAbility == AbilitiesEnum.WHISTLE) { return; }
+        if (_trapsDict[_currentAbility].currentCount <= 0 ) { return; }
+
+        PreviewTrap(_currentAbility, interactionPoint, _playerControls.GameGrid.NodeFromWorldPos(interactionPoint));
     }
 
     public void SelectAction(AbilitiesEnum selectedAbility)
@@ -155,7 +155,7 @@ public class PlayerActions : MonoBehaviour
         try
         {
             DynamicOutline outline = _currentTrap.GetComponent<DynamicOutline>();
-            if (node.isFree)
+            if (node.isFree && node.playerZone == _playerControls.PlayerID)
             {
                 outline.SetOutlineValid();
             }
@@ -171,25 +171,19 @@ public class PlayerActions : MonoBehaviour
     }
 
     public void StartTrapDeployment(Node deployTrapAtNode)
-    {
-        if (_currentAbility != AbilitiesEnum.NONE && _currentAbility != AbilitiesEnum.WHISTLE)
+    {        
+        if (_currentAbility == AbilitiesEnum.NONE || _currentAbility == AbilitiesEnum.WHISTLE) { return; }
+        GameManager.TrapData currentTrapData = _trapsDict[_currentAbility];
+        if (currentTrapData.currentCount <= 0 || currentTrapData.timer > 0) 
         {
-            GameManager.TrapData currentTrapData = _trapsDict[_currentAbility];
+            _pAbilitiesUI.ShowWarning(currentTrapData.fillImage, _pAbilitiesUI.DefaultWarningTime, _pAbilitiesUI.DefaultWarningColor);
+            return;
+        }
+        if (!deployTrapAtNode.isFree || deployTrapAtNode.playerZone != _playerControls.PlayerID) { return; }
 
-            if (deployTrapAtNode.isFree && currentTrapData.currentCount > 0 && currentTrapData.timer <= 0)
-            {
-                _trapSetupCoroutine = StartCoroutine(TrapSetupTimer(currentTrapData.setupTime, deployTrapAtNode));
-                Debug.Log("Trap deployment started");
-                return;
-            }
-            if (currentTrapData.currentCount <= 0)
-            {
-                _pAbilitiesUI.ShowWarning(currentTrapData.fillImage, _pAbilitiesUI.DefaultWarningTime, _pAbilitiesUI.DefaultWarningColor);
-                Debug.Log("No more " + _currentAbility + " left !");
-            }
-            if (!deployTrapAtNode.isFree) { Debug.Log("Node is already occupied"); }
-            if (currentTrapData.timer > 0) { Debug.Log(_currentAbility + " in cooldown !"); }
-        }        
+        _trapSetupCoroutine = StartCoroutine(TrapSetupTimer(currentTrapData.setupTime, deployTrapAtNode));
+        Debug.Log("Trap deployment started");
+        return;
     }
 
     public void CancelTrapDeployment()
