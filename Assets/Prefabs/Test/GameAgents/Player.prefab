@@ -327,20 +327,20 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 26e65dbfefde6ad4f91c606a8acfac9f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  speed: 6
-  rotationSpeed: 8
-  playerID: 1
-  raycastStartDistance: 0.52
-  interactionDistance: 2
-  gameAgentsMask:
+  _speed: 5
+  _rotationSpeed: 8
+  _playerID: 0
+  _raycastStartDistance: 0.52
+  _interactionDistance: 2
+  _gameAgentsMask:
     serializedVersion: 2
     m_Bits: 64
-  rJoystickUPBind: 2
-  rJoystickDOWNBind: 1
-  rJoystickLEFTBind: 3
-  rJoystickRIGHTBind: 4
-  drawGizmos: 1
-  pointsRadii: 0.25
+  _rJoystickUPBind: 2
+  _rJoystickDOWNBind: 1
+  _rJoystickLEFTBind: 3
+  _rJoystickRIGHTBind: 4
+  _drawGizmos: 1
+  _pointsRadii: 0.25
 --- !u!114 &4603702753971812300
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -365,6 +365,16 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e5cd05565b260dd419ee38e657e99d59, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  alarmTrapUI:
+    countText: {fileID: 0}
+    fillImage: {fileID: 0}
+  pushTrapUI:
+    countText: {fileID: 0}
+    fillImage: {fileID: 0}
+  captureTrapUI:
+    countText: {fileID: 0}
+    fillImage: {fileID: 0}
+  whistleFillImage: {fileID: 0}
   defaultWarningTime: 0.3
   defaultWarningColor: {r: 1, g: 1, b: 1, a: 1}
 --- !u!1 &6093196710959670524
