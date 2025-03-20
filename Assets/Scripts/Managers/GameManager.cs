@@ -133,8 +133,9 @@ public class GameManager : MonoBehaviour
     void Start()
     {
         InitializePlayers();
+        UIManager.CreatePlayersReputationUI(_maxPlayersReputation);
 
-        //start gameplay loop
+        // start gameplay loop
         _preStartRoundCoroutine = StartCoroutine(PreStartRound(_roundsParameter.timeBeforeRoundStart));
     }
 
@@ -186,14 +187,23 @@ public class GameManager : MonoBehaviour
     //if one player lose all his reputation and the other is alone, end the game
     public void LosePlayerReputation(PlayerEnum playerIndex, int loseValue)
     {
+        print("############ LosePlayerReputation ############");
         int index = (int)playerIndex;
         if (index < 0) return;
         if (index > _players.Length) return;
         _playersReputation[index - 1].reputationValue -= loseValue;
         Debug.Log($"{_players[index - 1].name} has lose {loseValue}, and is now at {_playersReputation[index - 1].reputationValue} reputation !");
-        if (_playersReputation[index - 1].reputationValue > 0) return;
-        _playersReputation[index - 1].isEliminated = true;
-        CheckPlayersElimination();
+        //UI Update for Player reputation
+        UIManager.UpdatePlayersReputationUI(index, _playersReputation, _maxPlayersReputation);
+
+        //if (_playersReputation[index - 1].reputationValue > 0) return;
+        //_playersReputation[index - 1].isEliminated = true;
+
+
+
+        //CheckPlayersElimination();
+
+        print("############ LosePlayerReputation End ############");
     }
 
     //make all other players lose reputation

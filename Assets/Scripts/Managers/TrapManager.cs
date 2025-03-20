@@ -139,13 +139,14 @@ public class TrapManager : MonoBehaviour
 
     private IEnumerator RunAwayDelay()
     {
+        //Run Away for RobberBehaviour
+        robberCapture?.GetSifled(PlayerEnum.NONE, 10);
+
         yield return new WaitForSeconds(timeTillAlarmIndicatorAppear);
         Destroy(alarmTrap);
         if (_indicator == null) yield break;
         _indicator?.SetActive(true);
 
-        //Run Away for RobberBehaviour
-        robberCapture?.GetSifled(PlayerEnum.NONE, 10);
 
         // Optional - Reaction to alarm -> Turning right to left
         /*yield return new WaitForSeconds(0.5f);
@@ -237,11 +238,14 @@ public class TrapManager : MonoBehaviour
         Vector3 pushDirection = _agent.transform.forward * pushDistance; 
         _rb?.AddForce(pushDirection , ForceMode.Impulse); 
 
+        
         StartCoroutine(StunAfterPush());
     }
 
     IEnumerator StunAfterPush()
     {
+        robberCapture?.GetSifled(PlayerEnum.NONE, 20);
+        
         yield return new WaitForSeconds(timeTillPushIndicatorAppear);
         if(_indicator == null)yield break;
         _indicator?.SetActive(true);
@@ -269,7 +273,6 @@ public class TrapManager : MonoBehaviour
         else yield break;
 
         _indicator?.SetActive(false);
-        robberCapture?.GetSifled(PlayerEnum.NONE, 20);
     }
     #endregion
   
@@ -278,7 +281,6 @@ public class TrapManager : MonoBehaviour
     {
         // Disable collider, movement and reset velocity to zero
         captureTrap.GetComponent</*CapsuleCollider*/Collider>().enabled = false;
-
         if (_agent != null)
         {
             _agent.isStopped = true;
@@ -294,6 +296,8 @@ public class TrapManager : MonoBehaviour
 
     IEnumerator StunFromCapture()
     {
+        robberCapture?.GetSifled(PlayerEnum.NONE, 1);
+        
         yield return new WaitForSeconds(timeTillCaptureIndicatorAppear);
         if(_indicator == null) yield break;
         _indicator?.SetActive(true);
