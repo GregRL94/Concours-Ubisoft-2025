@@ -242,19 +242,17 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4a088af894339c84aad9537b3cd32fa9, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _proximityDetection: 4
-  _visionConeRange: 4
-  _visionConeAngle: 15
   _obstaclesMask:
     serializedVersion: 2
     m_Bits: 0
   _gameAgentsMask:
     serializedVersion: 2
     m_Bits: 0
-  _rotation: 0.25
-  _nbRays: 4
-  _offset: 0.5
-  _elevationSteps: 2
+  _radius: 3
+  _visionConeRange: 6
+  _visionConeAngle: 25
+  _numberOfRays: 4
+  _offset: 0.51
 --- !u!1 &230452929
 GameObject:
   m_ObjectHideFlags: 0

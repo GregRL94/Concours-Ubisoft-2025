@@ -6,20 +6,20 @@ using UnityEngine;
 
 public class PlayerVision : MonoBehaviour
 {
-    [Header("PROXIMITY DETECTION")]
-    [SerializeField] private float _proximityDetection;
-    [Space]
-    [Header("VISION CONE")]
-    [SerializeField] private float _visionConeRange;
-    [SerializeField] private float _visionConeAngle;
-    [Space]
-    [Header("DETECTION RAYS")]
+    [Header("LAYER MASKS")]
     [SerializeField] LayerMask _obstaclesMask;
     [SerializeField] LayerMask _gameAgentsMask;
-    [SerializeField, Range(0f, 1f)] private float _rotation;
-    [SerializeField] private int _nbRays;
+    [Space]
+    [Header("PROXIMITY DETECTION")]
+    [SerializeField, Range(0f, 5f)] private float _radius;
+    [Space]
+    [Header("VISION CONE")]
+    [SerializeField, Range(0f, 20f)] private float _visionConeRange;
+    [SerializeField, Range(0f, 360f)] private float _visionConeAngle;
+    [Space]
+    [Header("DETECTION RAYS")]
+    [SerializeField] int _numberOfRays;
     [SerializeField] private float _offset;
-    [SerializeField] private int _elevationSteps;
 
 
     private List<Vector3> _detectionPointsList;
@@ -28,47 +28,81 @@ public class PlayerVision : MonoBehaviour
     void Start()
     {
         _detectionPointsList = new List<Vector3>();
-        float stepElevationAngle = Mathf.Deg2Rad * (_visionConeAngle / _elevationSteps);
+        float startAngle = Mathf.Deg2Rad * (-_visionConeAngle / 2);
+        float stepAngle = Mathf.Deg2Rad * (_visionConeAngle / _numberOfRays);
+        float currentAngle = startAngle;
 
-        for (int i = 0; i <= _elevationSteps; i++)
+        for (int i = 0; i <= _numberOfRays; i++)
         {
-            float currentElevation = i * stepElevationAngle;
+            float posX = Mathf.Sin(currentAngle);
+            float posZ = Mathf.Cos(currentAngle);
 
-            for (int j = 0; j < _nbRays; j++)
-            {
-                float currentAngle = j * 2 * Mathf.PI * _rotation;
-                float detectionPointX = Mathf.Sin(currentElevation) * Mathf.Cos(currentAngle);
-                float detectionPointY = Mathf.Sin(currentElevation) * Mathf.Sin(currentAngle);
-                float detectionPointZ = Mathf.Acos(currentElevation);
+            currentAngle += stepAngle;
 
-                Vector3 dir = transform.TransformDirection(new Vector3(detectionPointX, detectionPointY, detectionPointZ));
-
-                _detectionPointsList.Add(dir);
-            }
+            Vector3 dir = transform.TransformDirection(new Vector3(posX, 0f, posZ));
+            _detectionPointsList.Add(dir);
         }
     }
 
     // Update is called once per frame
     void Update()
     {
-       foreach(Vector3 dir in _detectionPointsList)
+        foreach (Vector3 dir in _detectionPointsList)
         {
             Ray ray = new Ray(transform.position + dir * _offset, dir);
             RaycastHit hit;
 
             if (Physics.Raycast(ray, out hit, _visionConeRange, _obstaclesMask))
             {
-                Debug.DrawRay(transform.position + dir * _offset, dir, Color.red);
+                Debug.DrawRay(transform.position + dir * _offset, dir * _visionConeRange, Color.red);
             }
             else
             {
-                Debug.DrawRay(transform.position + dir * _offset, dir, Color.green);
-            }            
+                Debug.DrawRay(transform.position + dir * _offset, dir * _visionConeRange, Color.green);
+            }
         }
+    }
+
+    private List<Vector3> SetupRaycastsDirections()
+    {
+        List<Vector3> directions = new List<Vector3>();
+
+        float startAngle = Mathf.Deg2Rad * (-_visionConeAngle / 2);
+        float stepAngle = Mathf.Deg2Rad * (_visionConeAngle / _numberOfRays);
+        float currentAngle = startAngle;
+
+        for (int i = 0; i <= _numberOfRays; i++)
+        {
+            float posX = Mathf.Sin(currentAngle);
+            float posZ = Mathf.Cos(currentAngle);
+
+            currentAngle += stepAngle;
+
+            Vector3 dir = transform.TransformDirection(new Vector3(posX, 0f, posZ));
+            directions.Add(dir);
+        }
+
+        return directions;
     }
 
     public void OnDrawGizmos()
     {
-       
+        float startAngle = Mathf.Deg2Rad * (-_visionConeAngle / 2);
+        float stepAngle = Mathf.Deg2Rad * (_visionConeAngle / _numberOfRays);
+        float currentAngle = startAngle;
+
+        Gizmos.color = Color.green;
+        Gizmos.DrawWireSphere(transform.position, _radius);
+
+        //for (int i = 0; i <= _numberOfRays; i++)
+        //{
+        //    float posX = Mathf.Sin(currentAngle);
+        //    float posZ = Mathf.Cos(currentAngle);
+
+        //    currentAngle += stepAngle;
+
+        //    Vector3 dir = transform.TransformDirection(new Vector3(posX, 0f, posZ));
+        //    Gizmos.DrawLine(transform.position + dir * _offset, transform.position + dir * _visionConeRange);
+        //}
     }
 }
