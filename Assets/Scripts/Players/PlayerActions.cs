@@ -3,7 +3,6 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
-using UnityEngine.UI;
 
 public class PlayerActions : MonoBehaviour
 {
@@ -65,24 +64,22 @@ public class PlayerActions : MonoBehaviour
 
         if (_whistle.timer > 0) { _whistle.timer -= deltaTime; }
 
-        if (_currentAbility != AbilitiesEnum.NONE && _currentAbility != AbilitiesEnum.WHISTLE)
-        {
-            PreviewTrap(_currentAbility, interactionPoint, _playerControls.GameGrid.NodeFromWorldPos(interactionPoint));
-        }
+        if (_currentAbility == AbilitiesEnum.NONE || _currentAbility == AbilitiesEnum.WHISTLE) { return; }
+        if (_trapsDict[_currentAbility].currentCount <= 0 ) { return; }
+
+        PreviewTrap(_currentAbility, interactionPoint, _playerControls.GameGrid.NodeFromWorldPos(interactionPoint));
     }
 
     public void SelectAction(AbilitiesEnum selectedAbility)
     {
-        if (!(_currentAbility == selectedAbility))
+        if(_currentAbility == selectedAbility) { return; }
+        if (_currentTrap != null)
         {
-            if (_currentTrap != null)
-            {
-                Destroy(_currentTrap);
-                _currentTrap = null;
-            }
-            _currentAbility = selectedAbility;
-            Debug.Log(_currentAbility);
-        }       
+            Destroy(_currentTrap);
+            _currentTrap = null;
+        }
+        _currentAbility = selectedAbility;
+        Debug.Log(_currentAbility);
     }
 
     public void DeselectAction()
@@ -103,39 +100,32 @@ public class PlayerActions : MonoBehaviour
 
     public void PerformWhistle(LayerMask gameAgentsMask)
     {
-        if (_currentAbility == AbilitiesEnum.WHISTLE && _whistle.timer <= 0f)
+        if (_currentAbility != AbilitiesEnum.WHISTLE || _whistle.timer > 0f) { return; }
+        // Play sound
+        // Play Animation
+        Collider[] agents = Physics.OverlapSphere(transform.position, _whistle.whistleFleeRange, gameAgentsMask);
+
+        if (agents.Length > 0)
         {
-            // Play sound
-            // Play Animation
-            Collider[] agents = Physics.OverlapSphere(transform.position, _whistle.whistleFleeRange, gameAgentsMask);
-
-            if (agents.Length > 0)
+            foreach (Collider collider in agents)
             {
-                foreach (Collider collider in agents)
+                if (collider.gameObject.CompareTag("ENEMY"))
                 {
-                    if (collider.gameObject.CompareTag("ENEMY"))
-                    {
-                        RobberCapture robber = collider.gameObject.GetComponent<RobberCapture>();
+                    RobberCapture robber = collider.gameObject.GetComponent<RobberCapture>();
 
-                        if (Vector3.Distance(transform.position, collider.gameObject.transform.position) <= _whistle.whistleCaptureRange)
-                        {
-                            robber.GetSifled(_playerControls.PlayerID, _whistle.whistleCapturePower);
-                        }
-                        else
-                        {
-                            robber.GetSifled(_playerControls.PlayerID, 0f);
-                        }
+                    if (Vector3.Distance(transform.position, collider.gameObject.transform.position) <= _whistle.whistleCaptureRange)
+                    {
+                        robber.GetSifled(_playerControls.PlayerID, _whistle.whistleCapturePower);
+                    }
+                    else
+                    {
+                        robber.GetSifled(_playerControls.PlayerID, 0f);
                     }
                 }
             }
-            _whistle.timer += _whistle.whistleCooldown;
-            _pAbilitiesUI.UpdateCooldownFill(_whistle.fillImage, _whistle.whistleCooldown);
-            Debug.Log("Whistled");
         }
-        else if (_currentAbility == AbilitiesEnum.WHISTLE && _whistle.timer > 0f)
-        {
-            Debug.Log(AbilitiesEnum.WHISTLE + " in cooldown !");
-        }
+        _whistle.timer += _whistle.whistleCooldown;
+        _pAbilitiesUI.UpdateCooldownFill(_whistle.fillImage, _whistle.whistleCooldown);
     }
     #endregion
 
@@ -155,7 +145,7 @@ public class PlayerActions : MonoBehaviour
         try
         {
             DynamicOutline outline = _currentTrap.GetComponent<DynamicOutline>();
-            if (node.isFree)
+            if (node.isFree && node.playerZone == _playerControls.PlayerID)
             {
                 outline.SetOutlineValid();
             }
@@ -171,35 +161,28 @@ public class PlayerActions : MonoBehaviour
     }
 
     public void StartTrapDeployment(Node deployTrapAtNode)
-    {
-        if (_currentAbility != AbilitiesEnum.NONE && _currentAbility != AbilitiesEnum.WHISTLE)
-        {
-            GameManager.TrapData currentTrapData = _trapsDict[_currentAbility];
+    {        
+        if (_currentAbility == AbilitiesEnum.NONE || _currentAbility == AbilitiesEnum.WHISTLE) { return; }
 
-            if (deployTrapAtNode.isFree && currentTrapData.currentCount > 0 && currentTrapData.timer <= 0)
-            {
-                _trapSetupCoroutine = StartCoroutine(TrapSetupTimer(currentTrapData.setupTime, deployTrapAtNode));
-                Debug.Log("Trap deployment started");
-                return;
-            }
-            if (currentTrapData.currentCount <= 0)
-            {
-                _pAbilitiesUI.ShowWarning(currentTrapData.fillImage, _pAbilitiesUI.DefaultWarningTime, _pAbilitiesUI.DefaultWarningColor);
-                Debug.Log("No more " + _currentAbility + " left !");
-            }
-            if (!deployTrapAtNode.isFree) { Debug.Log("Node is already occupied"); }
-            if (currentTrapData.timer > 0) { Debug.Log(_currentAbility + " in cooldown !"); }
-        }        
+        GameManager.TrapData currentTrapData = _trapsDict[_currentAbility];
+        if (currentTrapData.currentCount <= 0 || currentTrapData.timer > 0) 
+        {
+            _pAbilitiesUI.ShowWarning(currentTrapData.fillImage, _pAbilitiesUI.DefaultWarningTime, _pAbilitiesUI.DefaultWarningColor);
+            return;
+        }
+        if (!deployTrapAtNode.isFree || deployTrapAtNode.playerZone != _playerControls.PlayerID) { return; }
+
+        _trapSetupCoroutine = StartCoroutine(TrapSetupTimer(currentTrapData.setupTime, deployTrapAtNode));
+        Debug.Log("Trap deployment started");
+        return;
     }
 
     public void CancelTrapDeployment()
     {
-        if (_trapSetupCoroutine != null)
-        {
-            StopCoroutine(_trapSetupCoroutine);
-            _trapSetupCoroutine = null;
-            Debug.Log("Trap deployment canceled");
-        }
+        if (_trapSetupCoroutine == null) { return; }
+        StopCoroutine(_trapSetupCoroutine);
+        _trapSetupCoroutine = null;
+        Debug.Log("Trap deployment canceled");
     }
 
     public void RotateTrap(float inputValue, GameObject trap)
