@@ -9,6 +9,7 @@ public class PlayerVision : MonoBehaviour
     [Header("LAYER MASKS")]
     [SerializeField] LayerMask _obstaclesMask;
     [SerializeField] LayerMask _gameAgentsMask;
+    [SerializeField] MeshFilter _foVMeshFilter;
     [Space]
     [Header("PROXIMITY DETECTION")]
     [SerializeField, Range(0f, 5f)] private float _radius;
@@ -21,13 +22,18 @@ public class PlayerVision : MonoBehaviour
     [SerializeField] int _numberOfRays;
     [SerializeField] private float _offset;
 
-
-    private List<Vector3> _detectionPointsList;
+    private Mesh _foVMesh;
 
     // Start is called before the first frame update
     void Start()
     {
-        _detectionPointsList = new List<Vector3>();
+        _foVMesh = new Mesh();
+        _foVMesh.name = "FoV Mesh";
+    }
+
+    // Update is called once per frame
+    void Update()
+    {
         float startAngle = Mathf.Deg2Rad * (-_visionConeAngle / 2);
         float stepAngle = Mathf.Deg2Rad * (_visionConeAngle / _numberOfRays);
         float currentAngle = startAngle;
@@ -40,26 +46,7 @@ public class PlayerVision : MonoBehaviour
             currentAngle += stepAngle;
 
             Vector3 dir = transform.TransformDirection(new Vector3(posX, 0f, posZ));
-            _detectionPointsList.Add(dir);
-        }
-    }
-
-    // Update is called once per frame
-    void Update()
-    {
-        foreach (Vector3 dir in _detectionPointsList)
-        {
-            Ray ray = new Ray(transform.position + dir * _offset, dir);
-            RaycastHit hit;
-
-            if (Physics.Raycast(ray, out hit, _visionConeRange, _obstaclesMask))
-            {
-                Debug.DrawRay(transform.position + dir * _offset, dir * _visionConeRange, Color.red);
-            }
-            else
-            {
-                Debug.DrawRay(transform.position + dir * _offset, dir * _visionConeRange, Color.green);
-            }
+            Debug.DrawLine(transform.position, transform.position + dir * _visionConeRange, Color.green);
         }
     }
 
@@ -85,24 +72,43 @@ public class PlayerVision : MonoBehaviour
         return directions;
     }
 
+    private void DrawFieldOfView(List<Vector3> raycastsDirections)
+    {
+        int vertexCount = raycastsDirections.Count + 1;
+        Vector3[] vertices = new Vector3[vertexCount];
+        int[] triangles = new int[(vertexCount - 2) * 3];
+
+        vertices[0] = Vector3.zero;
+
+        for (int i = 0; i < vertexCount-1; i++)
+        {
+            Ray ray = new Ray(transform.position, raycastsDirections[i]);
+            RaycastHit hit;
+            if (Physics.Raycast(ray, out hit, _visionConeRange, _obstaclesMask))
+            {
+                vertices[i+1] = hit.point;
+            }
+            else
+            {
+                vertices[i+1] = raycastsDirections[i] * _visionConeRange;
+            }
+
+            if (i < vertexCount - 2)
+            {
+                triangles[i * 3] = 0;
+                triangles[i * 3 + 1] = i + 1;
+                triangles[i * 3 + 2] = i + 2;
+            }            
+        }
+
+        _foVMesh.Clear();
+        _foVMesh.vertices = vertices;
+        _foVMesh.triangles = triangles;
+    }
+
     public void OnDrawGizmos()
     {
-        float startAngle = Mathf.Deg2Rad * (-_visionConeAngle / 2);
-        float stepAngle = Mathf.Deg2Rad * (_visionConeAngle / _numberOfRays);
-        float currentAngle = startAngle;
-
         Gizmos.color = Color.green;
         Gizmos.DrawWireSphere(transform.position, _radius);
-
-        //for (int i = 0; i <= _numberOfRays; i++)
-        //{
-        //    float posX = Mathf.Sin(currentAngle);
-        //    float posZ = Mathf.Cos(currentAngle);
-
-        //    currentAngle += stepAngle;
-
-        //    Vector3 dir = transform.TransformDirection(new Vector3(posX, 0f, posZ));
-        //    Gizmos.DrawLine(transform.position + dir * _offset, transform.position + dir * _visionConeRange);
-        //}
     }
 }

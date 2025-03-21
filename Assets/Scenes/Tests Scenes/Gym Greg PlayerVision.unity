@@ -251,7 +251,7 @@ MonoBehaviour:
   _radius: 3
   _visionConeRange: 6
   _visionConeAngle: 25
-  _numberOfRays: 4
+  _numberOfRays: 8
   _offset: 0.51
 --- !u!1 &230452929
 GameObject:
