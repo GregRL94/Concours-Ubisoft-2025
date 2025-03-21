@@ -27,46 +27,38 @@ public class PlayerVision : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        _foVMesh = new Mesh();
-        _foVMesh.name = "FoV Mesh";
+        _foVMesh = new Mesh{name = "FoV Mesh"};
+        _foVMeshFilter.mesh = _foVMesh;
     }
 
     // Update is called once per frame
     void Update()
     {
-        float startAngle = Mathf.Deg2Rad * (-_visionConeAngle / 2);
-        float stepAngle = Mathf.Deg2Rad * (_visionConeAngle / _numberOfRays);
+        float startAngle = -_visionConeAngle / 2;
+        float stepAngle = _visionConeAngle / _numberOfRays;
         float currentAngle = startAngle;
 
         for (int i = 0; i <= _numberOfRays; i++)
         {
-            float posX = Mathf.Sin(currentAngle);
-            float posZ = Mathf.Cos(currentAngle);
-
-            currentAngle += stepAngle;
-
-            Vector3 dir = transform.TransformDirection(new Vector3(posX, 0f, posZ));
+            Vector3 dir = AngleToDir(currentAngle, true);
             Debug.DrawLine(transform.position, transform.position + dir * _visionConeRange, Color.green);
+            currentAngle += stepAngle;
         }
     }
 
-    private List<Vector3> SetupRaycastsDirections()
+    private List<Vector3> SetupRaycastsDirections(float viewAngleInDeg, int numberOfRays, bool isAngleLocal)
     {
         List<Vector3> directions = new List<Vector3>();
 
-        float startAngle = Mathf.Deg2Rad * (-_visionConeAngle / 2);
-        float stepAngle = Mathf.Deg2Rad * (_visionConeAngle / _numberOfRays);
+        float startAngle = -viewAngleInDeg / 2;
+        float stepAngle = viewAngleInDeg / numberOfRays;
         float currentAngle = startAngle;
 
-        for (int i = 0; i <= _numberOfRays; i++)
+        for (int i = 0; i <= numberOfRays; i++)
         {
-            float posX = Mathf.Sin(currentAngle);
-            float posZ = Mathf.Cos(currentAngle);
-
-            currentAngle += stepAngle;
-
-            Vector3 dir = transform.TransformDirection(new Vector3(posX, 0f, posZ));
+            Vector3 dir = AngleToDir(currentAngle, isAngleLocal);
             directions.Add(dir);
+            currentAngle += stepAngle;
         }
 
         return directions;
@@ -83,14 +75,13 @@ public class PlayerVision : MonoBehaviour
         for (int i = 0; i < vertexCount-1; i++)
         {
             Ray ray = new Ray(transform.position, raycastsDirections[i]);
-            RaycastHit hit;
-            if (Physics.Raycast(ray, out hit, _visionConeRange, _obstaclesMask))
+            if (Physics.Raycast(ray, out RaycastHit hit, _visionConeRange, _obstaclesMask))
             {
-                vertices[i+1] = hit.point;
+                vertices[i + 1] = transform.InverseTransformPoint(hit.point);
             }
             else
             {
-                vertices[i+1] = raycastsDirections[i] * _visionConeRange;
+                vertices[i + 1] = raycastsDirections[i] * _visionConeRange;
             }
 
             if (i < vertexCount - 2)
@@ -104,6 +95,18 @@ public class PlayerVision : MonoBehaviour
         _foVMesh.Clear();
         _foVMesh.vertices = vertices;
         _foVMesh.triangles = triangles;
+        _foVMesh.RecalculateNormals();
+        _foVMesh.RecalculateBounds();
+    }
+
+    public Vector3 AngleToDir(float angleInDeg, bool isAngleLocal)
+    {
+        angleInDeg = Mathf.Deg2Rad * angleInDeg;
+        float dirX = Mathf.Sin(angleInDeg);
+        float dirZ = Mathf.Cos(angleInDeg);
+
+        if (isAngleLocal) { return transform.TransformDirection(new Vector3(dirX, 0f, dirZ)); }
+        return new Vector3(dirX, 0f, dirZ);
     }
 
     public void OnDrawGizmos()
