@@ -251,7 +251,7 @@ MonoBehaviour:
     m_Bits: 64
   _foVMeshFilter: {fileID: 461404945}
   _radius: 3
-  _visionConeRange: 6
+  _visionConeRange: 3
   _visionConeAngle: 25
   _numberOfRays: 8
   _offset: 0.51
