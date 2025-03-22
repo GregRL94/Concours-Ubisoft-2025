@@ -56,6 +56,7 @@ public class PlayerVision : MonoBehaviour
     private SphereCollider _foVCollider;
 
     private List<GameObject> _elligibleObjects;
+    private List<GameObject> _previousVisibleObjects;
 
     // Start is called before the first frame update
     void Start()
@@ -69,15 +70,18 @@ public class PlayerVision : MonoBehaviour
         _foVCollider.isTrigger = true;
 
         _elligibleObjects = new List<GameObject>();
+        _previousVisibleObjects = new List<GameObject>();
     }
 
     void LateUpdate()
     {
         DrawFieldOfView(_visionConeAngle, _numberOfRays);
-        VisibleObjects();
+        List<GameObject> currentVisibleObjectsList = FindVisibleObjects();
+        ShowHideObjects(currentVisibleObjectsList);
+        _previousVisibleObjects = currentVisibleObjectsList;
     }
 
-    private List<GameObject> VisibleObjects()
+    private List<GameObject> FindVisibleObjects()
     {
         List<GameObject> visibleObjects = new List<GameObject>();
 
@@ -100,7 +104,35 @@ public class PlayerVision : MonoBehaviour
                 }
             }
         }
-        return new List<GameObject>();
+        return visibleObjects;
+    }
+
+    private void ShowHideObjects(List<GameObject> newVisibleObjectsList)
+    {
+        DynamicMeshDisplay meshDisplay;
+
+        foreach (GameObject obj in newVisibleObjectsList)
+        {
+            meshDisplay = obj.GetComponent<DynamicMeshDisplay>();
+            if (meshDisplay != null)
+            {
+                meshDisplay.ShowMesh(true);
+            }
+        }
+
+        foreach(GameObject obj in _previousVisibleObjects)
+        {
+            meshDisplay = obj.GetComponent<DynamicMeshDisplay>();
+            if (!newVisibleObjectsList.Contains(obj))
+            {
+                meshDisplay = obj.GetComponent<DynamicMeshDisplay>();
+                if(meshDisplay != null)
+                {
+                    Debug.Log("Hiding Mesh for: " + obj.name);
+                    meshDisplay.ShowMesh(false);
+                }
+            }
+        }
     }
 
     private void DrawFieldOfView(float viewAngleInDeg, int numberOfRays)
