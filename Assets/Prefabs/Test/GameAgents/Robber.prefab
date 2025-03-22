@@ -491,7 +491,7 @@ MonoBehaviour:
   _vFlee: 10
   _radialVision: 5
   _fleeVision: 10
-  _stealTime: 3
+  _stealTime: 1
   _stealRange: 2
   _stealingList: 00000000000000000100000000000000
   _indicator: {fileID: 5372714353555304992}

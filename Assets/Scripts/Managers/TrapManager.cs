@@ -193,7 +193,7 @@ public class TrapManager : MonoBehaviour
                 _agent.speed = agentInitialSpeed;
                 hasFleeToDestination = false;
                 _indicator.SetActive(false);
-                Destroy(alarmTrap); // todo: when to destroy alarm gameobject ???
+                Destroy(alarmTrap);
             }
             yield return null; // calculates it in every frame
         }
@@ -244,7 +244,7 @@ public class TrapManager : MonoBehaviour
 
     IEnumerator StunAfterPush()
     {
-        robberCapture?.GetSifled(PlayerEnum.NONE, 20);
+        robberCapture?.GetSifled(PlayerEnum.PLAYER2, 5);
         
         yield return new WaitForSeconds(timeTillPushIndicatorAppear);
         if(_indicator == null)yield break;
@@ -280,16 +280,19 @@ public class TrapManager : MonoBehaviour
     public void TriggerCaptureTrap()
     {
         // Disable collider, movement and reset velocity to zero
-        captureTrap.GetComponent</*CapsuleCollider*/Collider>().enabled = false;
+        captureTrap.GetComponent<CapsuleCollider>().enabled = false;
         if (_agent != null)
         {
             _agent.isStopped = true;
         }
-
         if (_rb != null)
         {
             _rb.velocity = Vector3.zero;
         }
+
+        //if(_agent.transform.position != captureTrap.transform.position)
+        //    _agent.transform.position = captureTrap.transform.position;
+
 
         StartCoroutine(StunFromCapture());
     }

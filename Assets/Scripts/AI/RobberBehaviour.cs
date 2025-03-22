@@ -32,6 +32,8 @@ public class RobberBehaviour : BTAgent
     private NavMeshAgent _robberAgent;
     [SerializeField]
     private RobberCapture _robberCapture;
+    [SerializeField]
+    private UIManager _uiManager;
 
     [Header("DEBUG READING")]
     [SerializeField]
@@ -58,6 +60,7 @@ public class RobberBehaviour : BTAgent
         if(!_robberAgent)_robberAgent = GetComponent<NavMeshAgent>();
         if(!_rb)_rb = GetComponent<Rigidbody>();
         if(!_robberCapture) _robberCapture = GetComponent<RobberCapture>();
+        if(!_uiManager) _uiManager= FindAnyObjectByType<UIManager>();
 
         _robberAgent.speed = _vBase;
         GameManager.Instance.TrapManager.SetRobber(_robberAgent, _rb, _indicator, _robberCapture);
@@ -176,6 +179,7 @@ public class RobberBehaviour : BTAgent
             
             GameManager.Instance.LosePlayerReputation(_currentTargetObject.ObjectOwner, 1);
             Destroy(_currentTargetObject.gameObject);
+            
             _currentTargetObject = null;
             _stealingList.RemoveAt(0);
             StopVunerableState();

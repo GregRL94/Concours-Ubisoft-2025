@@ -15,6 +15,6 @@ EditorBuildSettings:
     path: Assets/Scenes/Tests Scenes/Character Selection.unity
     guid: 5dca4726a3950dd4a836b3b151950917
   - enabled: 1
-    path: Assets/Scenes/Tests Scenes/Gym Ajmal UI.unity
-    guid: e6d15e59895cc9a4fba43d3fb7eecd11
+    path: Assets/Scenes/Tests Scenes/Gym Prototype.unity
+    guid: 42be38cbf2c779c4cb8acc522aae7744
   m_configObjects: {}
