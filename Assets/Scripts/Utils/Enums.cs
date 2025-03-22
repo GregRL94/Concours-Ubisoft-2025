@@ -22,3 +22,11 @@ public enum AbilitiesEnum
     PUSH_TRAP,
     CAPTURE_TRAP,
 }
+
+public enum ObjectType
+{
+    PAINTING,
+    JEWELRY,
+    VASE,
+    SCULPTURE
+}

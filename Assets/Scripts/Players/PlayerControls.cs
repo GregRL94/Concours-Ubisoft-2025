@@ -7,100 +7,113 @@ public class PlayerControls : MonoBehaviour
 {
     #region Variables
     [Header("MOVEMENT PARAMETERS")]
-    [SerializeField, Range(0f, 20f)] private float speed;
-    [SerializeField, Range(0f, 10f)] private float rotationSpeed;
+    [SerializeField, Range(0f, 20f)] private float _speed;
+    [SerializeField, Range(0f, 10f)] private float _rotationSpeed;
     [Space]
     [Header("INTERACTIONS PARAMETERS")]
-    [SerializeField] private PlayerEnum playerID;
-    [SerializeField, Range(0f, 10f)] private float raycastStartDistance;
-    [SerializeField, Range(0f, 10f)] private float interactionDistance;
-    [SerializeField] private LayerMask gameAgentsMask;
+    [SerializeField] private PlayerEnum _playerID;
+    [SerializeField, Range(0f, 10f)] private float _raycastStartDistance;
+    [SerializeField, Range(0f, 10f)] private float _interactionDistance;
+    [SerializeField] private LayerMask _gameAgentsMask;
     [Space]
     [Header("ABILITIES BINDING")]
-    [SerializeField] private AbilitiesEnum rJoystickUPBind;
-    [SerializeField] private AbilitiesEnum rJoystickDOWNBind;
-    [SerializeField] private AbilitiesEnum rJoystickLEFTBind;
-    [SerializeField] private AbilitiesEnum rJoystickRIGHTBind;
-    [Space]
-    [Header("ABILITIES COOLDOWN")]
-    [SerializeField, Range(0f, 10f)] private float whistleCD;
-    [SerializeField, Range(0f, 10f)] private float alarmTrapCD;
-    [SerializeField, Range(0f, 10f)] private float pushTrapCD;
-    [SerializeField, Range(0f, 10f)] private float captureTrapCD;
+    [SerializeField] private AbilitiesEnum _rJoystickUPBind;
+    [SerializeField] private AbilitiesEnum _rJoystickDOWNBind;
+    [SerializeField] private AbilitiesEnum _rJoystickLEFTBind;
+    [SerializeField] private AbilitiesEnum _rJoystickRIGHTBind;
     [Space]
     [Header("GIZMOS PARAMETERS")]
-    [SerializeField] private bool drawGizmos;
-    [SerializeField, Range(0.1f, 0.5f)] private float pointsRadii = 0.25f;
+    [SerializeField] private bool _drawGizmos;
+    [SerializeField, Range(0.1f, 0.5f)] private float _pointsRadii = 0.25f;
     
-    private GameGrid gameGrid;
-    private Vector3 snappedInteractionPoint;
-    private GameObject currentTrap;
+    private GameGrid _gameGrid;
+    private Node _previousNode;
+    private Node _currentNode;
+    private Vector3 _snappedInteractionPoint;
+    private GameObject _currentTrap;
 
-    private InputActionAsset inputAsset;
-    private InputActionMap playerControls;
-    private Dictionary<R_JoystickDirection, AbilitiesEnum> bindingDict;
-    private AbilitiesEnum selectedAbility = AbilitiesEnum.NONE;
+    private InputActionAsset _inputAsset;
+    private InputActionMap _playerControls;
+    private PlayerActions _playerActions;
+    private Dictionary<R_JoystickDirection, AbilitiesEnum> _bindingDict;
 
-    private Rigidbody rb;
-    private Vector2 leftJoystickInput;
-    private Vector3 leftjoystickVirtualPoint;
+    private Rigidbody _rb;
+    private Vector2 _leftJoystickInput;
+    private Vector3 _leftjoystickVirtualPoint;
 
-    private float joystickPointDisplayDistance = 2f;
+    private readonly float _joystickPointDisplayDistance = 2f;
+
+    public PlayerEnum PlayerID => _playerID;
+    public GameGrid GameGrid => _gameGrid;
     #endregion
 
     #region MonoBehaviour Flow
     private void Awake()
     {
-        inputAsset = GetComponent<PlayerInput>().actions;
-        playerControls = inputAsset.FindActionMap("PlayerControls");
+        _inputAsset = GetComponent<PlayerInput>().actions;
+        _playerControls = _inputAsset.FindActionMap("PlayerControls");
+        _playerActions = GetComponent<PlayerActions>();
     }
 
     void Start()
     {
-        gameGrid = GameGrid.Instance;
-        bindingDict = new Dictionary<R_JoystickDirection, AbilitiesEnum>
+        _gameGrid = GameGrid.Instance;
+        _bindingDict = new Dictionary<R_JoystickDirection, AbilitiesEnum>
         {
-            [R_JoystickDirection.UP] = rJoystickUPBind,
-            [R_JoystickDirection.DOWN] = rJoystickDOWNBind,
-            [R_JoystickDirection.LEFT] = rJoystickLEFTBind,
-            [R_JoystickDirection.RIGHT] = rJoystickRIGHTBind,
+            [R_JoystickDirection.UP] = _rJoystickUPBind,
+            [R_JoystickDirection.DOWN] = _rJoystickDOWNBind,
+            [R_JoystickDirection.LEFT] = _rJoystickLEFTBind,
+            [R_JoystickDirection.RIGHT] = _rJoystickRIGHTBind,
             [R_JoystickDirection.NONE] = AbilitiesEnum.NONE,
         };
-        rb = GetComponent<Rigidbody>();
+        _rb = GetComponent<Rigidbody>();
         EnablePlayerInputs(true);
+        _currentNode = _gameGrid.NodeFromWorldPos(transform.position);
+        _previousNode = _currentNode;
+        _gameGrid.UpdateNode(_currentNode);
     }
 
     private void FixedUpdate()
     {
-        float joystickInputMagnitude = Mathf.Sqrt(leftJoystickInput.x * leftJoystickInput.x + leftJoystickInput.y * leftJoystickInput.y);
+        float joystickInputMagnitude = Mathf.Sqrt(_leftJoystickInput.x * _leftJoystickInput.x + _leftJoystickInput.y * _leftJoystickInput.y);
 
-        leftjoystickVirtualPoint = new Vector3(transform.position.x + leftJoystickInput.x * joystickPointDisplayDistance, transform.position.y, transform.position.z + leftJoystickInput.y * joystickPointDisplayDistance);
-        transform.rotation = Quaternion.LookRotation(Vector3.RotateTowards(transform.forward, leftjoystickVirtualPoint - transform.position, rotationSpeed * Time.deltaTime, 0.0f));
-        rb.velocity = transform.forward * joystickInputMagnitude * speed;
+        _leftjoystickVirtualPoint = new Vector3(transform.position.x + _leftJoystickInput.x * _joystickPointDisplayDistance, transform.position.y, transform.position.z + _leftJoystickInput.y * _joystickPointDisplayDistance);
+        transform.rotation = Quaternion.LookRotation(Vector3.RotateTowards(transform.forward, _leftjoystickVirtualPoint - transform.position, _rotationSpeed * Time.deltaTime, 0.0f));
+        _rb.velocity = joystickInputMagnitude * _speed * transform.forward;
+
+        Node node = _gameGrid.NodeFromWorldPos(transform.position);
+
+        if (node != _currentNode)
+        {
+            _previousNode = _currentNode;
+            _currentNode = node;
+        }
+
+        _gameGrid.UpdateNode(_currentNode);
+        _gameGrid.UpdateNode(_previousNode);
     }
 
     private void Update()
     {
-        Vector3 raycastStartPoint = transform.position + transform.forward * raycastStartDistance;
-        Vector3 interactionPoint = raycastStartPoint + transform.forward * interactionDistance;
-        snappedInteractionPoint = gameGrid.SnapToGridPos(interactionPoint);
+        Vector3 raycastStartPoint = transform.position + transform.forward * _raycastStartDistance;
+        Vector3 interactionPoint = raycastStartPoint + transform.forward * _interactionDistance;
+        _snappedInteractionPoint = _gameGrid.SnapToGridPos(interactionPoint);
 
         Ray ray = new Ray(raycastStartPoint, transform.forward);
-        RaycastHit hit;
 
-        if (Physics.Raycast(ray, out hit, interactionDistance, gameAgentsMask))
+        if (Physics.Raycast(ray, out RaycastHit hit, _interactionDistance, _gameAgentsMask))
         {
             if (hit.collider.gameObject.CompareTag("TRAP"))
             {
-                if (currentTrap != hit.collider.gameObject)
+                if (_currentTrap != hit.collider.gameObject)
                 {
                     TypeOfTrap trap = hit.collider.gameObject.GetComponentInChildren<TypeOfTrap>();
 
                     try
                     {
-                        if (trap.TrapOwner == playerID)
+                        if (trap.TrapOwner == _playerID)
                         {
-                            currentTrap = hit.collider.gameObject;
+                            _currentTrap = hit.collider.gameObject;
                             Debug.Log("GATHERED TRAP");
                         }
                     }
@@ -110,34 +123,36 @@ public class PlayerControls : MonoBehaviour
                     }
                 }                
             }
-            else if (currentTrap != null)
+            else if (_currentTrap != null)
             {
-                currentTrap = null;
+                _currentTrap = null;
                 Debug.Log("CLEARED TRAP");
             }
         }
-        else if (currentTrap != null)
+        else if (_currentTrap != null)
         {
-            currentTrap = null;
+            _currentTrap = null;
             Debug.Log("CLEARED TRAP");
         }
+
+        _playerActions.UpdateActionState(Time.deltaTime, _snappedInteractionPoint);
     }
     #endregion
 
     #region Movement
     public void Movement(InputAction.CallbackContext context)
     {
-        leftJoystickInput = context.ReadValue<Vector2>();
+        _leftJoystickInput = context.ReadValue<Vector2>();        
     }
 
     public void Stop(InputAction.CallbackContext context)
     {
-        leftJoystickInput = Vector2.zero;
+        _leftJoystickInput = Vector2.zero;
     }
     #endregion
 
     #region Actions
-    public void ActionSelection(InputAction.CallbackContext context)
+    private void ActionSelection(InputAction.CallbackContext context)
     {
         Vector2 rightJoystickInput = context.ReadValue<Vector2>();
         R_JoystickDirection r_joystick_dir = R_JoystickDirection.NONE;
@@ -159,83 +174,69 @@ public class PlayerControls : MonoBehaviour
             r_joystick_dir = R_JoystickDirection.DOWN;
         }
 
-        if ((r_joystick_dir != R_JoystickDirection.NONE) && !(bindingDict[r_joystick_dir] == selectedAbility))
+        if (r_joystick_dir != R_JoystickDirection.NONE)
         {
-            selectedAbility = bindingDict[r_joystick_dir];
-            Debug.Log(selectedAbility);
+            _playerActions.SelectAction(_bindingDict[r_joystick_dir]);
         }        
     }
 
-    public void ActionDeselection(InputAction.CallbackContext context)
+    private void ActionDeselection(InputAction.CallbackContext context)
     {
-        if (context.performed)
-        {
-            selectedAbility = AbilitiesEnum.NONE;
-            Debug.Log(selectedAbility);
-        }        
+        _playerActions.DeselectAction();
     }
 
-    public void ActionActivation(InputAction.CallbackContext context)
+    private void Whistle(InputAction.CallbackContext context)
     {
-        if (context.performed)
-        {
-            Debug.Log(selectedAbility + " ACTIVATED");
-        }        
+        _playerActions.PerformWhistle(_gameAgentsMask);
     }
     #endregion
 
     #region Traps
-    public void RotateTrap(InputAction.CallbackContext context)
+    private void OnStartTrapDeployment(InputAction.CallbackContext context)
     {
-        if (context.performed)
-        {
-            float shoulderPressed = context.ReadValue<float>();
-            int rotationDirection = 0;
+        _playerActions.StartTrapDeployment(_gameGrid.NodeFromWorldPos(_snappedInteractionPoint));
+    }
 
-            if (shoulderPressed < 0)
-            {
-                Debug.Log("LEFT SHOULDER PRESSED");
-                rotationDirection = -1;
-            }
-            else if (shoulderPressed > 0)
-            {
-                Debug.Log("RIGHT SHOULDER PRESSED");
-                rotationDirection = 1;
-            }
+    private void OnCancelTrapDeployment(InputAction.CallbackContext context)
+    {
+        _playerActions.CancelTrapDeployment();
+    }
 
-            if (currentTrap != null && rotationDirection != 0)
-            {
-                Debug.Log("Rotating Trap");
-                currentTrap.transform.Rotate(new Vector3(0f, rotationDirection * 90f, 0f));
-            }
-        }
+    private void OnRotateTrap(InputAction.CallbackContext context)
+    {
+        _playerActions.RotateTrap(context.ReadValue<float>(), _currentTrap);
     }
     #endregion
 
     #region Enable & Disable
     private void EnablePlayerInputs(bool enableState)
     {
-        InputAction movementAction = playerControls.FindAction("Movement");
+        InputAction movementAction = _playerControls.FindAction("Movement");
+        InputAction actionActivation = _playerControls.FindAction("ActionActivation");
 
         if (enableState)
         {
-            playerControls.Enable();
+            _playerControls.Enable();
             movementAction.performed += Movement;
             movementAction.canceled += Stop;
-            playerControls.FindAction("ActionSelection").performed += ActionSelection;
-            playerControls.FindAction("ActionDeselection").performed += ActionDeselection;
-            playerControls.FindAction("ActionActivation").performed += ActionActivation;
-            playerControls.FindAction("TrapRotation").performed += RotateTrap;
+            _playerControls.FindAction("ActionSelection").performed += ActionSelection;
+            _playerControls.FindAction("ActionDeselection").performed += ActionDeselection;
+            actionActivation.performed += Whistle;
+            actionActivation.started += OnStartTrapDeployment;
+            actionActivation.canceled += OnCancelTrapDeployment;
+            _playerControls.FindAction("TrapRotation").performed += OnRotateTrap;
         }
         else
         {
             movementAction.performed -= Movement;
             movementAction.canceled -= Stop;
-            playerControls.FindAction("ActionSelection").performed -= ActionSelection;
-            playerControls.FindAction("ActionDeselection").performed -= ActionDeselection;
-            playerControls.FindAction("ActionActivation").performed -= ActionActivation;
-            playerControls.FindAction("TrapRotation").performed -= RotateTrap;
-            playerControls.Disable();
+            _playerControls.FindAction("ActionSelection").performed -= ActionSelection;
+            _playerControls.FindAction("ActionDeselection").performed -= ActionDeselection;
+            actionActivation.performed -= Whistle;
+            actionActivation.started -= OnStartTrapDeployment;
+            actionActivation.canceled -= OnCancelTrapDeployment;
+            _playerControls.FindAction("TrapRotation").performed -= OnRotateTrap;
+            _playerControls.Disable();
         }
 
     }
@@ -258,14 +259,19 @@ public class PlayerControls : MonoBehaviour
     #region Gizmos
     private void OnDrawGizmos()
     {
-        if (drawGizmos)
+        if (_drawGizmos)
         {
             Gizmos.color = Color.red;
-            Gizmos.DrawWireSphere(leftjoystickVirtualPoint, pointsRadii);
+            Gizmos.DrawWireSphere(_leftjoystickVirtualPoint, _pointsRadii);
 
-            Gizmos.color = Color.white;
-            Gizmos.DrawLine(transform.position + transform.forward * raycastStartDistance, transform.position + (interactionDistance + raycastStartDistance) * transform.forward);
-            Gizmos.DrawSphere(snappedInteractionPoint, pointsRadii);
+            Gizmos.color = Color.green;
+            Gizmos.DrawLine(transform.position + transform.forward * _raycastStartDistance, transform.position + (_interactionDistance + _raycastStartDistance) * transform.forward);
+            Gizmos.DrawSphere(_snappedInteractionPoint, _pointsRadii);
+
+            if (_playerActions != null)
+            {
+                _playerActions.OnDrawGizmos();
+            }            
         }
     }
     #endregion

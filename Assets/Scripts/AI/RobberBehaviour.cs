@@ -22,7 +22,7 @@ public class RobberBehaviour : BTAgent
     [SerializeField, Tooltip("Robber stealing range")]
     private float _stealRange = 2f;
     [SerializeField, Tooltip("Robber stealing list")]
-    private List<MuseumObjects.ObjectType> _stealingList;
+    private List<ObjectType> _stealingList;
     
     [SerializeField]
     private GameObject _indicator;
@@ -60,7 +60,7 @@ public class RobberBehaviour : BTAgent
         if(!_robberCapture) _robberCapture = GetComponent<RobberCapture>();
 
         _robberAgent.speed = _vBase;
-        TrapManager.Instance.SetRobber(_robberAgent, _rb, _indicator, _robberCapture);
+        GameManager.Instance.TrapManager.SetRobber(_robberAgent, _rb, _indicator, _robberCapture);
 
         //Flee state
         BTLeaf isFleeing = new BTLeaf("Is fleeing", IsFleeing);
@@ -123,7 +123,7 @@ public class RobberBehaviour : BTAgent
     //if all objects are in cd, bypass cd condition
     private void GetNearestObject(bool bypassObjectCDCondition)
     {
-        MuseumObjects[] museumObjects = MuseumObjectsManager.Instance?.GetObjectList(_stealingList[0]);
+        MuseumObjects[] museumObjects = GameManager.Instance.MuseumObjectsManager.GetObjectList(_stealingList[0]);
         float minDistance = float.MaxValue;
         MuseumObjects nearestObject = null;
         int objectsInCd = 0;
@@ -171,8 +171,11 @@ public class RobberBehaviour : BTAgent
             _hasStolen = BTNode.Status.SUCCESS;
             state = ActionState.IDLE;
 
-            Debug.Log($"{_currentTargetObject.MuseumObjectType} STEALED !");
-            _currentTargetObject.gameObject.SetActive(false);
+            //steal object
+            GameManager.Instance.MuseumObjectsManager.CheckArtefactStolen(_currentTargetObject);
+            
+            GameManager.Instance.LosePlayerReputation(_currentTargetObject.ObjectOwner, 1);
+            Destroy(_currentTargetObject.gameObject);
             _currentTargetObject = null;
             _stealingList.RemoveAt(0);
             StopVunerableState();

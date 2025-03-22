@@ -5,8 +5,11 @@ using UnityEngine;
 
 public class RobberCapture : MonoBehaviour
 {
-    [SerializeField, Range(0f, 100f)]
-    private float _captureGauge = 0f;
+    [Header("Metrics")]
+    [SerializeField]
+    private int _capturedLoseReputationValue = 1;
+
+    [Header("Debug")]
     [SerializeField]
     private bool _isCaptured = false;
     private RobberBehaviour _robberBehaviour;
@@ -16,20 +19,15 @@ public class RobberCapture : MonoBehaviour
         _robberBehaviour = GetComponent<RobberBehaviour>();
     }
 
-    // Update is called once per frame
-    void Update()
+    public void GetSifled(PlayerEnum playerID, float captureValue)
     {
-        if (Input.GetKeyDown(KeyCode.Space))
-            GetSifled(20f);
-    }
-
-    public void GetSifled(float captureValue)
-    {
-        //if (!_robberBehaviour.IsVulnerable) return;
-        _captureGauge += captureValue;
         _robberBehaviour.StartFleeState();
-        if (_captureGauge < 100f) return;
+        Debug.Log("Robber Siffled and Captured by " + playerID + " for: " + captureValue);
+        GameManager.Instance.UIManager.UpdateCaptureThiefGauge((int)captureValue);
+        if (GameManager.Instance.UIManager.GetCurrentCaptureThiefAmount < GameManager.Instance.UIManager.GetmaxCaptureThiefAmount) return;
+        if (playerID == PlayerEnum.NONE) return;
         _isCaptured = true;
+        GameManager.Instance.AllOtherPlayersLoseReputation(playerID, _capturedLoseReputationValue);
         this.gameObject.SetActive(false);
     }
 
