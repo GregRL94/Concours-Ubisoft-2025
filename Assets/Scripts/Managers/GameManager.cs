@@ -134,9 +134,8 @@ public class GameManager : MonoBehaviour
     {
         InitializePlayers();
 
-        //start gameplay loop
-        _preStartRoundCoroutine = StartCoroutine(PreStartRound(_roundsParameter.timeBeforeRoundStart));
     }
+
 
     private void InitializePlayers()
     {
@@ -177,6 +176,8 @@ public class GameManager : MonoBehaviour
             StopCoroutine(_preStartRoundCoroutine);
             _preStartRoundCoroutine = null;
         }
+        //To do : deplacer cette ligne dans l'UI apres l'attribution des points
+        SceneLoading.Instance.LoadNextScene();
         _preStartRoundCoroutine = StartCoroutine(PreStartRound(_roundsParameter.timeBeforeRoundStart));
     }
     #endregion
@@ -233,4 +234,8 @@ public class GameManager : MonoBehaviour
         if (eliminatedValue >= _playersReputation.Length)
             Debug.Log("It's a DRAW !");
     }
+
+    //start gameplay loop
+    public void StartGameLoop() => _preStartRoundCoroutine = StartCoroutine(PreStartRound(_roundsParameter.timeBeforeRoundStart));
+    
 }

@@ -77,5 +77,6 @@ public class TutorialManager : MonoBehaviour
 
         _tutorialUI.SetActive(false);
         _isTutorialCompleted = true;
+        GameManager.Instance.StartGameLoop();
     }
 }
