@@ -8,6 +8,26 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 2534177156245338472}
     m_Modifications:
+    - target: {fileID: 2068087306782374677, guid: e784e646e63e5c645b35ef1ed23fcb10,
+        type: 3}
+      propertyPath: LightsModule.range
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 2068087306782374677, guid: e784e646e63e5c645b35ef1ed23fcb10,
+        type: 3}
+      propertyPath: LightsModule.maxLights
+      value: 3
+      objectReference: {fileID: 0}
+    - target: {fileID: 2068087306782374677, guid: e784e646e63e5c645b35ef1ed23fcb10,
+        type: 3}
+      propertyPath: LightsModule.rangeCurve.scalar
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 2068087306782374677, guid: e784e646e63e5c645b35ef1ed23fcb10,
+        type: 3}
+      propertyPath: LightsModule.intensityCurve.scalar
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 4328504264676977545, guid: e784e646e63e5c645b35ef1ed23fcb10,
         type: 3}
       propertyPath: m_Name
