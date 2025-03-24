@@ -37,12 +37,13 @@ public class PlayerVision : MonoBehaviour
     [Header("LAYER MASKS")]
     [SerializeField] LayerMask _obstaclesMask;
     [SerializeField] LayerMask _gameAgentsMask;
-    [SerializeField] MeshFilter _foVMeshFilter;
     [Space]
     [Header("PROXIMITY DETECTION")]
     [SerializeField, Range(0f, 5f)] private float _proximityRadius;
+    [SerializeField] private MeshFilter _proximityVisualization;
     [Space]
     [Header("VISION CONE")]
+    [SerializeField] MeshFilter _foVMeshFilter;
     [SerializeField, Range(0f, 20f)] private float _visionConeRange;
     [SerializeField, Range(0f, 360f)] private float _visionConeAngle;
     [Space]
@@ -68,6 +69,8 @@ public class PlayerVision : MonoBehaviour
         _foVCollider = _foVGameObj.AddComponent<SphereCollider>();
         _foVCollider.radius = _visionConeRange;
         _foVCollider.isTrigger = true;
+
+        _proximityVisualization.gameObject.transform.localScale = new Vector3(2 * _proximityRadius, 0.1f, 2 * _proximityRadius);
 
         _elligibleObjects = new List<GameObject>();
         _previousVisibleObjects = new List<GameObject>();
@@ -116,7 +119,7 @@ public class PlayerVision : MonoBehaviour
             meshDisplay = obj.GetComponent<DynamicMeshDisplay>();
             if (meshDisplay != null)
             {
-                meshDisplay.ShowMesh(true);
+                meshDisplay.OnGetVision(true);
             }
         }
 
@@ -129,7 +132,7 @@ public class PlayerVision : MonoBehaviour
                 if(meshDisplay != null)
                 {
                     Debug.Log("Hiding Mesh for: " + obj.name);
-                    meshDisplay.ShowMesh(false);
+                    meshDisplay.OnGetVision(false);
                 }
             }
         }
@@ -264,11 +267,5 @@ public class PlayerVision : MonoBehaviour
         {
             _elligibleObjects.Remove(other.gameObject);
         }
-    }
-
-    public void OnDrawGizmos()
-    {
-        Gizmos.color = Color.green;
-        Gizmos.DrawWireSphere(transform.position, _proximityRadius);      
     }
 }

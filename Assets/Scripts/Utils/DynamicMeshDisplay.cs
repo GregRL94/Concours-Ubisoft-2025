@@ -9,9 +9,27 @@ public class DynamicMeshDisplay : MonoBehaviour
         _meshRenderer = GetComponent<MeshRenderer>();
     }
 
-    public void ShowMesh(bool show)
+    public void OnGetVision(bool show)
     {
-        if (show) { _meshRenderer.enabled = true; return; }
-        _meshRenderer.enabled = false;
+        if (gameObject.CompareTag("ENEMY"))
+        {
+            if (show)
+            {
+                _meshRenderer.enabled = true;
+                return;
+            }
+            _meshRenderer.enabled = false;
+            return;
+        }
+
+        if (gameObject.CompareTag("MUSEUMOBJECT"))
+        {
+            MuseumObjects museumObject = gameObject.GetComponent<MuseumObjects>();
+            if (museumObject.IsStolen)
+            {
+                gameObject.SetActive(false);
+                return;
+            }
+        }
     }
 }
