@@ -78,6 +78,8 @@ public class GameManager : MonoBehaviour
     private TrapManager _trapManager;
     [SerializeField]
     private UIManager _uiManager;
+    [SerializeField]
+    private TutorialManager _tutorialManager;
 
     [Header("Metrics")]
     [SerializeField]
@@ -116,6 +118,7 @@ public class GameManager : MonoBehaviour
     public RobberManager RobberManager => _robberManager;
     public TrapManager TrapManager => _trapManager;
     public UIManager UIManager => _uiManager;
+    public TutorialManager TutorialManager => _tutorialManager;
 
 
     public static GameManager Instance;

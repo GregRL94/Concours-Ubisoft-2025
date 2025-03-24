@@ -13,6 +13,9 @@ public class SceneLoading : MonoBehaviour
     [Header("Debug Reading")]
     [SerializeField]
     private int _nextSceneIndex = 0;
+    [SerializeField]
+    private bool _isTutoCompleted = false;
+    public bool IsTutoCompleted { get { return _isTutoCompleted; } set {  _isTutoCompleted = value; } }
 
     public static SceneLoading Instance;
     private void Awake()
