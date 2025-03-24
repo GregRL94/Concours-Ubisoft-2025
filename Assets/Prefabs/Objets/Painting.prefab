@@ -225,7 +225,7 @@ GameObject:
   - component: {fileID: 8103129727010554338}
   m_Layer: 0
   m_Name: Painting
-  m_TagString: Untagged
+  m_TagString: MUSEUMOBJECT
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -337,6 +337,7 @@ MonoBehaviour:
   _objectType: 0
   _objectStealableCD: 10
   _timeStealableCD: 0
+  _isStolen: 0
 --- !u!1 &5260877759020286492
 GameObject:
   m_ObjectHideFlags: 0
