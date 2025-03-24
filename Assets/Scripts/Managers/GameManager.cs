@@ -134,9 +134,8 @@ public class GameManager : MonoBehaviour
     {
         InitializePlayers();
 
-        //start gameplay loop
-        _preStartRoundCoroutine = StartCoroutine(PreStartRound(_roundsParameter.timeBeforeRoundStart));
     }
+
 
     private void InitializePlayers()
     {
@@ -235,4 +234,8 @@ public class GameManager : MonoBehaviour
         if (eliminatedValue >= _playersReputation.Length)
             Debug.Log("It's a DRAW !");
     }
+
+    //start gameplay loop
+    public void StartGameLoop() => _preStartRoundCoroutine = StartCoroutine(PreStartRound(_roundsParameter.timeBeforeRoundStart));
+    
 }
