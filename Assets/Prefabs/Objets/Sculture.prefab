@@ -13,6 +13,7 @@ GameObject:
   - component: {fileID: 7100327498102424735}
   - component: {fileID: 9040398704450575074}
   - component: {fileID: 1728506550469672016}
+  - component: {fileID: 8460393617906890051}
   m_Layer: 0
   m_Name: Sculture
   m_TagString: MUSEUMOBJECT
@@ -125,3 +126,15 @@ MonoBehaviour:
   _objectStealableCD: 10
   _timeStealableCD: 0
   _isStolen: 0
+--- !u!114 &8460393617906890051
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6208972197697279211}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a383df0079a9dd3449b3889148860067, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
