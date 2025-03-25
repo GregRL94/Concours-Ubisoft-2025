@@ -111,7 +111,9 @@ public class GameManager : MonoBehaviour
     private PlayerControls[] _players;
     [SerializeField]
     private PlayerReputation[] _playersReputation;
-    
+    [SerializeField]
+    private TextMeshProUGUI _timerText;
+
     //getter
     public PlayerControls[] Players => _players;
     public MuseumObjectsManager MuseumObjectsManager => _museumObjectManager;
@@ -133,11 +135,8 @@ public class GameManager : MonoBehaviour
             Destroy(this.gameObject);
     }
     // Start is called before the first frame update
-    void Start()
-    {
-        InitializePlayers();
-
-    }
+    void Start() => InitializePlayers();
+    
 
 
     private void InitializePlayers()
@@ -159,7 +158,13 @@ public class GameManager : MonoBehaviour
     #region Rounds management
     private IEnumerator PreStartRound(float time)
     {
-        yield return new WaitForSeconds(time);
+        float timer = time;
+        while (timer > 0)
+        {
+            _timerText.text = timer.ToString();
+            yield return new WaitForSeconds(1);
+            timer--;
+        }
         if (_startRoundCoroutine != null)
         {
             StopCoroutine(_startRoundCoroutine);
@@ -171,7 +176,13 @@ public class GameManager : MonoBehaviour
     {
         _roundsParameter.hasRoundStarted = true;
         _robberManager.SpawnRobber();
-        yield return new WaitForSeconds(time);
+        float timer = time;
+        while (timer > 0)
+        {
+            _timerText.text = timer.ToString();
+            yield return new WaitForSeconds(1);
+            timer--;
+        }
         _roundsParameter.hasRoundStarted = false;
         _robberManager.DispawnRobber();
         if (_preStartRoundCoroutine != null)

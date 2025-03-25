@@ -39,7 +39,8 @@ public class TutorialManager : MonoBehaviour
     {
         _isTutorialCompleted = SceneLoading.Instance.IsTutoCompleted;
         AutoGetTutorialPages();
-        if (!_isTutorialCompleted)StartTutorial();
+        if (!_isTutorialCompleted) StartTutorial();
+        else CompleteTutorial();
     }
 
     private void AutoGetTutorialPages()
