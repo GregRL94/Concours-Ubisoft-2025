@@ -13,6 +13,7 @@ GameObject:
   - component: {fileID: 8788251838170829517}
   - component: {fileID: 378313550334396639}
   - component: {fileID: 2700775265593963603}
+  - component: {fileID: 5208392050733716490}
   m_Layer: 0
   m_Name: Vase
   m_TagString: MUSEUMOBJECT
@@ -125,3 +126,15 @@ MonoBehaviour:
   _objectStealableCD: 10
   _timeStealableCD: 0
   _isStolen: 0
+--- !u!114 &5208392050733716490
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7567881307903172242}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a383df0079a9dd3449b3889148860067, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
