@@ -108,6 +108,59 @@ MonoBehaviour:
   timeTillCaptureIndicatorAppear: 0
   captureDuration: 5
   robberCapture: {fileID: 0}
+--- !u!1 &4811968783051992124
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 6849989548463986765}
+  - component: {fileID: 7569506294769515535}
+  m_Layer: 0
+  m_Name: UIManager
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &6849989548463986765
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4811968783051992124}
+  serializedVersion: 2
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: -26.602997, y: -15.078732, z: 16.471504}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 5496437348749677003}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &7569506294769515535
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4811968783051992124}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 760faa2af91c2834bae148ad233313f2, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  Parent: {fileID: 0}
+  artefactText: {fileID: 1204367213253019009, guid: 56167cd0547c0e540a428daa7112a72b,
+    type: 3}
+  artefactNameCollection: []
+  captureThiefText: {fileID: 0}
+  captureGaugeFillTime: 0
+  fillCaptureGaugeImage: {fileID: 0}
+  fillCaptureGaugeIconImage: {fileID: 0}
+  currentCaptureThiefAmount: 0
 --- !u!1 &6507636436235381459
 GameObject:
   m_ObjectHideFlags: 0
@@ -141,6 +194,7 @@ Transform:
   - {fileID: 2307875789098193728}
   - {fileID: 2490109305407423027}
   - {fileID: 846813464508921277}
+  - {fileID: 6849989548463986765}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &1308096671972412955
@@ -155,14 +209,54 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6f7c262b668e7bd4f9628e2a756f9ac0, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _museumObjectManager: {fileID: 8551145803918306297}
+  _robberManager: {fileID: 9189048240540200624}
+  _trapManager: {fileID: 6528705165863518113}
+  _uiManager: {fileID: 7569506294769515535}
+  _maxPlayersReputation: 10
   _roundsParameter:
     timeBeforeRoundStart: 5
     roundTime: 20
     hasRoundStarted: 0
+  whistleBase:
+    whistleFleeRange: 4
+    whistleCaptureRange: 2
+    whistleCapturePower: 10
+    whistleCooldown: 5
+    fillImage: {fileID: 0}
+    timer: 0
+  alarmTrapBase:
+    trapPrefab: {fileID: 3498075083092552529, guid: 0c7d6ea4032edde4aa33a556c706c1fd,
+      type: 3}
+    setupTime: 1
+    initialCount: 3
+    cooldown: 3
+    countText: {fileID: 0}
+    fillImage: {fileID: 0}
+    currentCount: 0
+    timer: 0
+  pushTrapBase:
+    trapPrefab: {fileID: 2770947862988725122, guid: 52a1be5a9953ce0438137c3ddd843768,
+      type: 3}
+    setupTime: 2
+    initialCount: 2
+    cooldown: 4
+    countText: {fileID: 0}
+    fillImage: {fileID: 0}
+    currentCount: 0
+    timer: 0
+  captureTrapBase:
+    trapPrefab: {fileID: 8493981246009426259, guid: a86da0407480c6449933385c69ce7bea,
+      type: 3}
+    setupTime: 3
+    initialCount: 2
+    cooldown: 5
+    countText: {fileID: 0}
+    fillImage: {fileID: 0}
+    currentCount: 0
+    timer: 0
   _players: []
-  _museumObjectManager: {fileID: 8551145803918306297}
-  _robberManager: {fileID: 9189048240540200624}
-  _trapManager: {fileID: 6528705165863518113}
+  _playersReputation: []
 --- !u!1 &7988615855478924178
 GameObject:
   m_ObjectHideFlags: 0
@@ -208,3 +302,5 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _allMuseumObjects: []
+  stealInput: 0
+  uiManager: {fileID: 0}

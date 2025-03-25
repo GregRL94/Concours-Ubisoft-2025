@@ -146,7 +146,7 @@ public class GameManager : MonoBehaviour
         PlayerControls[] playersSorted = new PlayerControls[_players.Length];
         for (int i = 0; i < _players.Length; i++)
         {
-            if ((int)_players[i].PlayerID - 1 < 0) continue;
+            if (_players[i].PlayerID == PlayerEnum.NONE) continue;
             playersSorted[(int)_players[i].PlayerID - 1] = _players[i];
             //initialize player reputation
             _playersReputation[i].reputationValue = _maxPlayersReputation;

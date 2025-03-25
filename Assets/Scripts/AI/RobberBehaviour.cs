@@ -21,8 +21,6 @@ public class RobberBehaviour : BTAgent
     private float _stealTime = 10f;
     [SerializeField, Tooltip("Robber stealing range")]
     private float _stealRange = 2f;
-    [SerializeField, Tooltip("Robber stealing list")]
-    private List<ObjectType> _stealingList;
     
     [SerializeField]
     private GameObject _indicator;
@@ -34,6 +32,8 @@ public class RobberBehaviour : BTAgent
     private RobberCapture _robberCapture;
 
     [Header("DEBUG READING")]
+    [SerializeField, Tooltip("Robber stealing list")]
+    private List<ObjectType> _stealingList;
     [SerializeField]
     private MuseumObjects _currentTargetObject;
     private BTNode.Status _hasStolen = BTNode.Status.RUNNING;
@@ -49,10 +49,12 @@ public class RobberBehaviour : BTAgent
     private Coroutine _fleeingTimer;
     private Coroutine _detectPlayers;
     public bool IsVulnerable => _isVulnerable;
+    public List<ObjectType> StealingList => _stealingList;
 
     // Start is called before the first frame update
     public override void Start()
     {
+        StopAllCoroutines();
         base.Start();
         _currentVision = _radialVision;
         if(!_robberAgent)_robberAgent = GetComponent<NavMeshAgent>();
@@ -104,14 +106,22 @@ public class RobberBehaviour : BTAgent
     public BTNode.Status HasStealedEverything()
     {
         if (_stealingList.Count <= 0)
+        {
+            Debug.Log("huh");
             return BTNode.Status.FAILURE;
-        return BTNode.Status.SUCCESS;
+        }
+        else return BTNode.Status.SUCCESS;
     }
     public BTNode.Status GoToObjectListed()
     {
         if (_currentTargetObject == null) GetNearestObject(false);
         //stop the node if no object to steal
-        if(_currentTargetObject == null)return BTNode.Status.FAILURE;
+        if (_currentTargetObject == null)
+        {
+            Debug.LogWarning("NO CURRENT TARGET OBJECT");
+            return BTNode.Status.FAILURE;
+        }
+
 
         BTNode.Status s = GoToPosition(_currentTargetObject.transform.position);
         if (s == BTNode.Status.SUCCESS)
@@ -127,7 +137,7 @@ public class RobberBehaviour : BTAgent
     private void GetNearestObject(bool bypassObjectCDCondition)
     {
         MuseumObjects[] museumObjects = GameManager.Instance.MuseumObjectsManager.GetObjectList(_stealingList[0]);
-        
+        if (museumObjects == null) return;
         float minDistance = float.MaxValue;
         MuseumObjects nearestObject = null;
         int objectsInCd = 0;
@@ -179,7 +189,6 @@ public class RobberBehaviour : BTAgent
             //animation de vol fini
 
             _hasStolen = BTNode.Status.SUCCESS;
-            state = ActionState.IDLE;
 
             //steal object
             GameManager.Instance.MuseumObjectsManager.CheckArtefactStolen(_currentTargetObject);
@@ -277,6 +286,8 @@ public class RobberBehaviour : BTAgent
         _isVulnerable = true;
         _robberAgent.speed = 0;
         _currentVision = 0;
+        _robberAgent.isStopped = true;
+        _rb.angularVelocity = Vector3.zero;
         _rb.velocity = Vector3.zero;
         //lance l'animation vulnerable
 
@@ -288,6 +299,7 @@ public class RobberBehaviour : BTAgent
         _isVulnerable = false;
         _robberAgent.speed = _vBase;
         _currentVision = _radialVision;
+        _robberAgent.isStopped = false;
         //animation vulnerable fini
 
     }
