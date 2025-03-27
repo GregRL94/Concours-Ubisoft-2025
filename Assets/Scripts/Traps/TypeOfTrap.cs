@@ -19,7 +19,7 @@ public class TypeOfTrap : MonoBehaviour, ITrap
         trap = GetComponent<ITrap>();
     }
 
-    public void ActivateTrap()
+    public void ActivateTrap(Vector3 pos)
     {
         if(selectedTrap == AbilitiesEnum.ALARM_TRAP)
         {
@@ -31,7 +31,7 @@ public class TypeOfTrap : MonoBehaviour, ITrap
         }
         else if (selectedTrap == AbilitiesEnum.CAPTURE_TRAP)
         {
-            GameManager.Instance.TrapManager.TriggerCaptureTrap();
+            GameManager.Instance.TrapManager.TriggerCaptureTrap(trapOwner,pos);
         }
     }
 
@@ -39,7 +39,7 @@ public class TypeOfTrap : MonoBehaviour, ITrap
     {
         if (other.CompareTag("ENEMY"))
         {
-            trap.ActivateTrap();
+            trap.ActivateTrap(transform.position);
         }
     }
 }

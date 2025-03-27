@@ -176,7 +176,7 @@ public class EnemyTrapBehaviour : MonoBehaviour
                 agent.speed = agentInitialSpeed;
                 hasFleeToDestination = false;
                 indicator.SetActive(false);
-                Destroy(alarmTrap); // todo: when to destroy alarm gameobject ???
+                Destroy(alarmTrap); 
             }
             yield return null; // calculates it in every frame
         }
