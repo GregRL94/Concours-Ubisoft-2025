@@ -14,8 +14,11 @@ public class MuseumObjects : MonoBehaviour
     [Header("DEBUG")]
     [SerializeField]
     protected float _timeStealableCD;
+    [SerializeField]
+    protected bool _isStolen;
     public ObjectType MuseumObjectType => _objectType;
     public PlayerEnum ObjectOwner => _objectOwner;
+    public bool IsStolen => _isStolen;
 
     protected Coroutine _cdCoroutine;
 
@@ -33,5 +36,6 @@ public class MuseumObjects : MonoBehaviour
     }
 
     public bool IsObjectStealable() => _timeStealableCD <= 0;
+    public void StealObject() => _isStolen = true;
 
 }
