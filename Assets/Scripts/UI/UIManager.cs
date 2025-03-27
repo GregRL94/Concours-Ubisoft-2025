@@ -464,6 +464,12 @@ public class UIManager : MonoBehaviour
         // Determine which player captured the thief at the end of the round
         if (currentCaptureThiefAmount >= maxCaptureThiefAmount)
         {
+            if (playerID == PlayerEnum.NONE)
+            {
+                currentCaptureThiefAmount--;
+                StartCoroutine(UpdateCaptureThiefUI(previousAmount, currentCaptureThiefAmount));
+                return;
+            }
             GameManager.Instance.LosePlayerReputationByCapturingThief(playerID, 1);
         }
         print("####### UpdateCaptureThiefGauge End ####### ");

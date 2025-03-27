@@ -257,8 +257,8 @@ public class GameManager : MonoBehaviour
             print(Time.time);
         }
 
-        _roundsParameter.hasRoundStarted = false;
-        _robberManager.DispawnRobber();
+        //_roundsParameter.hasRoundStarted = false;
+        //_robberManager.DispawnRobber();
 
         //todo: Audio - For Round Finished
         _uiManager.ShowReputationBoard(_playersReputation, _maxPlayersReputation, _minPlayersReputation);
@@ -276,6 +276,8 @@ public class GameManager : MonoBehaviour
     #endregion
     void Update()
     {
+        // todo: Thomas - Pause(robber) everything in game except ui Update for next round
+        // todo: Thomas - Check robber amount object left
         CheckEndRound();
     }
 
@@ -283,7 +285,6 @@ public class GameManager : MonoBehaviour
     {
         if ((ValidateMuseumEmpty() || UIManager.GetCurrentCaptureThiefAmount >= UIManager.GetmaxCaptureThiefAmount) && !_endGame)
         {
-            // todo: Ajmal - Pause everything in game except ui Update for next round
             _endGame = true;
             UIManager.ShowReputationBoard(_playersReputation, _maxPlayersReputation, _minPlayersReputation);
         }
