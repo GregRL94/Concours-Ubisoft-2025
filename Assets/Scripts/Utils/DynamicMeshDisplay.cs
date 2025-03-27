@@ -1,25 +1,29 @@
+using System.Collections.Generic;
 using UnityEngine;
 
 public class DynamicMeshDisplay : MonoBehaviour
 {
-    MeshRenderer _meshRenderer;
+    List<MeshRenderer> _meshes = new List<MeshRenderer>();
 
     void Start()
     {
-        _meshRenderer = GetComponent<MeshRenderer>();
+        foreach (Transform child in GetFirstLevelChidren(transform))
+        {
+            if(child.GetComponent<MeshRenderer>() != null)
+            {
+                _meshes.Add(child.GetComponent<MeshRenderer>());
+            }
+        }
     }
 
     public void OnGetVision(bool show)
     {
         if (gameObject.CompareTag("ENEMY"))
         {
-            if (show)
+            for (int i = 0; i < _meshes.Count; i++)
             {
-                _meshRenderer.enabled = true;
-                return;
+                _meshes[i].enabled = show;
             }
-            _meshRenderer.enabled = false;
-            return;
         }
 
         if (gameObject.CompareTag("MUSEUMOBJECT"))
@@ -28,8 +32,19 @@ public class DynamicMeshDisplay : MonoBehaviour
             if (museumObject.IsStolen)
             {
                 gameObject.SetActive(false);
-                return;
             }
         }
+    }
+
+    private List<Transform> GetFirstLevelChidren(Transform parent)
+    {
+        List<Transform> listOfChildren = new List<Transform>();
+
+        foreach (Transform child in parent)
+        {
+            listOfChildren.Add(child);
+        }
+
+        return listOfChildren;
     }
 }

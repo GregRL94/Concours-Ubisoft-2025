@@ -10,7 +10,7 @@ GameObject:
   m_Component:
   - component: {fileID: 9177788909562754300}
   - component: {fileID: 4488573719565046832}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: PF_Pedestal
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -52,8 +52,8 @@ BoxCollider:
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 3
-  m_Size: {x: 0.5, y: 1.2294196, z: 0.5}
-  m_Center: {x: 0, y: 0.6692206, z: 0}
+  m_Size: {x: 0.5, y: 0.85, z: 0.5}
+  m_Center: {x: 0, y: 0.49, z: 0}
 --- !u!1001 &7542457679793492253
 PrefabInstance:
   m_ObjectHideFlags: 0

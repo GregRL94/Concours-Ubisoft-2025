@@ -654,6 +654,7 @@ MonoBehaviour:
   _objectType: 0
   _objectStealableCD: 10
   _timeStealableCD: 0
+  _isStolen: 0
 --- !u!64 &148219572
 MeshCollider:
   m_ObjectHideFlags: 0
@@ -781,6 +782,7 @@ MonoBehaviour:
   _objectType: 1
   _objectStealableCD: 10
   _timeStealableCD: 0
+  _isStolen: 0
 --- !u!65 &188577291
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -2480,6 +2482,7 @@ MonoBehaviour:
   _objectType: 0
   _objectStealableCD: 10
   _timeStealableCD: 0
+  _isStolen: 0
 --- !u!1 &919599686
 GameObject:
   m_ObjectHideFlags: 0
@@ -4976,6 +4979,7 @@ MonoBehaviour:
   _objectType: 0
   _objectStealableCD: 10
   _timeStealableCD: 0
+  _isStolen: 0
 --- !u!114 &1984504571 stripped
 MonoBehaviour:
   m_CorrespondingSourceObject: {fileID: 8447471986863284113, guid: 3a9ac99fe884a544482c80efc86e1f78,
@@ -5647,13 +5651,13 @@ PrefabInstance:
         type: 3}
       propertyPath: pushTrapBase.trapPrefab
       value: 
-      objectReference: {fileID: 2770947862988725122, guid: 52a1be5a9953ce0438137c3ddd843768,
+      objectReference: {fileID: 5354938375276220566, guid: 6dec6df1cb895eb438b2d1e2ad37cc49,
         type: 3}
     - target: {fileID: 1308096671972412955, guid: 0fc8b0361f3adb04f9da3a1279eaf35d,
         type: 3}
       propertyPath: alarmTrapBase.trapPrefab
       value: 
-      objectReference: {fileID: 3498075083092552529, guid: 0c7d6ea4032edde4aa33a556c706c1fd,
+      objectReference: {fileID: 6068576871829732595, guid: 6420b40663b20694c9fd444218cb98bc,
         type: 3}
     - target: {fileID: 1308096671972412955, guid: 0fc8b0361f3adb04f9da3a1279eaf35d,
         type: 3}
@@ -5679,7 +5683,7 @@ PrefabInstance:
         type: 3}
       propertyPath: captureTrapBase.trapPrefab
       value: 
-      objectReference: {fileID: 8493981246009426259, guid: a86da0407480c6449933385c69ce7bea,
+      objectReference: {fileID: 5772873612793821327, guid: c3dd2a5796484e843b1c104b1f391f1d,
         type: 3}
     - target: {fileID: 1308096671972412955, guid: 0fc8b0361f3adb04f9da3a1279eaf35d,
         type: 3}
@@ -5776,11 +5780,36 @@ PrefabInstance:
       propertyPath: captureTrap
       value: 
       objectReference: {fileID: 5130346872949624738}
+    - target: {fileID: 7569506294769515535, guid: 0fc8b0361f3adb04f9da3a1279eaf35d,
+        type: 3}
+      propertyPath: captureThiefText
+      value: 
+      objectReference: {fileID: 253500785}
+    - target: {fileID: 7569506294769515535, guid: 0fc8b0361f3adb04f9da3a1279eaf35d,
+        type: 3}
+      propertyPath: fillCaptureGaugeImage
+      value: 
+      objectReference: {fileID: 253500788}
+    - target: {fileID: 7569506294769515535, guid: 0fc8b0361f3adb04f9da3a1279eaf35d,
+        type: 3}
+      propertyPath: fillCaptureGaugeIconImage
+      value: 
+      objectReference: {fileID: 253500787}
     - target: {fileID: 8551145803918306297, guid: 0fc8b0361f3adb04f9da3a1279eaf35d,
         type: 3}
       propertyPath: uiManager
       value: 
       objectReference: {fileID: 453285056}
+    - target: {fileID: 9189048240540200624, guid: 0fc8b0361f3adb04f9da3a1279eaf35d,
+        type: 3}
+      propertyPath: _stealObjectList.Array.size
+      value: 3
+      objectReference: {fileID: 0}
+    - target: {fileID: 9189048240540200624, guid: 0fc8b0361f3adb04f9da3a1279eaf35d,
+        type: 3}
+      propertyPath: _stealObjectList.Array.data[2]
+      value: 1
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []

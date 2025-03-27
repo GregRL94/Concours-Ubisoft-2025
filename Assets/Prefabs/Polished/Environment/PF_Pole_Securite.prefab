@@ -10,7 +10,7 @@ GameObject:
   m_Component:
   - component: {fileID: 265359058373868559}
   - component: {fileID: 5707484280352742340}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: PF_Pole_Securite
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -132,6 +132,11 @@ PrefabInstance:
       propertyPath: m_ConstrainProportionsScale
       value: 1
       objectReference: {fileID: 0}
+    - target: {fileID: -8580433622201042945, guid: 2feeae649b375d84c8195df125ebad1e,
+        type: 3}
+      propertyPath: m_Layer
+      value: 7
+      objectReference: {fileID: 0}
     - target: {fileID: -7933004941265063346, guid: 2feeae649b375d84c8195df125ebad1e,
         type: 3}
       propertyPath: m_Materials.Array.data[0]
@@ -150,7 +155,17 @@ PrefabInstance:
     - target: {fileID: 919132149155446097, guid: 2feeae649b375d84c8195df125ebad1e,
         type: 3}
       propertyPath: m_Name
-      value: PoleSecurite (1)
+      value: PoleSecurite
+      objectReference: {fileID: 0}
+    - target: {fileID: 919132149155446097, guid: 2feeae649b375d84c8195df125ebad1e,
+        type: 3}
+      propertyPath: m_Layer
+      value: 7
+      objectReference: {fileID: 0}
+    - target: {fileID: 1748528876415048195, guid: 2feeae649b375d84c8195df125ebad1e,
+        type: 3}
+      propertyPath: m_Layer
+      value: 7
       objectReference: {fileID: 0}
     - target: {fileID: 2033756387121500926, guid: 2feeae649b375d84c8195df125ebad1e,
         type: 3}
@@ -167,6 +182,21 @@ PrefabInstance:
       propertyPath: m_Materials.Array.data[1]
       value: 
       objectReference: {fileID: 2100000, guid: 0acdc33ef840fd4459c6eff06ee75b31, type: 2}
+    - target: {fileID: 3308773639039269856, guid: 2feeae649b375d84c8195df125ebad1e,
+        type: 3}
+      propertyPath: m_Layer
+      value: 7
+      objectReference: {fileID: 0}
+    - target: {fileID: 4655185663659888783, guid: 2feeae649b375d84c8195df125ebad1e,
+        type: 3}
+      propertyPath: m_Layer
+      value: 7
+      objectReference: {fileID: 0}
+    - target: {fileID: 5681894239345259717, guid: 2feeae649b375d84c8195df125ebad1e,
+        type: 3}
+      propertyPath: m_Layer
+      value: 7
+      objectReference: {fileID: 0}
     - target: {fileID: 5687457657680106041, guid: 2feeae649b375d84c8195df125ebad1e,
         type: 3}
       propertyPath: m_Materials.Array.data[0]

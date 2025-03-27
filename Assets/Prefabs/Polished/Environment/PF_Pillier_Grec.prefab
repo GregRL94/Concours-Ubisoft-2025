@@ -11,7 +11,7 @@ GameObject:
   - component: {fileID: -8679921383154817045}
   - component: {fileID: -5754084199372789682}
   - component: {fileID: -7511558181221131132}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: PillierGrec
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -93,7 +93,7 @@ GameObject:
   m_Component:
   - component: {fileID: 4945559687814459289}
   - component: {fileID: 6297267944515047083}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: PF_Pillier_Grec
   m_TagString: Untagged
   m_Icon: {fileID: 0}
