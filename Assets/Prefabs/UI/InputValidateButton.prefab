@@ -11,7 +11,7 @@ GameObject:
   - component: {fileID: 6588086941098082901}
   - component: {fileID: 985479938118388604}
   - component: {fileID: 8915183370171102466}
-  - component: {fileID: 4236609043040174260}
+  - component: {fileID: 9060177444615639598}
   m_Layer: 0
   m_Name: InputValidateButton
   m_TagString: Untagged
@@ -76,7 +76,7 @@ MonoBehaviour:
   m_FillOrigin: 0
   m_UseSpriteMesh: 0
   m_PixelsPerUnitMultiplier: 1
---- !u!114 &4236609043040174260
+--- !u!114 &9060177444615639598
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -85,8 +85,9 @@ MonoBehaviour:
   m_GameObject: {fileID: 8188035926729600133}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: a9204672f332b94498b5bbb3f849f814, type: 3}
+  m_Script: {fileID: 11500000, guid: 28fef6f9d168ae84e85511515ef677d3, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _isValidated: 0
   _validateSprite: {fileID: 21300000, guid: b0e22694141503c41bfec1d209f68a71, type: 3}
   _image: {fileID: 8915183370171102466}

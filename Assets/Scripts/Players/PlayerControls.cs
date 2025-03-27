@@ -148,7 +148,7 @@ public class PlayerControls : MonoBehaviour
     #region Movement
     public void Movement(InputAction.CallbackContext context)
     {
-        if (!GameManager.Instance.TutorialManager.IsTutorialCompleted && GameManager.Instance.TutorialManager.CurrentTutorialType == UITutorialStep.MOVE_STEP) GameManager.Instance.TutorialManager.DynamicValidatePage(_playerID);
+        if (!GameManager.Instance.TutorialManager.IsTutorialCompleted && GameManager.Instance.TutorialManager.CurrentTutorialType == UITutorialStep.MOVE_STEP) GameManager.Instance.UIManager.CurrentPlayerValidation.DynamicValidatePage(_playerID);
         _leftJoystickInput = context.ReadValue<Vector2>();        
     }
 
@@ -194,7 +194,7 @@ public class PlayerControls : MonoBehaviour
 
     private void Whistle(InputAction.CallbackContext context)
     {
-        if (!GameManager.Instance.TutorialManager.IsTutorialCompleted && GameManager.Instance.TutorialManager.CurrentTutorialType == UITutorialStep.WHISTLE_STEP) GameManager.Instance.TutorialManager.DynamicValidatePage(_playerID);
+        if (!GameManager.Instance.TutorialManager.IsTutorialCompleted && GameManager.Instance.TutorialManager.CurrentTutorialType == UITutorialStep.WHISTLE_STEP) GameManager.Instance.UIManager.CurrentPlayerValidation.DynamicValidatePage(_playerID);
         _playerActions.PerformWhistle(_gameAgentsMask);
     }
     #endregion
@@ -202,7 +202,7 @@ public class PlayerControls : MonoBehaviour
     #region Traps
     private void OnStartTrapDeployment(InputAction.CallbackContext context)
     {
-        if (!GameManager.Instance.TutorialManager.IsTutorialCompleted && GameManager.Instance.TutorialManager.CurrentTutorialType == UITutorialStep.PLACE_TRAP_STEP) GameManager.Instance.TutorialManager.DynamicValidatePage(_playerID);
+        if (!GameManager.Instance.TutorialManager.IsTutorialCompleted && GameManager.Instance.TutorialManager.CurrentTutorialType == UITutorialStep.PLACE_TRAP_STEP) GameManager.Instance.UIManager.CurrentPlayerValidation.DynamicValidatePage(_playerID);
         _playerActions.StartTrapDeployment(_gameGrid.NodeFromWorldPos(_snappedInteractionPoint));
     }
 
@@ -213,15 +213,14 @@ public class PlayerControls : MonoBehaviour
 
     private void OnRotateTrap(InputAction.CallbackContext context)
     {
-        if (!GameManager.Instance.TutorialManager.IsTutorialCompleted && GameManager.Instance.TutorialManager.CurrentTutorialType == UITutorialStep.ROTATE_STRAP_STEP) GameManager.Instance.TutorialManager.DynamicValidatePage(_playerID);
+        if (!GameManager.Instance.TutorialManager.IsTutorialCompleted && GameManager.Instance.TutorialManager.CurrentTutorialType == UITutorialStep.ROTATE_STRAP_STEP) GameManager.Instance.UIManager.CurrentPlayerValidation.DynamicValidatePage(_playerID);
         _playerActions.RotateTrap(context.ReadValue<float>(), _currentTrap);
     }
 
     private void OnUIValidatePage(InputAction.CallbackContext context)
     {
-        if (GameManager.Instance.TutorialManager.IsTutorialCompleted) return;
-        if (GameManager.Instance.TutorialManager.CurrentTutorialType != UITutorialStep.TALK_STEP) return;
-        GameManager.Instance.TutorialManager.DynamicValidatePage(_playerID);
+        if (GameManager.Instance.TutorialManager.CurrentTutorialType != UITutorialStep.TALK_STEP && !GameManager.Instance.UIManager.CurrentPlayerValidation.SimpleValidate) return;
+        GameManager.Instance.UIManager.CurrentPlayerValidation.DynamicValidatePage(_playerID);
     }
     #endregion
 

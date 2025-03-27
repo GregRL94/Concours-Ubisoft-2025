@@ -90,6 +90,10 @@ public class GameManager : MonoBehaviour
     private Rounds _roundsParameter;
     public Rounds RoundParameter => _roundsParameter;
 
+    [SerializeField]
+    private Color[] _playerColor;
+    public Color[] PlayerColor => _playerColor;
+
     [Header("-- ABILITIES --")]
     [Header("Whistle")]
     [SerializeField] private WhistleData whistleBase;

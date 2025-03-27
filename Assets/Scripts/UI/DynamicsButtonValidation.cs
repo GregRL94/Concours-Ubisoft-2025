@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
-public class TutorialGeneratedButton : MonoBehaviour
+public class DynamicsButtonValidation : MonoBehaviour
 {
     [SerializeField]
     private bool _isValidated;
@@ -13,11 +13,9 @@ public class TutorialGeneratedButton : MonoBehaviour
     private Image _image;
     public Image Image => _image;
     public bool IsValidated => _isValidated;
-    private void Start() => GameManager.Instance.TutorialManager.ValidateButtons.Add(this);
     public void ValidateButton()
     {
         _image.sprite = _validateSprite;
         _isValidated = true;
     }
-
 }

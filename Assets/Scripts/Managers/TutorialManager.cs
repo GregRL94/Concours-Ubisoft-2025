@@ -24,14 +24,7 @@ public class TutorialManager : MonoBehaviour
     private int _currentTutorialPageIndex;
     [SerializeField]
     private UITutorialStep _currentTutorialType;
-    [SerializeField]
-    private List<TutorialGeneratedButton> _validateButtons;
-    public List<TutorialGeneratedButton> ValidateButtons => _validateButtons;
-    [SerializeField]
-    private int _nbValidatedButton = 0;
-    [SerializeField]
-    private Color[] _playerColor;
-    public Color[] PlayerColor => _playerColor;
+    
     public bool IsTutorialCompleted => _isTutorialCompleted;
     public UITutorialStep CurrentTutorialType { get { return _currentTutorialType; } set { _currentTutorialType = value; } }
 
@@ -87,7 +80,6 @@ public class TutorialManager : MonoBehaviour
         _tutorialPages[index].SetActive(true);
         _currentTutorialPage = _tutorialPages[index];
         _currentTutorialPageIndex = index;
-        _validateButtons.Clear();
     }
 
     private void CompleteTutorial()
@@ -99,25 +91,4 @@ public class TutorialManager : MonoBehaviour
         SceneLoading.Instance.IsTutoCompleted = _isTutorialCompleted;
     }
 
-    //Validate button for player
-    //if all players validated, go to next tutorial page
-    public void DynamicValidatePage(PlayerEnum playerID)
-    {
-        int id = (int)playerID;
-        if (id > _validateButtons.Count || id <= 0) return;
-        if (_validateButtons[id - 1].IsValidated) return;
-        for (int i = 0; i < _validateButtons.Count; i++)
-        {
-            if (i != id - 1) continue;
-            _validateButtons[i].ValidateButton();
-        }
-        //SFX de bouton valide
-
-        _nbValidatedButton++;
-        if(_nbValidatedButton >= _validateButtons.Count)
-        {
-            _nbValidatedButton = 0;
-            NextTutorialPage();
-        }
-    }
 }
