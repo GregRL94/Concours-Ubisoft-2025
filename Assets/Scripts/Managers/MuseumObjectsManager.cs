@@ -18,7 +18,6 @@ public class MuseumObjectsManager : MonoBehaviour
 
     public UIManager uiManager;
 
-
     void Start()
     {
         //we get all museum objects

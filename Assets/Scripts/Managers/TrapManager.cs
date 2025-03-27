@@ -140,7 +140,8 @@ public class TrapManager : MonoBehaviour
     private IEnumerator RunAwayDelay()
     {
         //Run Away for RobberBehaviour
-        robberCapture?.GetSifled(PlayerEnum.NONE, 10);
+        // todo - (Gregory || Thomas) Trap id from player that set the trap and value
+        robberCapture?.GetSifled(PlayerEnum.PLAYER1, 10);
 
         yield return new WaitForSeconds(timeTillAlarmIndicatorAppear);
         Destroy(alarmTrap);
@@ -244,7 +245,7 @@ public class TrapManager : MonoBehaviour
 
     IEnumerator StunAfterPush()
     {
-        robberCapture?.GetSifled(PlayerEnum.PLAYER2, 5);
+        robberCapture?.GetSifled(PlayerEnum.PLAYER2, 10);
         
         yield return new WaitForSeconds(timeTillPushIndicatorAppear);
         if(_indicator == null)yield break;
@@ -299,7 +300,7 @@ public class TrapManager : MonoBehaviour
 
     IEnumerator StunFromCapture()
     {
-        robberCapture?.GetSifled(PlayerEnum.NONE, 1);
+        robberCapture?.GetSifled(PlayerEnum.PLAYER1, 1);
         
         yield return new WaitForSeconds(timeTillCaptureIndicatorAppear);
         if(_indicator == null) yield break;

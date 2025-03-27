@@ -79,13 +79,10 @@ public class GameManager : MonoBehaviour
     private TrapManager _trapManager;
     [SerializeField]
     private UIManager _uiManager;
-    [SerializeField]
-    private CaptureThiefManager _captureThiefManager;
 
     [Header("Metrics")]
     [Range(0,13)][SerializeField]
     private int _maxPlayersReputation = 10;
-    public int MaxPlayersReputation => _maxPlayersReputation;
     const int _minPlayersReputation = -4;
     [SerializeField]
     private Rounds _roundsParameter;
@@ -121,17 +118,21 @@ public class GameManager : MonoBehaviour
     public RobberManager RobberManager => _robberManager;
     public TrapManager TrapManager => _trapManager;
     public UIManager UIManager => _uiManager;
-    public CaptureThiefManager CaptureThiefManager => _captureThiefManager;
 
 
     [Header("Round Metrics")]
+    [SerializeField]
+    private int showTimeBeforeRoundEnd = 5;
     private Coroutine _preStartRoundCoroutine;
     private Coroutine _startRoundCoroutine;
-    public TextMeshProUGUI countdown;
+    private bool _endGame = false;
+
 
     public static GameManager Instance { get; private set; }
     void Awake()
     {
+        DetachGameManager();
+
         if (Instance == null)
         {
             Instance = this;
@@ -139,8 +140,8 @@ public class GameManager : MonoBehaviour
         }
         else
             Destroy(this.gameObject);
-    }
 
+    }
     void OnEnable()
     {
         SceneManager.sceneLoaded += OnSceneLoaded;
@@ -150,82 +151,86 @@ public class GameManager : MonoBehaviour
     {
         SceneManager.sceneLoaded -= OnSceneLoaded;
     }
+    void OnApplicationQuit()
+    {
+        print("Reset Player Points on Quit");
+        GameData.ResetPlayerPoints();
+    }
 
     void OnSceneLoaded(Scene scene, LoadSceneMode mode)
     {
-        Debug.Log($"Scene Loaded: {scene.name}. Reassigning references...");
 
-        endGame = false;
-        _museumObjectManager = FindAnyObjectByType<MuseumObjectsManager>();
-        _robberManager = FindAnyObjectByType<RobberManager>();
-        _trapManager = FindAnyObjectByType<TrapManager>();
-        _uiManager = FindAnyObjectByType<UIManager>();
-        _captureThiefManager = FindAnyObjectByType<CaptureThiefManager>();
-
-        ReInitializePlayers();
-
-        UIManager.CreatePlayersReputationUI(_maxPlayersReputation, _minPlayersReputation,_playersReputation);
-
-        // start gameplay loop
-        _preStartRoundCoroutine = StartCoroutine(PreStartRound(_roundsParameter.timeBeforeRoundStart));
-
-    }
-    void Start()
-    {
-        print("GameManager Hey");
+        AssignManagers();
         InitializePlayers();
 
-        //TODO: UI - Time before round starts
+        UIManager.CreatePlayersReputationUI(_maxPlayersReputation, _minPlayersReputation, _playersReputation);
+
+        // Start gameplay loop
+        _endGame = false;
+        _preStartRoundCoroutine = StartCoroutine(PreStartRound(_roundsParameter.timeBeforeRoundStart));
+    }
+
+    void DetachGameManager()
+    {
+        if (transform.childCount > 0)
+        {
+            // Store all children before detaching to avoid modification issues during iteration
+            List<Transform> children = new List<Transform>();
+
+            foreach (Transform child in transform)
+            {
+                children.Add(child);
+            }
+
+            // Detach each child
+            foreach (Transform child in children)
+            {
+                child.SetParent(null); // Removes the parent-child relationship
+            }
+        }
+    }
+
+    private void AssignManagers()
+    {
+        if(!_museumObjectManager) _museumObjectManager = FindAnyObjectByType<MuseumObjectsManager>();
+        if(!_robberManager)_robberManager = FindAnyObjectByType<RobberManager>();
+        if(!_trapManager)_trapManager = FindAnyObjectByType<TrapManager>();
+        if(!_uiManager)_uiManager = FindAnyObjectByType<UIManager>();
     }
 
     private void InitializePlayers()
     {
         _players = FindObjectsOfType<PlayerControls>();
-        _playersReputation = new PlayerReputation[_players.Length];
+        int playerCount = _players.Length;
+        _playersReputation = new PlayerReputation[playerCount];
 
-        //sort player depending on its id
-        PlayerControls[] playersSorted = new PlayerControls[_players.Length];
-        for (int i = 0; i < _players.Length; i++)
+        PlayerControls[] playersSorted = new PlayerControls[playerCount];
+
+        for (int i = 0; i < playerCount; i++)
         {
-            if ((int)_players[i].PlayerID - 1 < 0) continue;
-            playersSorted[(int)_players[i].PlayerID - 1] = _players[i];
-            //initialize player reputation
-            _playersReputation[i].reputationValue = _maxPlayersReputation;
+            int playerIndex = (int)_players[i].PlayerID - 1;
+            if (playerIndex < 0 || playerIndex >= playerCount) continue;
+
+            playersSorted[playerIndex] = _players[i];
+
+            _playersReputation[i] = new PlayerReputation
+            {
+                reputationValue = GameData.FirstRound ? _maxPlayersReputation :
+                                (playerIndex == 0 ? GameData.p1Point : GameData.p2Point)
+            };
+
+            if (GameData.FirstRound)
+            {
+                if (playerIndex == 0) GameData.p1Point = _maxPlayersReputation;
+                else GameData.p2Point = _maxPlayersReputation;
+            }
         }
-
-        GameData.p1Point = _maxPlayersReputation;
-        GameData.p2Point = _maxPlayersReputation;
-        Debug.Log($"Chargement des scores : P1 = {GameData.p1Point}, P2 = {GameData.p2Point}");
-        print("P1 " + _playersReputation[0].reputationValue + "P2 " +
-        _playersReputation[1].reputationValue + "in Initial Players !");
-
-        _players = playersSorted;
-    }
-
-    private void ReInitializePlayers()
-    {
-        _players = FindObjectsOfType<PlayerControls>();
-        _playersReputation = new PlayerReputation[_players.Length];
-
-        //sort player depending on its id
-        PlayerControls[] playersSorted = new PlayerControls[_players.Length];
-        for (int i = 0; i < _players.Length; i++)
-        {
-            if ((int)_players[i].PlayerID - 1 < 0) continue;
-            playersSorted[(int)_players[i].PlayerID - 1] = _players[i];
-        }
-
-         //initialize player reputation
-        _playersReputation[0].reputationValue = GameData.p1Point;
-        _playersReputation[1].reputationValue = GameData.p2Point;
-
-
-        print("P1 " + _playersReputation[0].reputationValue + " P2 " +
-        _playersReputation[1].reputationValue + " in scene on Loaded !");
 
         _players = playersSorted;
 
+        //print($"P1 {_playersReputation[0].reputationValue} | P2 {_playersReputation[1].reputationValue} in scene on Loaded!");
     }
+
 
     #region Rounds Management
     private IEnumerator PreStartRound(float time)
@@ -236,7 +241,7 @@ public class GameManager : MonoBehaviour
             StopCoroutine(_startRoundCoroutine);
             _startRoundCoroutine = null;
         }
-        _startRoundCoroutine = StartCoroutine(StartRound(_roundsParameter.roundTime, _roundsParameter.roundTime - 5));
+        _startRoundCoroutine = StartCoroutine(StartRound(_roundsParameter.roundTime, _roundsParameter.roundTime - showTimeBeforeRoundEnd)); 
     }
     private IEnumerator StartRound(float time, float timeLeftWarning)
     {
@@ -246,8 +251,8 @@ public class GameManager : MonoBehaviour
 
         for (int i = 0; i < time - timeLeftWarning ; i++)
         {
-            int test = (int)((int)time - timeLeftWarning - i);
-            countdown.text = test.ToString();
+            int timeLeft = (int)((int)time - timeLeftWarning - i);
+            _uiManager.ShowUIRoundCountdown(timeLeft);
             yield return new WaitForSeconds(1);
             print(Time.time);
         }
@@ -255,10 +260,10 @@ public class GameManager : MonoBehaviour
         _roundsParameter.hasRoundStarted = false;
         _robberManager.DispawnRobber();
 
-        // Audio For Round Finished !
-        // todo: show board !
-        _uiManager.Invoke("ShowReputationBoard", 1f);
-     
+        //todo: Audio - For Round Finished
+        _uiManager.ShowReputationBoard(_playersReputation, _maxPlayersReputation, _minPlayersReputation);
+    
+
         //_roundsParameter.hasRoundStarted = false;
         //_robberManager.DispawnRobber();
         //if (_preStartRoundCoroutine != null)
@@ -269,50 +274,43 @@ public class GameManager : MonoBehaviour
         //_preStartRoundCoroutine = StartCoroutine(PreStartRound(_roundsParameter.timeBeforeRoundStart));
     }
     #endregion
-    public bool endGame = false;
-    private void Update()
+    void Update()
     {
-        print("GameManager Update !");
-        /*Time.time >= _roundsParameter.roundTime ||*/
-        if ((ValidateMuseumEmpty() || UIManager.GetCurrentCaptureThiefAmount >= UIManager.GetmaxCaptureThiefAmount) && !endGame)
-        {
-            
-            endGame = true;
-            UIManager.ShowReputationBoard( _playersReputation, _maxPlayersReputation, _minPlayersReputation);
-        }
-
+        CheckEndRound();
     }
+
+    void CheckEndRound()
+    {
+        if ((ValidateMuseumEmpty() || UIManager.GetCurrentCaptureThiefAmount >= UIManager.GetmaxCaptureThiefAmount) && !_endGame)
+        {
+            // todo: Ajmal - Pause everything in game except ui Update for next round
+            _endGame = true;
+            UIManager.ShowReputationBoard(_playersReputation, _maxPlayersReputation, _minPlayersReputation);
+        }
+    }
+
 
     //make a player lose reputation
     //check if player is registered in player list
     //if one player lose all his reputation and the other is alone, end the game
     public void LosePlayerReputation(PlayerEnum playerIndex, int loseValue)
     {
-        print("############ LosePlayerReputation ############");
         int index = (int)playerIndex;
-        print("PlayerEnum Index "+index);
         if (index < 0) return;
         if (index > _players.Length) return;
         _playersReputation[index - 1].reputationValue -= loseValue;
-        Debug.Log($"{_players[index - 1].name} has lose {loseValue}, and is now at {_playersReputation[index - 1].reputationValue} reputation !");
-        //UI Update for Player reputation
-        
-        //UIManager.UpdatePlayersReputationUI(index, _playersReputation, _maxPlayersReputation);
+        //Debug.Log($"{_players[index - 1].name} has lose {loseValue}, and is now at {_playersReputation[index - 1].reputationValue} reputation !");
 
         //if (_playersReputation[index - 1].reputationValue > 0) return;
         //_playersReputation[index - 1].isEliminated = true;
-
         //CheckPlayersElimination();
-
-        print("############ LosePlayerReputation End ############");
     }
 
 
-    // PlayerEnum -> (int)PLAYER 1 == 1 -> index == 0
-    // PlayerEnum -> (int)PLAYER 2 == 2 -> index == 1
+    // Determine which player did catch the thief at 100%
+    // Opposite player loses a point at the end of the round
     public void LosePlayerReputationByCapturingThief(PlayerEnum playerIndex, int loseValue)
     {
-        print("############ LosePlayerReputationByCapturingThief ############");
         int index = (int)playerIndex;
         if (index < 0 || index > _players.Length) return;
 
@@ -321,9 +319,7 @@ public class GameManager : MonoBehaviour
         else if (index == (int)PlayerEnum.PLAYER2) index--;
         else Debug.Log("Player ID NULL");
         _playersReputation[index - 1].reputationValue -= loseValue;
-        Debug.Log($"Captured Thief !!!!! {_players[index - 1].name} has lose {loseValue}, and is now at {_playersReputation[index - 1].reputationValue} reputation !");
         
-        print("############ LosePlayerReputationByCapturingThief End ############");
     }
 
 
@@ -338,6 +334,7 @@ public class GameManager : MonoBehaviour
             LosePlayerReputation((PlayerEnum)i + 1, loseValue);
         }
     }
+
 
     //check all players reputation
     //when there is only one player not eliminated, make that one player win
@@ -365,36 +362,15 @@ public class GameManager : MonoBehaviour
             Debug.Log("It's a DRAW !");
     }
 
-    //CheckAndDisplayReputationBoard 
+
+    //Check if museum has any remaining  artefacts
     public bool ValidateMuseumEmpty()
     {
         // Checks Museum List is Empty or Not
         if (_museumObjectManager.CountAllMuseumObjects() == 0)
         {
-            //ShowReputationBoard();
             return true;
         }
         return false;
     }
-
-
-    // Keeping Player Reputation data between scenes
-    #region Players Reputation Get/Set
-    //public PlayerReputation GetPlayerReputation(int playerIndex)
-    //{
-    //    return _playersReputation[playerIndex];
-    //}
-
-    //public void SetPlayerReputation(int playerIndex, int newReputation)
-    //{
-    //    _playersReputation[playerIndex].reputationValue = newReputation;
-
-    //    Debug.Log($"Réputation sauvegardée: Joueur {playerIndex + 1} = {_playersReputation[playerIndex].reputationValue}");
-
-    //}
-
-
-    #endregion
-
-
 }

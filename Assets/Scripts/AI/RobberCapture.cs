@@ -22,23 +22,14 @@ public class RobberCapture : MonoBehaviour
     public void GetSifled(PlayerEnum playerID, float captureValue)
     {
         _robberBehaviour.StartFleeState();
-        print("########### GetSifled ###########");
         Debug.Log("Robber Siffled and Captured by " + playerID + " for: " + captureValue);
         GameManager.Instance.UIManager.UpdateCaptureThiefGauge((int)captureValue, playerID);
-        print("You just got siffled for stepping into a trap: +" + captureValue + " - " + GameManager.Instance.UIManager.GetCurrentCaptureThiefAmount +
-              "/" + GameManager.Instance.UIManager.GetmaxCaptureThiefAmount);
-        print( "Round still going " + (GameManager.Instance.UIManager.GetCurrentCaptureThiefAmount < GameManager.Instance.UIManager.GetmaxCaptureThiefAmount).ToString() );
-        print("########### GetSifled End ###########");
 
-        // IF CURRENT CAPTURE BAR THIEF IS > MAX
         if (GameManager.Instance.UIManager.GetCurrentCaptureThiefAmount < GameManager.Instance.UIManager.GetmaxCaptureThiefAmount) return;
-        //if (playerID == PlayerEnum.NONE) return;
+        if (playerID == PlayerEnum.NONE) return;
         //_isCaptured = true;
         //GameManager.Instance.AllOtherPlayersLoseReputation(playerID, _capturedLoseReputationValue);
         //this.gameObject.SetActive(false);
-
-
-
     }
 
     public void StartVulnerability() => _robberBehaviour.StartVulnerableState();

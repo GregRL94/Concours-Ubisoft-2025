@@ -9,11 +9,16 @@ using static GameManager;
 
 public static class GameData
 {
-    public static int p1Point = 10;
-    public static int p1LastRoundPoint = 0;
-    public static int p2Point = 10;
-    public static int p2LastRoundPoint = 0;
-    public static bool skipFirstRound = true;
+    public static int p1Point;
+    public static int p2Point;
+    public static bool FirstRound = true;
+
+    public static void ResetPlayerPoints()
+    {
+        p1Point = 0;
+        p2Point = 0;
+        FirstRound = true;
+    }
 }
 
 public class UIManager : MonoBehaviour
@@ -30,9 +35,7 @@ public class UIManager : MonoBehaviour
     public float captureGaugeFillTime;
     public Image fillCaptureGaugeImage;
     public Image fillCaptureGaugeIconImage;
-    [HideInInspector] public Coroutine captureThiefRoutine;
 
-    ////////
     [Serializable]
     public class PlayerReputationUI
     {
@@ -61,7 +64,6 @@ public class UIManager : MonoBehaviour
     int currentCaptureThiefAmount;
     public int GetCurrentCaptureThiefAmount => currentCaptureThiefAmount;
     public int GetmaxCaptureThiefAmount => maxCaptureThiefAmount;
-    private Coroutine finishUpdateCaptureThiefUIRoutine;
 
     [Header("Reputation Board UI")]
     [SerializeField] private GameObject ReputationUIBoard;
@@ -71,9 +73,13 @@ public class UIManager : MonoBehaviour
     [SerializeField] private GameObject Player1Win;
     [SerializeField] private GameObject Player2Win;
     [SerializeField] private GameObject FinalResultOptions;
-    bool _nextRound = false;
-    private bool Confirmed;
 
+    [Header("Round UI")]
+    public TextMeshProUGUI roundCountdownText;
+
+    private bool Confirmed;
+    private bool _nextRound = false;
+    private int startingIndex; // starts from previous value index between rounds
 
     void Awake()
     {
@@ -87,50 +93,45 @@ public class UIManager : MonoBehaviour
         }
     }
 
-
     void Start()
     {
         ReputationUIBoard?.SetActive(false);
         captureThiefText.text = currentCaptureThiefAmount + "/" + maxCaptureThiefAmount;
+    }
+    #region UI Show Round Time
+    public void ShowUIRoundCountdown(int timeCountdown)
+    {
+        roundCountdownText.text = timeCountdown.ToString();
+    }
+    #endregion
 
-        Debug.Log($"Chargement des scores : P1 = {GameData.p1Point}, P2 = {GameData.p2Point}");
+    #region UI Animation Score Board 
 
+    // Hides positive points
+    IEnumerator HideReputationPoints(PlayerReputationUI playerReputationUI, int pointsToRemove)
+    {
+        for (int j = startingIndex; j < pointsToRemove; j++)
+        {
+            yield return StartCoroutine(AnimateReputationPointRemoval(playerReputationUI.pointsCollection[j].transform.GetComponent<Image>(), 0.5f));
+            yield return new WaitForSeconds(0.5f);
+        }
     }
 
-    #region Update Instantly Player Score Board
-    //public void UpdatePlayersReputationUIInstantly(PlayerReputation[] _playersReputation, int maxPlayerReputation, int minPlayerReputation)
-    //{
-    //    print("Sup INSTANTLY !");
-    //    if (!ReputationUIBoard.activeInHierarchy)
-    //    {
-    //        ReputationUIBoard.SetActive(true);
-    //        ReputationUIBoard.GetComponent<Canvas>().enabled = false;
-    //        for (int i = 0; i < _playersReputation.Length; i++)
-    //        {
-    //            // Each Player UI ref
-    //            PlayerReputationUI currentPlayer = (i == 0) ? player1 : player2;
-    //            int reputationValue = (int)_playersReputation[i].reputationValue;
-
-    //            print($"Player {i + 1}: Reputation {reputationValue} | Max: {maxPlayerReputation}");
+    // Show negative extra points
+    IEnumerator ShowExtraReputationPoints(PlayerReputationUI playerReputationUI, int reputationValue, int minPlayerReputation)
+    {   
+        for (int k = reputationValue; k < 0 && k >= minPlayerReputation; k++)
+        {
+            int index = -(k) - 1;
+            playerReputationUI.extraPointsCollection[index].SetActive(true);
+        }
+        yield return null;
+    }
 
 
-    //            // Positive Bar
-    //            if (reputationValue >= 0)
-    //            {
-    //                HideReputationPointsInstantly(currentPlayer, maxPlayerReputation - reputationValue);
-    //            }
-    //            // Negative bar 
-    //            else
-    //            {
-    //                HideReputationPointsInstantly(currentPlayer, maxPlayerReputation);
-    //                ShowExtraReputationPointsInstantly(currentPlayer, reputationValue, minPlayerReputation);
-    //            }
-    //            ReputationUIBoard.GetComponent<Canvas>().enabled = true;
-    //            ReputationUIBoard.SetActive(false);
-    //        }
-    //    }
-    //}
+    #endregion
 
+    #region UI Restore Last Score Board
     void HideReputationPointsInstantly(PlayerReputationUI playerReputationUI, int pointsToRemove)
     {
         for (int j = 0; j < pointsToRemove; j++)
@@ -149,7 +150,6 @@ public class UIManager : MonoBehaviour
         }
     }
     #endregion
-
 
     #region Update Museum Actefacts Checklist UI 
 
@@ -214,13 +214,11 @@ public class UIManager : MonoBehaviour
     }
     #endregion
 
-    #region Update Board Reputation UI
-   
+    #region Update Players Score Board UI
     public void CreatePlayersReputationUI(int maxPlayerReputation, int minPlayerReputation, PlayerReputation[] _playersReputation)
     {
         CreatePlayerReputationUI(player1,maxPlayerReputation, minPlayerReputation);
         CreatePlayerReputationUI(player2,maxPlayerReputation, minPlayerReputation);
-        //UpdatePlayersReputationUIInstantly(_playersReputation, maxPlayerReputation, minPlayerReputation);
     }
     private void CreatePlayerReputationUI(PlayerReputationUI playerUI, int maxReputation, int minReputation)
     {
@@ -256,58 +254,26 @@ public class UIManager : MonoBehaviour
     public void ShowReputationBoard(PlayerReputation[] _playersReputation, int maxPlayerReputation, int minPlayerReputation)
     {
         //Audio For Round Finished !
-        StartCoroutine(UpdatePlayersReputationUI(_playersReputation, maxPlayerReputation, minPlayerReputation)); // todo: max,min test fait le !
+        StartCoroutine(UpdatePlayersReputationUI(_playersReputation, maxPlayerReputation, minPlayerReputation)); // todo: Ajmal - max,min test fait le !
     }
 
-    int startingIndex;
     IEnumerator UpdatePlayersReputationUI(PlayerReputation[] _playersReputation, int maxPlayerReputation, int minPlayerReputation)
     {
-        int chunkToRemove = 0;
-        if (!GameData.skipFirstRound) 
-        {
-            for (int i = 0; i < _playersReputation.Length; i++)
-            {
-                int reputationValue = (int)_playersReputation[i].reputationValue;
+        UpdatePreviousBoardResult(_playersReputation, maxPlayerReputation, minPlayerReputation);
+        yield return StartCoroutine(AnimateCurrentBoardResult(_playersReputation, maxPlayerReputation, minPlayerReputation));
+    }
 
-                PlayerReputationUI currentPlayer;
-                if(i == 0)
-                {
-                    currentPlayer = player1;
-                    chunkToRemove = maxPlayerReputation - GameData.p1Point; 
-                }
-                else
-                {
-                    currentPlayer = player2;
-                    chunkToRemove = maxPlayerReputation - GameData.p2Point;
-                }
-
-
-                // Positive Bar
-                if (reputationValue >= 0)
-                {
-                    HideReputationPointsInstantly(currentPlayer, chunkToRemove);
-                }
-                // Negative bar 
-                else
-                {
-                    HideReputationPointsInstantly(currentPlayer, chunkToRemove);
-                    if(reputationValue > 0)
-                        ShowExtraReputationPointsInstantly(currentPlayer, reputationValue, minPlayerReputation);
-                }
-                
-            }
-        }
-        else GameData.skipFirstRound = false;
-
-        //todo: Small delay before show board || animation
+    IEnumerator AnimateCurrentBoardResult(PlayerReputation[] _playersReputation, int maxPlayerReputation, int minPlayerReputation)
+    {
+        // Animate Results from current Round
+        //todo: Ajmal - Small delay before show board || animation
         ReputationUIBoard?.SetActive(true);
         yield return new WaitForSeconds(1.5f);
-        
+
         if (ReputationUIBoard.activeInHierarchy)
         {
             for (int i = 0; i < _playersReputation.Length; i++)
             {
-                //PlayerReputationUI currentPlayer = (i == 0) ? player1 : player2;
                 // Each Player UI ref
                 int reputationValue = (int)_playersReputation[i].reputationValue;
 
@@ -315,15 +281,15 @@ public class UIManager : MonoBehaviour
                 if (i == 0)
                 {
                     currentPlayer = player1;
-                    startingIndex = maxPlayerReputation - GameData.p1Point; // 2
+                    startingIndex = maxPlayerReputation - GameData.p1Point;
                 }
                 else
                 {
                     currentPlayer = player2;
-                    startingIndex = maxPlayerReputation - GameData.p2Point; // 2
+                    startingIndex = maxPlayerReputation - GameData.p2Point;
                 }
 
-                print($"Player {i + 1}: PreviousIndexValue {startingIndex} Reputation {reputationValue} | Max: {maxPlayerReputation}");
+                //print($"Player {i + 1}: PreviousIndexValue {startingIndex} Reputation {reputationValue} | Max: {maxPlayerReputation}");
 
                 // Show each player BG
                 if (currentPlayer.BG != null) yield return StartCoroutine(ShowPlayerBGColor(currentPlayer.BG, 0.3f));
@@ -343,35 +309,57 @@ public class UIManager : MonoBehaviour
 
                 yield return new WaitForSeconds(0.5f);
             }
+
             // Next Round || Win Condition 
             yield return StartCoroutine(CheckWinOrNextRound(_playersReputation));
         }
     }
 
-    // Hides positive points
-    IEnumerator HideReputationPoints(PlayerReputationUI playerReputationUI, int pointsToRemove)
+    private void UpdatePreviousBoardResult(PlayerReputation[] _playersReputation, int maxPlayerReputation, int minPlayerReputation)
     {
-        for (int j = startingIndex; j < pointsToRemove; j++)
-        {
-            yield return StartCoroutine(AnimateReputationPointRemoval(playerReputationUI.pointsCollection[j].transform.GetComponent<Image>(), 0.5f));
-            yield return new WaitForSeconds(0.5f);
-        }
-    }
+        int pointsToRemove = 0; // remove point that has already been depleted after first round
 
-    // Show negative extra points
-    IEnumerator ShowExtraReputationPoints(PlayerReputationUI playerReputationUI, int reputationValue, int minPlayerReputation)
-    {   
-        for (int k = reputationValue; k < 0 && k >= minPlayerReputation; k++)
+        if (!GameData.FirstRound) // Skip First Round, no point has been depleted 
         {
-            int index = -(k) - 1;
-            playerReputationUI.extraPointsCollection[index].SetActive(true);
+            for (int i = 0; i < _playersReputation.Length; i++)
+            {
+                int reputationValue = (int)_playersReputation[i].reputationValue;
+
+                // 
+                PlayerReputationUI currentPlayer;
+                if (i == 0)
+                {
+                    currentPlayer = player1;
+                    pointsToRemove = maxPlayerReputation - GameData.p1Point;
+                }
+                else
+                {
+                    currentPlayer = player2;
+                    pointsToRemove = maxPlayerReputation - GameData.p2Point;
+                }
+
+                // Positive Bar
+                if (reputationValue >= 0)
+                {
+                    HideReputationPointsInstantly(currentPlayer, pointsToRemove);
+                }
+                // Negative bar 
+                else
+                {
+                    HideReputationPointsInstantly(currentPlayer, pointsToRemove);
+
+                    if (reputationValue > 0) // show negative point only if previous has been animated 
+                        ShowExtraReputationPointsInstantly(currentPlayer, reputationValue, minPlayerReputation);
+                }
+
+            }
         }
-        yield return null;
+        else GameData.FirstRound = false;
     }
 
     IEnumerator CheckWinOrNextRound(PlayerReputation[] _playersReputation)
     {
-        /////////////// NEXT ROUND || WINNER CONDITION ///////////////////
+
         for (int i = 0; i < _playersReputation.Length; i++)
         {
             // Next Round Condition
@@ -379,26 +367,19 @@ public class UIManager : MonoBehaviour
             {
                 _nextRound = _playersReputation[i].reputationValue > 0;
                 if (!_nextRound) Confirmed = true; 
-                //_nextRound = _playersReputation[i].reputationValue > 0 ? _nextRound = true : _nextRound = false; // bad code cause it erases the last bool
             }
             if (i == (int)PlayerEnum.PLAYER1 - 1)
             {
-                //p1Point = (int)_playersReputation[i].reputationValue;
                 GameData.p1Point = (int)_playersReputation[(int)PlayerEnum.PLAYER1 - 1].reputationValue;
-                GameData.p1LastRoundPoint = (int)_playersReputation[(int)PlayerEnum.PLAYER1 - 1].reputationValue;
-                //GameManager.Instance.SetPlayerReputation((int)PlayerEnum.PLAYER1 - 1, (int)_playersReputation[i].reputationValue); // saves data for all rounds
             }
             else if (i == (int)PlayerEnum.PLAYER2 - 1)
             {
-                //p2Point = (int)_playersReputation[i].reputationValue;
                 GameData.p2Point = (int)_playersReputation[(int)PlayerEnum.PLAYER2 - 1].reputationValue;
-                GameData.p2LastRoundPoint = (int)_playersReputation[(int)PlayerEnum.PLAYER2 - 1].reputationValue;
-                //GameManager.Instance.SetPlayerReputation((int)PlayerEnum.PLAYER2 - 1, (int)_playersReputation[i].reputationValue); // saves data for all rounds
             }
 
         }
 
-        Debug.Log($"p1Point: {GameData.p1Point}, p2Point: {GameData.p2Point}");
+        //Debug.Log($"p1Point: {GameData.p1Point}, p2Point: {GameData.p2Point}");
         
         if (_nextRound)
         {
@@ -406,8 +387,8 @@ public class UIManager : MonoBehaviour
             yield return new WaitForSeconds(1);
             NextRound?.SetActive(true);
 
-            // Wait until any Input Pressed
-            yield return new WaitUntil(() => Input.anyKeyDown);
+            // todo: Thomas - Change avec ton round scene loop
+            yield return new WaitUntil(() => Input.anyKeyDown); // Wait until any Input Pressed
             SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
         }
         else // Winner
@@ -419,26 +400,29 @@ public class UIManager : MonoBehaviour
                 FinalResult?.SetActive(true);
                 if (GameData.p1Point > GameData.p2Point)
                 {
-                    Debug.Log("Player 1 Won !");
+                    //Debug.Log("Player 1 Won !");
                     Player1Win?.SetActive(true);
-                    //todo : trophy too!
+                    //todo : Ajmal - trophy animation for winner 
                 }
                 else if (GameData.p1Point < GameData.p2Point)
                 {
-                    Debug.Log("Player 2 Won !");
+                    //Debug.Log("Player 2 Won !");
                     Player2Win?.SetActive(true);
 
                 }
+                // todo: Ajmal - animate restart game or back to menu
                 FinalResultOptions?.SetActive(true);
             }
             else if (GameData.p1Point == GameData.p2Point)
             {
-                Debug.Log("Match Nul ! Crée un One Pointer Match");
+                // todo: Ajmal - Draw ! Golden Point Match
                 Draw?.SetActive(true);
             }
         }
     }
+    #endregion
 
+    #region Animations UI
     IEnumerator ShowPlayerBGColor(Image playerBG,float duration)
     {
         float elapsedTime = 0f;
@@ -464,58 +448,62 @@ public class UIManager : MonoBehaviour
         }
         fillImage.fillAmount = 0;
     }
-
     #endregion
 
     #region Update Capture Thief UI
 
-    //// todo: Create a script for captureThief
+    // todo: Ajmal - Create a script for captureThief
     public void UpdateCaptureThiefGauge(int amount, PlayerEnum playerID)
     {
         print("####### UpdateCaptureThiefGauge ####### ");
         float previousAmount = currentCaptureThiefAmount;
         currentCaptureThiefAmount = Mathf.Clamp(currentCaptureThiefAmount + amount, 0, maxCaptureThiefAmount);
 
-        //todo: put a (coroutine) so ui capture fills up before show board 
-        //if(finishUpdateCaptureThiefUIRoutine == null)
-        //{
-        finishUpdateCaptureThiefUIRoutine = StartCoroutine(UpdateCaptureThiefUI(previousAmount, currentCaptureThiefAmount));
-        //}
+        StartCoroutine(UpdateCaptureThiefUI(previousAmount, currentCaptureThiefAmount));
 
+        // Determine which player captured the thief at the end of the round
         if (currentCaptureThiefAmount >= maxCaptureThiefAmount)
         {
-            print("Game Finish \n Show the Score Board P1 && P2");
-            print("The player who has capture the thief at 100% is Player ID : " + playerID);
             GameManager.Instance.LosePlayerReputationByCapturingThief(playerID, 1);
         }
         print("####### UpdateCaptureThiefGauge End ####### ");
     }
 
-    public IEnumerator UpdateCaptureThiefUI(float startAmount,float targetAmount)
+    public IEnumerator UpdateCaptureThiefUI(float startAmount, float targetAmount)
     {
-        captureThiefText.text = currentCaptureThiefAmount + "/" + maxCaptureThiefAmount;
-
         float elapsedTime = 0f;
         float duration = 0.5f;
 
-        // Bar Fill
-        float startFill = fillCaptureGaugeImage.fillAmount; // last amount filled
+        // Get initial fill amounts
+        float startFill = fillCaptureGaugeImage.fillAmount;
         float targetFill = targetAmount / maxCaptureThiefAmount;
-        
-        // Icon Fill
-        float startIconFill = fillCaptureGaugeIconImage.fillAmount; // last amount filled
+
+        float startIconFill = fillCaptureGaugeIconImage.fillAmount;
         float targetIconFill = targetAmount / maxCaptureThiefAmount;
+
+        // Initialize the current amount for number animation
+        float currentAmount = startAmount;
 
         while (elapsedTime < duration)
         {
             elapsedTime += Time.deltaTime;
-            fillCaptureGaugeImage.fillAmount = Mathf.Lerp(startFill, targetFill, elapsedTime / duration);
-            fillCaptureGaugeIconImage.fillAmount = Mathf.Lerp(startIconFill, targetIconFill, elapsedTime / duration);
+            float t = elapsedTime / duration;
+
+            // Smoothly interpolate the fill amounts
+            fillCaptureGaugeImage.fillAmount = Mathf.Lerp(startFill, targetFill, t);
+            fillCaptureGaugeIconImage.fillAmount = Mathf.Lerp(startIconFill, targetIconFill, t);
+
+            // Smoothly interpolate the displayed number
+            currentAmount = Mathf.Lerp(startAmount, targetAmount, t);
+            captureThiefText.text = Mathf.RoundToInt(currentAmount) + "/" + maxCaptureThiefAmount;
+
             yield return null;
         }
 
+        // Ensure final values are correctly set
         fillCaptureGaugeImage.fillAmount = targetFill;
         fillCaptureGaugeIconImage.fillAmount = targetFill;
+        captureThiefText.text = Mathf.RoundToInt(targetAmount) + "/" + maxCaptureThiefAmount;
     }
     #endregion
 
