@@ -492,7 +492,7 @@ MonoBehaviour:
   _vFlee: 10
   _radialVision: 5
   _fleeVision: 10
-  _stealTime: 10
+  _stealTime: 1
   _stealRange: 2
   _indicator: {fileID: 5372714353555304992}
   _rb: {fileID: 3389639412683575569}
