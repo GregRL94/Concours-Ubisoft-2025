@@ -11,6 +11,7 @@ public class TrapManager : MonoBehaviour
 {
     public Action OnTrapTriggered;
     Rigidbody _rb;
+    Animator _animator;
 
     [SerializeField]
     private NavMeshAgent _agent;
@@ -58,12 +59,13 @@ public class TrapManager : MonoBehaviour
         // Actions for later
         //SubscribeToTrapEvents();
     }
-    public void SetRobber(NavMeshAgent agent, Rigidbody rb, GameObject indicator, RobberCapture robber)
+    public void SetRobber(NavMeshAgent agent, Rigidbody rb, GameObject indicator, RobberCapture robber, Animator animator)
     {
         _agent = agent;
         _rb = rb;
         _indicator = indicator;
         robberCapture = robber;
+        _animator = animator;
     }
 
     #region Action Traps (Later)
@@ -134,6 +136,8 @@ public class TrapManager : MonoBehaviour
         {
             _agent.isStopped = true;
             _agent.velocity = Vector3.zero;
+            _animator.SetTrigger("Surpris");
+            _animator.SetBool("Cours", false);
         }
 
         // Reaction time before flee
@@ -145,6 +149,8 @@ public class TrapManager : MonoBehaviour
         //Run Away for RobberBehaviour
         // todo - (Gregory || Thomas) Trap id from player that set the trap and value
         robberCapture?.GetSifled(trapOwner, _alarmCaptureValue);
+
+        _animator.SetBool("Cours", true);
 
         yield return new WaitForSeconds(timeTillAlarmIndicatorAppear);
         Destroy(alarmTrap);
