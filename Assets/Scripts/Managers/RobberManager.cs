@@ -20,7 +20,8 @@ public class RobberManager : MonoBehaviour
 
     [SerializeField, Tooltip("Distance between robber and all traps")]
     private float _minDistanceToTraps = 0;
-    
+    [SerializeField, Tooltip("Distance between robber and all traps")]
+    private List<ObjectType> _stealObjectList;
 
     private MuseumObjects[] _museumObjects;
     private GameObject[] _traps;
@@ -46,6 +47,7 @@ public class RobberManager : MonoBehaviour
                 spawnPosition = GameGrid.Instance.Grid[i, j].worldPos;
                 if (!IsValidSpawnPosition(spawnPosition)) continue;
                 _currentRobber = Instantiate(_robber, spawnPosition, Quaternion.identity);
+                SetupRobber();
                 return;
             }
         }
@@ -59,9 +61,18 @@ public class RobberManager : MonoBehaviour
                 Random.Range(mapMiddlePoint.x - mapSize.x, mapMiddlePoint.x + mapSize.x),
                 mapMiddlePoint.y,
                 Random.Range(mapMiddlePoint.z - mapSize.z, mapMiddlePoint.z + mapSize.z));
-        Instantiate(_robber, spawnPosition, Quaternion.identity);
-        
+        _currentRobber = Instantiate(_robber, spawnPosition, Quaternion.identity);
+        SetupRobber();
     }
+    private void SetupRobber()
+    {
+        RobberBehaviour robber = _currentRobber.GetComponent<RobberBehaviour>();
+        if (robber == null) return;
+        robber.StealingList.Clear();
+        for (int i = 0; i < _stealObjectList.Count; i++) 
+            robber.StealingList.Add(_stealObjectList[i]);
+    }
+
     private bool IsValidSpawnPosition(Vector3 position)
     {
         for (int i = 0; i < GameManager.Instance.Players.Length; i++)

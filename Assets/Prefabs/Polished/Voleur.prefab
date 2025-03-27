@@ -1,0 +1,85 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!1001 &7109084511620604152
+PrefabInstance:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    serializedVersion: 3
+    m_TransformParent: {fileID: 0}
+    m_Modifications:
+    - target: {fileID: -9198539960689656858, guid: 43d9d0fa36132bd46b66b0a77ca58d02,
+        type: 3}
+      propertyPath: m_Materials.Array.data[2]
+      value: 
+      objectReference: {fileID: 2100000, guid: c960cf58c5a970f47b6daa7e252bcd60, type: 2}
+    - target: {fileID: -8679921383154817045, guid: 43d9d0fa36132bd46b66b0a77ca58d02,
+        type: 3}
+      propertyPath: m_LocalPosition.x
+      value: -1.1722212
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: 43d9d0fa36132bd46b66b0a77ca58d02,
+        type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: 43d9d0fa36132bd46b66b0a77ca58d02,
+        type: 3}
+      propertyPath: m_LocalPosition.z
+      value: -9.526405
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: 43d9d0fa36132bd46b66b0a77ca58d02,
+        type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: 43d9d0fa36132bd46b66b0a77ca58d02,
+        type: 3}
+      propertyPath: m_LocalRotation.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: 43d9d0fa36132bd46b66b0a77ca58d02,
+        type: 3}
+      propertyPath: m_LocalRotation.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: 43d9d0fa36132bd46b66b0a77ca58d02,
+        type: 3}
+      propertyPath: m_LocalRotation.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: 43d9d0fa36132bd46b66b0a77ca58d02,
+        type: 3}
+      propertyPath: m_LocalEulerAnglesHint.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: 43d9d0fa36132bd46b66b0a77ca58d02,
+        type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: 43d9d0fa36132bd46b66b0a77ca58d02,
+        type: 3}
+      propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 919132149155446097, guid: 43d9d0fa36132bd46b66b0a77ca58d02,
+        type: 3}
+      propertyPath: m_Name
+      value: Voleur
+      objectReference: {fileID: 0}
+    - target: {fileID: 5866666021909216657, guid: 43d9d0fa36132bd46b66b0a77ca58d02,
+        type: 3}
+      propertyPath: m_Controller
+      value: 
+      objectReference: {fileID: 9100000, guid: 8185071a30070c8469e4af2e60a3d76f, type: 2}
+    - target: {fileID: 5866666021909216657, guid: 43d9d0fa36132bd46b66b0a77ca58d02,
+        type: 3}
+      propertyPath: m_ApplyRootMotion
+      value: 0
+      objectReference: {fileID: 0}
+    m_RemovedComponents: []
+    m_RemovedGameObjects: []
+    m_AddedGameObjects: []
+    m_AddedComponents: []
+  m_SourcePrefab: {fileID: 100100000, guid: 43d9d0fa36132bd46b66b0a77ca58d02, type: 3}
