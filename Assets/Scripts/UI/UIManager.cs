@@ -389,7 +389,7 @@ public class UIManager : MonoBehaviour
 
             // todo: Thomas - Change avec ton round scene loop
             yield return new WaitUntil(() => Input.anyKeyDown); // Wait until any Input Pressed
-            SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
+            SceneLoading.Instance.LoadNextScene();
         }
         else // Winner
         {

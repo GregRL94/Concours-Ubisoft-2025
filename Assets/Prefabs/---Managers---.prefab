@@ -4113,11 +4113,14 @@ MonoBehaviour:
   fleeRange: 8
   timeTillAlarmIndicatorAppear: 0.5
   timeTillFlee: 1
+  _alarmCaptureValue: 0
   pushDistance: 15
   timeTillEnemyStop: 0.4
   stunPushDuration: 4
+  _pushCaptureValue: 0
   timeTillCaptureIndicatorAppear: 0
   captureDuration: 5
+  _captureCaptureValue: 0
   robberCapture: {fileID: 0}
 --- !u!1 &4547635551155428499
 GameObject:
@@ -4517,7 +4520,32 @@ MonoBehaviour:
   captureGaugeFillTime: 0
   fillCaptureGaugeImage: {fileID: 0}
   fillCaptureGaugeIconImage: {fileID: 0}
+  player1:
+    parentPoints: {fileID: 0}
+    uiPoint: {fileID: 0}
+    pointsCollection: []
+    parentExtraPoints: {fileID: 0}
+    uiExtraPoint: {fileID: 0}
+    extraPointsCollection: []
+    BG: {fileID: 0}
+  player2:
+    parentPoints: {fileID: 0}
+    uiPoint: {fileID: 0}
+    pointsCollection: []
+    parentExtraPoints: {fileID: 0}
+    uiExtraPoint: {fileID: 0}
+    extraPointsCollection: []
+    BG: {fileID: 0}
+  maxCaptureThiefAmount: 30
   currentCaptureThiefAmount: 0
+  ReputationUIBoard: {fileID: 0}
+  NextRound: {fileID: 0}
+  Draw: {fileID: 0}
+  FinalResult: {fileID: 0}
+  Player1Win: {fileID: 0}
+  Player2Win: {fileID: 0}
+  FinalResultOptions: {fileID: 0}
+  roundCountdownText: {fileID: 0}
 --- !u!1 &4900854732628712522
 GameObject:
   m_ObjectHideFlags: 0
@@ -6193,6 +6221,7 @@ Transform:
   - {fileID: 846813464508921277}
   - {fileID: 6849989548463986765}
   - {fileID: 6702075128129177785}
+  - {fileID: 6782908628041347715}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &1308096671972412955
@@ -6257,6 +6286,7 @@ MonoBehaviour:
   _players: []
   _playersReputation: []
   _timerText: {fileID: 0}
+  showTimeBeforeRoundEnd: 5
 --- !u!1 &6571120282315518400
 GameObject:
   m_ObjectHideFlags: 0
@@ -7200,7 +7230,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _allMuseumObjects: []
-  stealInput: 0
   uiManager: {fileID: 7569506294769515535}
 --- !u!1 &8132322928438097688
 GameObject:
@@ -8118,6 +8147,56 @@ MonoBehaviour:
   m_hasFontAssetChanged: 0
   m_baseMaterial: {fileID: 0}
   m_maskOffset: {x: 0, y: 0, z: 0, w: 0}
+--- !u!1 &8796056598922459687
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 6782908628041347715}
+  - component: {fileID: 4775475527431028253}
+  m_Layer: 0
+  m_Name: SceneLoading
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &6782908628041347715
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8796056598922459687}
+  serializedVersion: 2
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: 745.8921, y: 362.12033, z: 16.967163}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 5496437348749677003}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &4775475527431028253
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8796056598922459687}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: bfa0fac3a332a39488617f17d5f708a3, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _scenesList:
+  - {fileID: 102900000, guid: 55630033359368a4abac8d8b880e85d8, type: 3}
+  - {fileID: 102900000, guid: e6d15e59895cc9a4fba43d3fb7eecd11, type: 3}
+  - {fileID: 102900000, guid: e6d15e59895cc9a4fba43d3fb7eecd11, type: 3}
+  _nextSceneIndex: 0
+  _isTutoCompleted: 1
 --- !u!1 &8833176572874605691
 GameObject:
   m_ObjectHideFlags: 0

@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.Runtime.CompilerServices;
+using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
@@ -105,7 +106,11 @@ public class TutorialManager : MonoBehaviour
         int id = (int)playerID;
         if (id > _validateButtons.Count || id <= 0) return;
         if (_validateButtons[id - 1].IsValidated) return;
-        _validateButtons[id - 1].ValidateButton();
+        for (int i = 0; i < _validateButtons.Count; i++)
+        {
+            if (i != id - 1) continue;
+            _validateButtons[i].ValidateButton();
+        }
         //SFX de bouton valide
 
         _nbValidatedButton++;

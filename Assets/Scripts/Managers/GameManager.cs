@@ -169,7 +169,9 @@ public class GameManager : MonoBehaviour
         InitializePlayers();
 
         UIManager.CreatePlayersReputationUI(_maxPlayersReputation, _minPlayersReputation, _playersReputation);
-
+    }
+    public void StartGameLoop()
+    {
         // Start gameplay loop
         _endGame = false;
         _preStartRoundCoroutine = StartCoroutine(PreStartRound(_roundsParameter.timeBeforeRoundStart));
@@ -201,6 +203,8 @@ public class GameManager : MonoBehaviour
         if(!_robberManager)_robberManager = FindAnyObjectByType<RobberManager>();
         if(!_trapManager)_trapManager = FindAnyObjectByType<TrapManager>();
         if(!_uiManager)_uiManager = FindAnyObjectByType<UIManager>();
+        if(!_tutorialManager) _tutorialManager = FindAnyObjectByType<TutorialManager>();
+        _timerText = _uiManager.roundCountdownText;
     }
 
     private void InitializePlayers()
@@ -252,6 +256,7 @@ public class GameManager : MonoBehaviour
             StopCoroutine(_startRoundCoroutine);
             _startRoundCoroutine = null;
         }
+        _timerText.text = "";
         _startRoundCoroutine = StartCoroutine(StartRound(_roundsParameter.roundTime, _roundsParameter.roundTime - showTimeBeforeRoundEnd)); 
     }
     private IEnumerator StartRound(float time, float timeLeftWarning)
@@ -273,10 +278,10 @@ public class GameManager : MonoBehaviour
 
         //todo: Audio - For Round Finished
         _uiManager.ShowReputationBoard(_playersReputation, _maxPlayersReputation, _minPlayersReputation);
+        _roundsParameter.hasRoundStarted = false;
+        _robberManager.DispawnRobber();
     
 
-        //_roundsParameter.hasRoundStarted = false;
-        //_robberManager.DispawnRobber();
         //if (_preStartRoundCoroutine != null)
         //{
         //    StopCoroutine(_preStartRoundCoroutine);
