@@ -30,6 +30,9 @@ public class RobberBehaviour : BTAgent
     private NavMeshAgent _robberAgent;
     [SerializeField]
     private RobberCapture _robberCapture;
+    [SerializeField]
+    private Animator _animator;
+    
 
     [Header("DEBUG READING")]
     [SerializeField, Tooltip("Robber stealing list")]
@@ -60,9 +63,10 @@ public class RobberBehaviour : BTAgent
         if(!_robberAgent)_robberAgent = GetComponent<NavMeshAgent>();
         if(!_rb)_rb = GetComponent<Rigidbody>();
         if(!_robberCapture) _robberCapture = GetComponent<RobberCapture>();
+        if (!_animator) _animator = GetComponentInChildren<Animator>();
 
         _robberAgent.speed = _vBase;
-        GameManager.Instance.TrapManager.SetRobber(_robberAgent, _rb, _indicator, _robberCapture);
+        GameManager.Instance.TrapManager.SetRobber(_robberAgent, _rb, _indicator, _robberCapture, _animator);
 
         //Flee state
         BTLeaf isFleeing = new BTLeaf("Is fleeing", IsFleeing);
@@ -182,12 +186,13 @@ public class RobberBehaviour : BTAgent
         StartVulnerableState();
         _currentTargetObject.SetObjectStealableCD();
         //Lance l'animation de vol
+        _animator.SetBool("VolUnOeuvre", true);
 
         while (_hasStolen == BTNode.Status.RUNNING)
         {
             yield return new WaitForSeconds(time);
             //animation de vol fini
-
+            _animator.SetBool("VolUnOeuvre", false);
             _hasStolen = BTNode.Status.SUCCESS;
 
             //steal object
@@ -290,7 +295,7 @@ public class RobberBehaviour : BTAgent
         _rb.angularVelocity = Vector3.zero;
         _rb.velocity = Vector3.zero;
         //lance l'animation vulnerable
-
+        _animator.SetBool("EstPieger", true);
     }
 
     public void StopVunerableState()
@@ -301,7 +306,7 @@ public class RobberBehaviour : BTAgent
         _currentVision = _radialVision;
         _robberAgent.isStopped = false;
         //animation vulnerable fini
-
+        _animator.SetBool("EstPieger", false);
     }
 
     public void StartFleeState()
@@ -334,23 +339,25 @@ public class RobberBehaviour : BTAgent
         //si l'animation de fuite est differente
         //met une condition dans l'animator qui differencie la marche de la fuite
         //(la fuite utilise aussi cette fonction)
-
+        
         float distanceToTarget = Vector3.Distance(destination, this.transform.position);
         if (state == ActionState.IDLE)
         {
+            _animator.SetBool("Cours", true);
             agent.SetDestination(destination);
             state = ActionState.WORKING;
         }
         else if (Vector3.Distance(agent.pathEndPosition, destination) >= _stealRange)
         {
             _rb.velocity = Vector3.zero;
+            _animator.SetBool("Cours", false);
             state = ActionState.IDLE;
             return BTNode.Status.FAILURE;
         }
         else if (distanceToTarget < _stealRange)
         {
             //animation de marche fini
-
+            _animator.SetBool("Cours", false);
             _rb.velocity = Vector3.zero;
             state = ActionState.IDLE;
             return BTNode.Status.SUCCESS;
