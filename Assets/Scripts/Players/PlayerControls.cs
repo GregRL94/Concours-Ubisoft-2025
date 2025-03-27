@@ -40,6 +40,7 @@ public class PlayerControls : MonoBehaviour
     private Rigidbody _rb;
     private Vector2 _leftJoystickInput;
     private Vector3 _leftjoystickVirtualPoint;
+    private Animator _animator;
 
     private readonly float _joystickPointDisplayDistance = 2f;
 
@@ -67,6 +68,7 @@ public class PlayerControls : MonoBehaviour
             [R_JoystickDirection.NONE] = AbilitiesEnum.NONE,
         };
         _rb = GetComponent<Rigidbody>();
+        _animator = GetComponentInChildren<Animator>();
         EnablePlayerInputs(true);
         _currentNode = _gameGrid.NodeFromWorldPos(transform.position);
         _previousNode = _currentNode;
@@ -80,6 +82,10 @@ public class PlayerControls : MonoBehaviour
         _leftjoystickVirtualPoint = new Vector3(transform.position.x + _leftJoystickInput.x * _joystickPointDisplayDistance, transform.position.y, transform.position.z + _leftJoystickInput.y * _joystickPointDisplayDistance);
         transform.rotation = Quaternion.LookRotation(Vector3.RotateTowards(transform.forward, _leftjoystickVirtualPoint - transform.position, _rotationSpeed * Time.deltaTime, 0.0f));
         _rb.velocity = joystickInputMagnitude * _speed * transform.forward;
+
+        //Gestion de l'animation de marche
+        _animator.SetBool("EstEnMouvement", _rb.velocity.magnitude > 0f);
+        _animator.SetFloat("Mouvement", joystickInputMagnitude);
 
         Node node = _gameGrid.NodeFromWorldPos(transform.position);
 
