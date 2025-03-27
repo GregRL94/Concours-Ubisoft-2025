@@ -15,6 +15,7 @@ public class PlayerActions : MonoBehaviour
     private Dictionary<AbilitiesEnum, GameManager.TrapData> _trapsDict;
     private GameObject _currentTrap;
     private Coroutine _trapSetupCoroutine;
+    private Animator _animator;
     #endregion
 
     #region MonoBehaviour Flow
@@ -23,6 +24,7 @@ public class PlayerActions : MonoBehaviour
         _gameManager = GameManager.Instance;
         _playerControls = GetComponent<PlayerControls>();
         _pAbilitiesUI = GetComponent<PlayerAbilitiesUI>();
+        _animator = GetComponentInChildren<Animator>();
 
         GameManager.WhistleData wBase = _gameManager.WhistleBase;
         GameManager.TrapData aTBase = _gameManager.AlarmTrapBase;
@@ -103,6 +105,7 @@ public class PlayerActions : MonoBehaviour
         if (_currentAbility != AbilitiesEnum.WHISTLE || _whistle.timer > 0f) { return; }
         // Play sound
         // Play Animation
+        _animator.SetTrigger("Siffle");
         Collider[] agents = Physics.OverlapSphere(transform.position, _whistle.whistleFleeRange, gameAgentsMask);
 
         if (agents.Length > 0)
@@ -164,6 +167,8 @@ public class PlayerActions : MonoBehaviour
     {        
         if (_currentAbility == AbilitiesEnum.NONE || _currentAbility == AbilitiesEnum.WHISTLE) { return; }
 
+        _animator.SetBool("installePiege", true);
+        _animator.SetTrigger("installation");
         GameManager.TrapData currentTrapData = _trapsDict[_currentAbility];
         if (currentTrapData.currentCount <= 0 || currentTrapData.timer > 0) 
         {
@@ -182,6 +187,7 @@ public class PlayerActions : MonoBehaviour
         if (_trapSetupCoroutine == null) { return; }
         StopCoroutine(_trapSetupCoroutine);
         _trapSetupCoroutine = null;
+        _animator.SetBool("installePiege", false);
         Debug.Log("Trap deployment canceled");
     }
 
@@ -240,6 +246,7 @@ public class PlayerActions : MonoBehaviour
     IEnumerator TrapSetupTimer(float setupTime, Node trapAtNode)
     {
         yield return new WaitForSeconds(setupTime);
+        _animator.SetBool("installePiege", false);
         DropTrap(trapAtNode);
     }
     #endregion
