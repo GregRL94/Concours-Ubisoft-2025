@@ -189,7 +189,7 @@ GameObject:
   - component: {fileID: 7470728487614340973}
   - component: {fileID: 5065975131926887332}
   - component: {fileID: 4470126901975182240}
-  m_Layer: 6
+  m_Layer: 0
   m_Name: Direction
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -375,7 +375,7 @@ GameObject:
   - component: {fileID: 3566065139378272299}
   - component: {fileID: 3389639412683575569}
   - component: {fileID: -5308983286172225453}
-  m_Layer: 6
+  m_Layer: 10
   m_Name: Robber
   m_TagString: ENEMY
   m_Icon: {fileID: 0}

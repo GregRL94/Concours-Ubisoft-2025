@@ -12,7 +12,7 @@ GameObject:
   - component: {fileID: 4135065049882426396}
   - component: {fileID: 1106216766848636227}
   - component: {fileID: 8379027551830799523}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: Frame
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -117,7 +117,7 @@ GameObject:
   - component: {fileID: 5278173027795134908}
   - component: {fileID: 639603540699535285}
   - component: {fileID: 2828602737185104238}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: Frame
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -224,7 +224,7 @@ GameObject:
   - component: {fileID: 4114003108881539013}
   - component: {fileID: 8103129727010554338}
   - component: {fileID: -6774876799597261296}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: Painting
   m_TagString: MUSEUMOBJECT
   m_Icon: {fileID: 0}
@@ -363,7 +363,7 @@ GameObject:
   - component: {fileID: 319156213403501777}
   - component: {fileID: 775983850571000701}
   - component: {fileID: 1029410918197108242}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: Frame
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -468,7 +468,7 @@ GameObject:
   - component: {fileID: 2035985578453870350}
   - component: {fileID: 735399089907055563}
   - component: {fileID: 7271556465235639888}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: Frame
   m_TagString: Untagged
   m_Icon: {fileID: 0}

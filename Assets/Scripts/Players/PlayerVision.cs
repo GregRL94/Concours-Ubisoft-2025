@@ -36,7 +36,6 @@ public class PlayerVision : MonoBehaviour
 
     [Header("LAYER MASKS")]
     [SerializeField] LayerMask _obstaclesMask;
-    [SerializeField] LayerMask _gameAgentsMask;
     [Space]
     [Header("PROXIMITY DETECTION")]
     [SerializeField, Range(0f, 5f)] private float _proximityRadius;
