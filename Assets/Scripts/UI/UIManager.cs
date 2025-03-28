@@ -80,7 +80,10 @@ public class UIManager : MonoBehaviour
     private bool Confirmed;
     private bool _nextRound = false;
     private int startingIndex; // starts from previous value index between rounds
-
+    
+    //input for validation
+    private DynamicsPlayersValidation _currentPlayerValidation;
+    public DynamicsPlayersValidation CurrentPlayerValidation { get { return _currentPlayerValidation; } set { _currentPlayerValidation = value; } }
     void Awake()
     {
         if (Instance == null)
@@ -387,9 +390,6 @@ public class UIManager : MonoBehaviour
             yield return new WaitForSeconds(1);
             NextRound?.SetActive(true);
 
-            // todo: Thomas - Change avec ton round scene loop
-            yield return new WaitUntil(() => Input.anyKeyDown); // Wait until any Input Pressed
-            SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
         }
         else // Winner
         {
