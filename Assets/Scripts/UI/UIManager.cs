@@ -84,6 +84,10 @@ public class UIManager : MonoBehaviour
     //input for validation
     private DynamicsPlayersValidation _currentPlayerValidation;
     public DynamicsPlayersValidation CurrentPlayerValidation { get { return _currentPlayerValidation; } set { _currentPlayerValidation = value; } }
+    
+    public Dictionary<ObjectType, int> alreadyAssignedType = new Dictionary<ObjectType, int>();
+
+
     void Awake()
     {
         if (Instance == null)
@@ -156,7 +160,7 @@ public class UIManager : MonoBehaviour
 
     #region Update Museum Actefacts Checklist UI 
 
-    public void CreateListOfMuseumArtefactsUI(Dictionary<ObjectType, MuseumObjects[]> museumArtefactsDict)
+    public void CreateListOfMuseumArtefactsUI(List<ObjectType> museumArtefactsList)
     {
         // Empty Parent Childs if not empty
         foreach (Transform child in Parent)
@@ -165,7 +169,7 @@ public class UIManager : MonoBehaviour
         }
 
         // Extract all keys found in the dictionnary and showcase it in UI List
-        foreach (var kvp in museumArtefactsDict)
+        /*foreach (var kvp in museumArtefactsList)
         {
             if(kvp.Value.Length > 0)
             {
@@ -178,10 +182,43 @@ public class UIManager : MonoBehaviour
                     textComponent.text = $"- {kvp.Key} {kvp.Value.Length}X";
                 }
             }
+        }*/
+        alreadyAssignedType.Clear();
+        for (int i = 0; i < museumArtefactsList.Count; i++)
+        {
+            bool skipObject = false;
+            //Check if object already assigned
+            for(int j = 0 ; j < alreadyAssignedType.Count; j++)
+            {
+                if (alreadyAssignedType.ContainsKey(museumArtefactsList[i]))
+                {
+                    alreadyAssignedType[museumArtefactsList[i]]++;
+                    skipObject = true;
+                    GameObject artefact = artefactNameCollection.Find(x => x.name == museumArtefactsList[i].ToString());
+                    TextMeshProUGUI text = artefact.GetComponent<TextMeshProUGUI>();
+                    if (text != null)
+                    {
+                        text.text = $"- {artefact.name} {alreadyAssignedType[museumArtefactsList[i]]}X";
+                    }
+                    break;
+                }
+            }
+
+            if (skipObject) continue;
+            alreadyAssignedType.Add(museumArtefactsList[i], 1);
+            GameObject newObject = Instantiate(artefactText, Parent);
+            newObject.name = museumArtefactsList[i].ToString();
+            artefactNameCollection.Add(newObject);
+            TextMeshProUGUI textComponent = newObject.GetComponent<TextMeshProUGUI>();
+            if (textComponent != null)
+            {
+                textComponent.text = $"- {museumArtefactsList[i].ToString()} {alreadyAssignedType[museumArtefactsList[i]]}X";
+            }
         }
+
     }
 
-    public void UpdateListOfMuseumArtefacts(Dictionary<ObjectType, MuseumObjects[]> museumArtefactsDict)
+    public void UpdateListOfMuseumArtefacts()
     {
         foreach (var artefactObj in artefactNameCollection) // Looping through all the gameobject artefacts created
         {
@@ -193,9 +230,9 @@ public class UIManager : MonoBehaviour
                 int amount = 0; // Consider that amount = 0 for each artefact name
 
                 // Verify if key exist and get -> MuseumObjectsTest[] (ex: PAINTING, 3 Painting objects in MuseumObjectsTest[])
-                if (museumArtefactsDict.TryGetValue(artefactType, out MuseumObjects[] artefacts)) 
+                if (alreadyAssignedType.TryGetValue(artefactType, out int artefactsNb)) 
                 {
-                    amount = artefacts.Length; // amount of MuseumObjects for each key
+                    amount = artefactsNb; // amount of MuseumObjects for each key
                 }
 
                 TextMeshProUGUI textComponent = artefactObj.GetComponent<TextMeshProUGUI>();
