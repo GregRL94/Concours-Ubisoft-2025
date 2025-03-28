@@ -294,14 +294,8 @@ public class GameManager : MonoBehaviour
         //_preStartRoundCoroutine = StartCoroutine(PreStartRound(_roundsParameter.timeBeforeRoundStart));
     }
     #endregion
-    void Update()
-    {
-        // todo: Thomas - Pause(robber) everything in game except ui Update for next round
-        // todo: Thomas - Check robber amount object left
-        CheckEndRound();
-    }
 
-    void CheckEndRound()
+    public void CheckEndRound()
     {
         if ((ValidateMuseumEmpty() || UIManager.GetCurrentCaptureThiefAmount >= UIManager.GetmaxCaptureThiefAmount) && !_endGame)
         {
