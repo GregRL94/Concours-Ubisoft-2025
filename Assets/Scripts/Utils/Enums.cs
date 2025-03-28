@@ -30,3 +30,12 @@ public enum ObjectType
     VASE,
     SCULPTURE
 }
+
+public enum UITutorialStep
+{
+    TALK_STEP,
+    MOVE_STEP,
+    PLACE_TRAP_STEP,
+    ROTATE_STRAP_STEP,
+    WHISTLE_STEP
+}

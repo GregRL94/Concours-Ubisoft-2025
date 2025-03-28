@@ -15,10 +15,8 @@ public class MuseumObjectsManager : MonoBehaviour
 
     public List<MuseumObjects> AllMuseumObjects => _allMuseumObjects;
 
-    public KeyCode stealInput;
 
     public UIManager uiManager;
-
 
     void Start()
     {
@@ -88,4 +86,16 @@ public class MuseumObjectsManager : MonoBehaviour
     {
         return _sortedObjects.GetValueOrDefault(objectType);
     }
+
+    public int CountAllMuseumObjects()
+    {
+        int totalCount = 0;
+        foreach (var kvp in _sortedObjects)
+        {
+            totalCount += kvp.Value.Length;
+        }
+
+        return totalCount;
+    }
+
 }

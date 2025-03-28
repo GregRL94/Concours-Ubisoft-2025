@@ -13,6 +13,7 @@ GameObject:
   - component: {fileID: 6358052351770077079}
   - component: {fileID: 7246230140569567556}
   - component: {fileID: 815541566121039705}
+  - component: {fileID: 1967256736539385657}
   m_Layer: 0
   m_Name: Jewelry
   m_TagString: MUSEUMOBJECT
@@ -123,3 +124,15 @@ MonoBehaviour:
   _objectStealableCD: 10
   _timeStealableCD: 0
   _isStolen: 0
+--- !u!114 &1967256736539385657
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1586565553606089096}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a383df0079a9dd3449b3889148860067, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
