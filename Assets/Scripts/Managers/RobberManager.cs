@@ -63,9 +63,11 @@ public class RobberManager : MonoBehaviour
                 Random.Range(mapMiddlePoint.z - mapSize.z, mapMiddlePoint.z + mapSize.z));
         _currentRobber = Instantiate(_robber, spawnPosition, Quaternion.identity);
         SetupRobber();
+
     }
     private void SetupRobber()
     {
+        GameManager.Instance.UIManager.CreateListOfMuseumArtefactsUI(_stealObjectList);
         RobberBehaviour robber = _currentRobber.GetComponent<RobberBehaviour>();
         if (robber == null) return;
         robber.StealingList.Clear();

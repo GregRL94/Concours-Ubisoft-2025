@@ -40,7 +40,6 @@ public class MuseumObjectsManager : MonoBehaviour
             _sortedObjects.Add(objectType, MuseumObjectsArray);
         }
 
-        uiManager.CreateListOfMuseumArtefactsUI(_sortedObjects);
     }
 
     public void CheckArtefactStolen(MuseumObjects objectStolen)
@@ -75,9 +74,9 @@ public class MuseumObjectsManager : MonoBehaviour
         }
 
         Debug.Log($"Successfully ! Object Stolen : {objectStolen.name} in the  {objectStolen.MuseumObjectType} category.");
-
+        UIManager.Instance.alreadyAssignedType[objectStolen.MuseumObjectType]--;
         // Update UI List of Museum Artefacts
-        uiManager.UpdateListOfMuseumArtefacts(_sortedObjects);
+        uiManager.UpdateListOfMuseumArtefacts();
     }
 
 
