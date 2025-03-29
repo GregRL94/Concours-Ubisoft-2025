@@ -14,7 +14,8 @@ public class PlayerControls : MonoBehaviour
     [SerializeField] private PlayerEnum _playerID;
     [SerializeField, Range(0f, 10f)] private float _raycastStartDistance;
     [SerializeField, Range(0f, 10f)] private float _interactionDistance;
-    [SerializeField] private LayerMask _gameAgentsMask;
+    [SerializeField] private LayerMask _trapsMask;
+    [SerializeField] private LayerMask _robberMask;
     [Space]
     [Header("ABILITIES BINDING")]
     [SerializeField] private AbilitiesEnum _rJoystickUPBind;
@@ -107,7 +108,7 @@ public class PlayerControls : MonoBehaviour
 
         Ray ray = new Ray(raycastStartPoint, transform.forward);
 
-        if (Physics.Raycast(ray, out RaycastHit hit, _interactionDistance, _gameAgentsMask))
+        if (Physics.Raycast(ray, out RaycastHit hit, _interactionDistance, _trapsMask))
         {
             if (hit.collider.gameObject.CompareTag("TRAP"))
             {
@@ -195,7 +196,7 @@ public class PlayerControls : MonoBehaviour
     private void Whistle(InputAction.CallbackContext context)
     {
         if (!GameManager.Instance.TutorialManager.IsTutorialCompleted && GameManager.Instance.TutorialManager.CurrentTutorialType == UITutorialStep.WHISTLE_STEP) GameManager.Instance.UIManager.CurrentPlayerValidation.DynamicValidatePage(_playerID);
-        _playerActions.PerformWhistle(_gameAgentsMask);
+        _playerActions.PerformWhistle(_robberMask);
     }
     #endregion
 

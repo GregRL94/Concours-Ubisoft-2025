@@ -29,7 +29,7 @@ public class GameManager : MonoBehaviour
     {
         public GameObject trapPrefab;
         [Range(0f, 10f)] public float setupTime;
-        [Range(0, 5)] public int initialCount;
+        [Range(0, 10)] public int initialCount;
         [Range(0f, 10f)] public float cooldown;
         [HideInInspector] public TextMeshProUGUI countText;
         [HideInInspector] public Image fillImage;

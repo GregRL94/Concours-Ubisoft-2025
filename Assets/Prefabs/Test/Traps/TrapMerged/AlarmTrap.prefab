@@ -14,7 +14,7 @@ GameObject:
   - component: {fileID: 8422100873042759471}
   - component: {fileID: 7305312544070130000}
   - component: {fileID: 3229153349711733166}
-  m_Layer: 6
+  m_Layer: 8
   m_Name: AlarmTrap
   m_TagString: TRAP
   m_Icon: {fileID: 0}
@@ -148,7 +148,7 @@ GameObject:
   - component: {fileID: 3336270982565152480}
   - component: {fileID: 2778665235409911167}
   - component: {fileID: 745327515436954241}
-  m_Layer: 6
+  m_Layer: 0
   m_Name: Direction
   m_TagString: Untagged
   m_Icon: {fileID: 0}
