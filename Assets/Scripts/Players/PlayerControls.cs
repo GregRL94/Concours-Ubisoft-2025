@@ -41,6 +41,7 @@ public class PlayerControls : MonoBehaviour
     private Rigidbody _rb;
     private Vector2 _leftJoystickInput;
     private Vector3 _leftjoystickVirtualPoint;
+    private Animator _animator;
 
     private readonly float _joystickPointDisplayDistance = 2f;
 
@@ -68,6 +69,7 @@ public class PlayerControls : MonoBehaviour
             [R_JoystickDirection.NONE] = AbilitiesEnum.NONE,
         };
         _rb = GetComponent<Rigidbody>();
+        _animator = GetComponentInChildren<Animator>();
         EnablePlayerInputs(true);
         _currentNode = _gameGrid.NodeFromWorldPos(transform.position);
         _previousNode = _currentNode;
@@ -81,6 +83,10 @@ public class PlayerControls : MonoBehaviour
         _leftjoystickVirtualPoint = new Vector3(transform.position.x + _leftJoystickInput.x * _joystickPointDisplayDistance, transform.position.y, transform.position.z + _leftJoystickInput.y * _joystickPointDisplayDistance);
         transform.rotation = Quaternion.LookRotation(Vector3.RotateTowards(transform.forward, _leftjoystickVirtualPoint - transform.position, _rotationSpeed * Time.deltaTime, 0.0f));
         _rb.velocity = joystickInputMagnitude * _speed * transform.forward;
+
+        //Gestion de l'animation de marche
+        _animator.SetBool("EstEnMouvement", _rb.velocity.magnitude > 0f);
+        _animator.SetFloat("Mouvement", joystickInputMagnitude);
 
         Node node = _gameGrid.NodeFromWorldPos(transform.position);
 
@@ -143,6 +149,7 @@ public class PlayerControls : MonoBehaviour
     #region Movement
     public void Movement(InputAction.CallbackContext context)
     {
+        if (!GameManager.Instance.TutorialManager.IsTutorialCompleted && GameManager.Instance.TutorialManager.CurrentTutorialType == UITutorialStep.MOVE_STEP) GameManager.Instance.UIManager.CurrentPlayerValidation.DynamicValidatePage(_playerID);
         _leftJoystickInput = context.ReadValue<Vector2>();        
     }
 
@@ -188,6 +195,7 @@ public class PlayerControls : MonoBehaviour
 
     private void Whistle(InputAction.CallbackContext context)
     {
+        if (!GameManager.Instance.TutorialManager.IsTutorialCompleted && GameManager.Instance.TutorialManager.CurrentTutorialType == UITutorialStep.WHISTLE_STEP) GameManager.Instance.UIManager.CurrentPlayerValidation.DynamicValidatePage(_playerID);
         _playerActions.PerformWhistle(_robberMask);
     }
     #endregion
@@ -195,6 +203,7 @@ public class PlayerControls : MonoBehaviour
     #region Traps
     private void OnStartTrapDeployment(InputAction.CallbackContext context)
     {
+        if (!GameManager.Instance.TutorialManager.IsTutorialCompleted && GameManager.Instance.TutorialManager.CurrentTutorialType == UITutorialStep.PLACE_TRAP_STEP) GameManager.Instance.UIManager.CurrentPlayerValidation.DynamicValidatePage(_playerID);
         _playerActions.StartTrapDeployment(_gameGrid.NodeFromWorldPos(_snappedInteractionPoint));
     }
 
@@ -205,7 +214,14 @@ public class PlayerControls : MonoBehaviour
 
     private void OnRotateTrap(InputAction.CallbackContext context)
     {
+        if (!GameManager.Instance.TutorialManager.IsTutorialCompleted && GameManager.Instance.TutorialManager.CurrentTutorialType == UITutorialStep.ROTATE_STRAP_STEP) GameManager.Instance.UIManager.CurrentPlayerValidation.DynamicValidatePage(_playerID);
         _playerActions.RotateTrap(context.ReadValue<float>(), _currentTrap);
+    }
+
+    private void OnUIValidatePage(InputAction.CallbackContext context)
+    {
+        if (GameManager.Instance.TutorialManager.CurrentTutorialType != UITutorialStep.TALK_STEP && !GameManager.Instance.UIManager.CurrentPlayerValidation.SimpleValidate) return;
+        GameManager.Instance.UIManager.CurrentPlayerValidation.DynamicValidatePage(_playerID);
     }
     #endregion
 
@@ -214,6 +230,7 @@ public class PlayerControls : MonoBehaviour
     {
         InputAction movementAction = _playerControls.FindAction("Movement");
         InputAction actionActivation = _playerControls.FindAction("ActionActivation");
+        InputAction actionUIValidate = _playerControls.FindAction("UIValidate");
 
         if (enableState)
         {
@@ -226,6 +243,8 @@ public class PlayerControls : MonoBehaviour
             actionActivation.started += OnStartTrapDeployment;
             actionActivation.canceled += OnCancelTrapDeployment;
             _playerControls.FindAction("TrapRotation").performed += OnRotateTrap;
+
+            actionUIValidate.performed += OnUIValidatePage;
         }
         else
         {
@@ -237,6 +256,8 @@ public class PlayerControls : MonoBehaviour
             actionActivation.started -= OnStartTrapDeployment;
             actionActivation.canceled -= OnCancelTrapDeployment;
             _playerControls.FindAction("TrapRotation").performed -= OnRotateTrap;
+            
+            actionUIValidate.performed -= OnUIValidatePage;
             _playerControls.Disable();
         }
 

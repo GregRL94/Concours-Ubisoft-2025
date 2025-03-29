@@ -1,11 +1,15 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.Runtime.CompilerServices;
+using Unity.VisualScripting;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class TutorialManager : MonoBehaviour
 {
     [Header("Metrics")]
+    [SerializeField]
+    private float _timeBeforeChangingTutorialPages = 2f;
     [SerializeField]
     private List<GameObject> _tutorialPages;
     [SerializeField]
@@ -18,13 +22,19 @@ public class TutorialManager : MonoBehaviour
     private GameObject _currentTutorialPage;
     [SerializeField]
     private int _currentTutorialPageIndex;
+    [SerializeField]
+    private UITutorialStep _currentTutorialType;
+    
     public bool IsTutorialCompleted => _isTutorialCompleted;
+    public UITutorialStep CurrentTutorialType { get { return _currentTutorialType; } set { _currentTutorialType = value; } }
 
     // Start is called before the first frame update
     void Start()
     {
+        _isTutorialCompleted = SceneLoading.Instance.IsTutoCompleted;
         AutoGetTutorialPages();
-        if (!_isTutorialCompleted)StartTutorial();
+        if (!_isTutorialCompleted) StartTutorial();
+        else CompleteTutorial();
     }
 
     private void AutoGetTutorialPages()
@@ -48,24 +58,24 @@ public class TutorialManager : MonoBehaviour
         _currentTutorialPageIndex = 0;
     }
 
-    public void PreviousTutorialPage() => GoToPage(_currentTutorialPageIndex - 1);
+    public void PreviousTutorialPage() => StartCoroutine(GoToPage(_currentTutorialPageIndex - 1));
 
-    public void NextTutorialPage() => GoToPage(_currentTutorialPageIndex + 1);
+    public void NextTutorialPage() => StartCoroutine(GoToPage(_currentTutorialPageIndex + 1));
 
     public void SkipTutorial() => CompleteTutorial();
-    private void GoToPage(int index)
+    private IEnumerator GoToPage(int index)
     {
-        if (_currentTutorialPageIndex < 0) return;
-
+        if (_currentTutorialPageIndex < 0) yield return null;
+        yield return new WaitForSeconds(_timeBeforeChangingTutorialPages);
         if(index > _currentTutorialPageIndex)
             _tutorialPages[index - 1].SetActive(false);
         else if(index < _currentTutorialPageIndex)
             _tutorialPages[index + 1].SetActive(false);
 
-        if (_currentTutorialPageIndex >= _tutorialPages.Count)
+        if (index >= _tutorialPages.Count)
         {
             CompleteTutorial();
-            return;
+            yield return null;
         }
         _tutorialPages[index].SetActive(true);
         _currentTutorialPage = _tutorialPages[index];
@@ -77,5 +87,8 @@ public class TutorialManager : MonoBehaviour
 
         _tutorialUI.SetActive(false);
         _isTutorialCompleted = true;
+        GameManager.Instance.StartGameLoop();
+        SceneLoading.Instance.IsTutoCompleted = _isTutorialCompleted;
     }
+
 }

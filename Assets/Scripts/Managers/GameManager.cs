@@ -79,6 +79,8 @@ public class GameManager : MonoBehaviour
     private TrapManager _trapManager;
     [SerializeField]
     private UIManager _uiManager;
+    [SerializeField]
+    private TutorialManager _tutorialManager;
 
     [Header("Metrics")]
     [Range(0,13)][SerializeField]
@@ -87,6 +89,10 @@ public class GameManager : MonoBehaviour
     [SerializeField]
     private Rounds _roundsParameter;
     public Rounds RoundParameter => _roundsParameter;
+
+    [SerializeField]
+    private Color[] _playerColor;
+    public Color[] PlayerColor => _playerColor;
 
     [Header("-- ABILITIES --")]
     [Header("Whistle")]
@@ -111,13 +117,16 @@ public class GameManager : MonoBehaviour
     private PlayerControls[] _players;
     [SerializeField]
     private PlayerReputation[] _playersReputation;
-    
+    [SerializeField]
+    private TextMeshProUGUI _timerText;
+
     //getter
     public PlayerControls[] Players => _players;
     public MuseumObjectsManager MuseumObjectsManager => _museumObjectManager;
     public RobberManager RobberManager => _robberManager;
     public TrapManager TrapManager => _trapManager;
     public UIManager UIManager => _uiManager;
+    public TutorialManager TutorialManager => _tutorialManager;
 
 
     [Header("Round Metrics")]
@@ -164,7 +173,9 @@ public class GameManager : MonoBehaviour
         InitializePlayers();
 
         UIManager.CreatePlayersReputationUI(_maxPlayersReputation, _minPlayersReputation, _playersReputation);
-
+    }
+    public void StartGameLoop()
+    {
         // Start gameplay loop
         _endGame = false;
         _preStartRoundCoroutine = StartCoroutine(PreStartRound(_roundsParameter.timeBeforeRoundStart));
@@ -196,6 +207,8 @@ public class GameManager : MonoBehaviour
         if(!_robberManager)_robberManager = FindAnyObjectByType<RobberManager>();
         if(!_trapManager)_trapManager = FindAnyObjectByType<TrapManager>();
         if(!_uiManager)_uiManager = FindAnyObjectByType<UIManager>();
+        if(!_tutorialManager) _tutorialManager = FindAnyObjectByType<TutorialManager>();
+        _timerText = _uiManager.roundCountdownText;
     }
 
     private void InitializePlayers()
@@ -235,12 +248,19 @@ public class GameManager : MonoBehaviour
     #region Rounds Management
     private IEnumerator PreStartRound(float time)
     {
-        yield return new WaitForSeconds(time);
+        float timer = time;
+        while (timer > 0)
+        {
+            _timerText.text = timer.ToString();
+            yield return new WaitForSeconds(1);
+            timer--;
+        }
         if (_startRoundCoroutine != null)
         {
             StopCoroutine(_startRoundCoroutine);
             _startRoundCoroutine = null;
         }
+        _timerText.text = "";
         _startRoundCoroutine = StartCoroutine(StartRound(_roundsParameter.roundTime, _roundsParameter.roundTime - showTimeBeforeRoundEnd)); 
     }
     private IEnumerator StartRound(float time, float timeLeftWarning)
@@ -262,10 +282,10 @@ public class GameManager : MonoBehaviour
 
         //todo: Audio - For Round Finished
         _uiManager.ShowReputationBoard(_playersReputation, _maxPlayersReputation, _minPlayersReputation);
+        _roundsParameter.hasRoundStarted = false;
+        _robberManager.DispawnRobber();
     
 
-        //_roundsParameter.hasRoundStarted = false;
-        //_robberManager.DispawnRobber();
         //if (_preStartRoundCoroutine != null)
         //{
         //    StopCoroutine(_preStartRoundCoroutine);
@@ -274,14 +294,8 @@ public class GameManager : MonoBehaviour
         //_preStartRoundCoroutine = StartCoroutine(PreStartRound(_roundsParameter.timeBeforeRoundStart));
     }
     #endregion
-    void Update()
-    {
-        // todo: Thomas - Pause(robber) everything in game except ui Update for next round
-        // todo: Thomas - Check robber amount object left
-        CheckEndRound();
-    }
 
-    void CheckEndRound()
+    public void CheckEndRound()
     {
         if ((ValidateMuseumEmpty() || UIManager.GetCurrentCaptureThiefAmount >= UIManager.GetmaxCaptureThiefAmount) && !_endGame)
         {
