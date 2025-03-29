@@ -17,7 +17,7 @@ public class BTLeaf : BTNode
 
     public override Status Process()
     {
-        if(ProcessMethod != null)
+        if (ProcessMethod != null)
             return ProcessMethod();
         return Status.FAILURE;
     }

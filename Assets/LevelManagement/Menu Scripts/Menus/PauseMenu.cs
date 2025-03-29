@@ -7,6 +7,30 @@ namespace LevelManagement
 {
     public class PauseMenu : Menu<PauseMenu>
     {
+        ////////// DEBUG PAUSE MENU CONCOURS UBISOFT
+        private void Start()
+        {
+            gameObject.SetActive(false);
+        }
+
+        private void Update()
+        {
+            print("Pause");
+            if (Input.GetKeyDown(KeyCode.Escape))
+            {
+                if (!gameObject.activeInHierarchy)
+                {
+                    gameObject.SetActive(true);
+                }
+                else
+                {
+                    gameObject.SetActive(false);
+                }
+            }
+        }
+
+        //////////
+
 
         public void OnResumePressed()
         {
