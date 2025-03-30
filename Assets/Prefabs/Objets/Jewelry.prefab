@@ -14,7 +14,7 @@ GameObject:
   - component: {fileID: 7246230140569567556}
   - component: {fileID: 815541566121039705}
   - component: {fileID: 1967256736539385657}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: Jewelry
   m_TagString: MUSEUMOBJECT
   m_Icon: {fileID: 0}
