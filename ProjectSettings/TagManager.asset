@@ -15,12 +15,12 @@ TagManager:
   - PlayerZones
   - Water
   - UI
-  - LevelObjects
+  - MuseumObjects
   - Obstacles
+  - Traps
   - Detection
+  - Robber
   - Players
-  - 
-  - 
   - 
   - 
   - 
