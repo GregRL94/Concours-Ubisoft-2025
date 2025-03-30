@@ -393,7 +393,7 @@ Transform:
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 7.385826, y: 2.2938154, z: -5.4857364}
   m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
+  m_ConstrainProportionsScale: 1
   m_Children:
   - {fileID: 5868586076236908978}
   - {fileID: 4893743775631515839}
@@ -489,8 +489,8 @@ MonoBehaviour:
   agent: {fileID: 3566065139378272299}
   state: 0
   treeStatus: 1
-  _vBase: 10
-  _vFlee: 10
+  _vBase: 4
+  _vFlee: 5
   _radialVision: 5
   _fleeVision: 10
   _stealTime: 1
@@ -866,17 +866,17 @@ PrefabInstance:
     - target: {fileID: 7287444114945984275, guid: 3635ff2415fe23f44bc8f0f97ac9b81c,
         type: 3}
       propertyPath: m_LocalScale.x
-      value: 0.42
+      value: 0.21
       objectReference: {fileID: 0}
     - target: {fileID: 7287444114945984275, guid: 3635ff2415fe23f44bc8f0f97ac9b81c,
         type: 3}
       propertyPath: m_LocalScale.y
-      value: 0.42
+      value: 0.21
       objectReference: {fileID: 0}
     - target: {fileID: 7287444114945984275, guid: 3635ff2415fe23f44bc8f0f97ac9b81c,
         type: 3}
       propertyPath: m_LocalScale.z
-      value: 0.42
+      value: 0.21
       objectReference: {fileID: 0}
     - target: {fileID: 7287444114945984275, guid: 3635ff2415fe23f44bc8f0f97ac9b81c,
         type: 3}
