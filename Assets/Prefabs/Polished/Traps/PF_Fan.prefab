@@ -12,7 +12,7 @@ GameObject:
   - component: {fileID: 974668122160537784}
   - component: {fileID: 4625542382217899253}
   - component: {fileID: 8636253911965243664}
-  m_Layer: 6
+  m_Layer: 8
   m_Name: PF_Fan
   m_TagString: TRAP
   m_Icon: {fileID: 0}

@@ -79,7 +79,7 @@ GameObject:
   - component: {fileID: 4887867580449354759}
   - component: {fileID: 465745400511747047}
   - component: {fileID: 2923907066789790336}
-  m_Layer: 6
+  m_Layer: 8
   m_Name: PF_Alarme
   m_TagString: TRAP
   m_Icon: {fileID: 0}

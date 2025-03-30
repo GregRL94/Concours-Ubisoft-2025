@@ -588,7 +588,7 @@ MonoBehaviour:
   _radialVision: 5
   _fleeVision: 10
   _stealTime: 10
-  _stealRange: 2
+  _stealRange: 1
   _indicator: {fileID: 5372714353555304992, guid: 6fc9a974839716d43bab03ae4fe13187,
     type: 3}
   _rb: {fileID: 3389639412683575569, guid: 6fc9a974839716d43bab03ae4fe13187, type: 3}
@@ -596,6 +596,7 @@ MonoBehaviour:
     type: 3}
   _robberCapture: {fileID: 1543242316697433222, guid: 6fc9a974839716d43bab03ae4fe13187,
     type: 3}
+  _animator: {fileID: 0}
   _stealingList: 00000000000000000100000000000000
   _currentTargetObject: {fileID: 0}
   _isVulnerable: 0
