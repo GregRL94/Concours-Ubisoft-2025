@@ -499,7 +499,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _speed: 5
   _rotationSpeed: 8
-  _playerID: 0
+  _playerID: 2
   _raycastStartDistance: 0.52
   _interactionDistance: 2
   _gameAgentsMask:
@@ -573,6 +573,9 @@ MonoBehaviour:
   whistleFillImage: {fileID: 0}
   defaultWarningTime: 0.3
   defaultWarningColor: {r: 1, g: 1, b: 1, a: 1}
+  selection: {fileID: 0}
+  speed: 0.11
+  scaleAmount: 0.05
 --- !u!1 &6093196710959670524
 GameObject:
   m_ObjectHideFlags: 0

@@ -168,11 +168,13 @@ public class GameManager : MonoBehaviour
 
     void OnSceneLoaded(Scene scene, LoadSceneMode mode)
     {
+        if(SceneManager.GetActiveScene().buildIndex > 2) // After Player Character Selection Scene
+        {
+            AssignManagers();
+            InitializePlayers();
 
-        AssignManagers();
-        InitializePlayers();
-
-        UIManager.CreatePlayersReputationUI(_maxPlayersReputation, _minPlayersReputation, _playersReputation);
+            UIManager.CreatePlayersReputationUI(_maxPlayersReputation, _minPlayersReputation, _playersReputation);
+        }
     }
     public void StartGameLoop()
     {
@@ -208,7 +210,7 @@ public class GameManager : MonoBehaviour
         if(!_trapManager)_trapManager = FindAnyObjectByType<TrapManager>();
         if(!_uiManager)_uiManager = FindAnyObjectByType<UIManager>();
         if(!_tutorialManager) _tutorialManager = FindAnyObjectByType<TutorialManager>();
-        _timerText = _uiManager.roundCountdownText;
+        if(!_timerText) _timerText = _uiManager.roundCountdownText;
     }
 
     private void InitializePlayers()

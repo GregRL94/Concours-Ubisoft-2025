@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using TMPro;
 using UnityEngine.UI;
+using Unity.VisualScripting;
 
 #region Action For Player Ability UI (Test)
 //public class PlayerAbilitiesUI : MonoBehaviour
@@ -80,6 +81,78 @@ public class PlayerAbilitiesUI : MonoBehaviour
     [SerializeField] private Color defaultWarningColor = Color.white;
     public Color DefaultWarningColor => defaultWarningColor;
 
+    [Header("Selection Displays")]
+    public GameObject selection;
+
+    public float speed = 0.15f;
+    public float scaleAmount = 0.05f;
+    private Vector3 initialScale;
+
+    void Start()
+    {
+        if (selection != null)
+        {
+            initialScale = selection.transform.localScale;
+        }
+    }
+
+    public Image imageSelected;
+
+    void Update()
+    {
+        HighlightAnimation();
+
+        if (Input.GetKeyDown(KeyCode.A))
+        {
+            Highlight(PlayerEnum.PLAYER1, alarmTrapUI.fillImage);
+        }
+        if (Input.GetKeyDown(KeyCode.S))
+        {
+            Highlight(PlayerEnum.PLAYER1, pushTrapUI.fillImage);
+        }
+        if (Input.GetKeyDown(KeyCode.D))
+        {
+            Highlight(PlayerEnum.PLAYER1, captureTrapUI.fillImage);
+        }
+        if (Input.GetKeyDown(KeyCode.F))
+        {
+            Highlight(PlayerEnum.PLAYER1, whistleFillImage);
+        }
+    }
+    public void Highlight(PlayerEnum currentSelection,Image fillImage)
+    {
+        if(currentSelection == PlayerEnum.PLAYER1)
+        {
+            SelectionUI(fillImage);
+        }
+        else if(currentSelection == PlayerEnum.PLAYER2)
+        {
+            SelectionUI(fillImage);
+        }
+        else if(currentSelection == PlayerEnum.NONE)
+        {
+            SelectionUI(fillImage);
+        }
+    }
+
+    private void SelectionUI(Image fillImage)
+    {
+        // Selection
+        Transform abilityUIPos = fillImage.transform.parent;
+        selection.transform.position = abilityUIPos.position;
+    }
+
+    #region Update Selection Animation
+    public void HighlightAnimation()
+    {
+        if (selection != null)
+        {
+            float scaleFactor = 1 + Mathf.PingPong(Time.time * speed, scaleAmount);
+            selection.transform.localScale = initialScale * scaleFactor;
+        }
+    }
+    #endregion
+
     #region Update Text UI 
     public void UpdateAbilityCountText(TextMeshProUGUI countText, int count)
     {
@@ -90,6 +163,8 @@ public class PlayerAbilitiesUI : MonoBehaviour
     #region Update Cooldowns
     public void UpdateCooldownFill(Image fillImage, float cooldownTime)
     {
+
+
         StartCoroutine(StartCooldown(fillImage, cooldownTime));
     }
     public IEnumerator StartCooldown(Image fillImage, float cooldownTime)

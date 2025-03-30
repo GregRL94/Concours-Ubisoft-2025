@@ -7,34 +7,10 @@ namespace LevelManagement
 {
     public class PauseMenu : Menu<PauseMenu>
     {
-        ////////// DEBUG PAUSE MENU CONCOURS UBISOFT
-        private void Start()
-        {
-            gameObject.SetActive(false);
-        }
-
-        private void Update()
-        {
-            print("Pause");
-            if (Input.GetKeyDown(KeyCode.Escape))
-            {
-                if (!gameObject.activeInHierarchy)
-                {
-                    gameObject.SetActive(true);
-                }
-                else
-                {
-                    gameObject.SetActive(false);
-                }
-            }
-        }
-
-        //////////
-
-
         public void OnResumePressed()
         {
             Time.timeScale = 1;
+            gameObject.SetActive(false);
             base.OnBackPressed();
         }
 
@@ -42,6 +18,7 @@ namespace LevelManagement
         {
             Time.timeScale = 1;
             SceneManager.LoadScene(SceneManager.GetActiveScene().name);
+            GameData.ResetPlayerPoints();
             base.OnBackPressed();
         }
 
@@ -49,11 +26,13 @@ namespace LevelManagement
         {
             Time.timeScale = 1;
             LevelLoader.LoadMainMenuLevel();
+            GameData.ResetPlayerPoints();
             MainMenu.Open();
         }
 
         public void OnQuitPressed()
         {
+            GameData.ResetPlayerPoints();
             Application.Quit();
             #if UNITY_EDITOR
                         UnityEditor.EditorApplication.isPlaying = false; // Exit option for editor 

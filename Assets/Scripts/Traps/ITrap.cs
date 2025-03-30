@@ -5,5 +5,5 @@ using UnityEngine;
 // Interface for Trap usages 
 public interface ITrap
 {
-    void ActivateTrap(Vector3 position);
+    void ActivateTrap(Transform tr);
 }

@@ -1,5 +1,3 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.EventSystems;
 
@@ -9,6 +7,22 @@ public class ControllerUIInput : MonoBehaviour
 
     private void OnEnable()
     {
-        EventSystem.current.SetSelectedGameObject(FirstSelectedButton);
+        SetSelectedButton();
+    }
+
+    private void Update()
+    {
+        if (EventSystem.current != null && EventSystem.current.currentSelectedGameObject == null)
+        {
+            SetSelectedButton();
+        }
+    }
+
+    private void SetSelectedButton()
+    {
+        if (FirstSelectedButton != null)
+        {
+            EventSystem.current.SetSelectedGameObject(FirstSelectedButton);
+        }
     }
 }
