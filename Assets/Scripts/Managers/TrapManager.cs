@@ -15,9 +15,6 @@ public class TrapManager : MonoBehaviour
 
     [SerializeField]
     private NavMeshAgent _agent;
-    public GameObject alarmTrap;
-    public GameObject pushTrap;
-    public GameObject captureTrap;
     [SerializeField]
     private GameObject _indicator;
 
@@ -116,20 +113,8 @@ public class TrapManager : MonoBehaviour
     }
     #endregion
 
-    private void Update()
-    {
-        //if (alarmTrap != null && alarmTrap.activeInHierarchy)
-        //    agent.SetDestination(alarmTrap.transform.position);
-
-        //if (pushTrap != null && pushTrap.activeInHierarchy && agent.enabled)
-        //    agent.SetDestination(pushTrap.transform.position);
-
-        //if (captureTrap != null && captureTrap.activeInHierarchy)
-        //    agent.SetDestination(captureTrap.transform.position);
-    }
-
     #region Alarm Trigger Behaviour
-    public void TriggerAlarmTrap(PlayerEnum trapOwner = PlayerEnum.NONE)
+    public void TriggerAlarmTrap(Transform tr, PlayerEnum trapOwner = PlayerEnum.NONE)
     {
         // Stops enemy agent
         if (_agent != null)
@@ -141,161 +126,90 @@ public class TrapManager : MonoBehaviour
         }
 
         // Reaction time before flee
-        StartCoroutine(RunAwayDelay(trapOwner));
+        StartCoroutine(RunAwayDelay(tr,trapOwner));
     }
 
-    private IEnumerator RunAwayDelay(PlayerEnum trapOwner)
+    private IEnumerator RunAwayDelay(Transform tr, PlayerEnum trapOwner)
     {
         //Run Away for RobberBehaviour
-        // todo - (Gregory || Thomas) Trap id from player that set the trap and value
         robberCapture?.GetSifled(trapOwner, _alarmCaptureValue);
 
         _animator.SetBool("Cours", true);
 
         yield return new WaitForSeconds(timeTillAlarmIndicatorAppear);
-        Destroy(alarmTrap);
+        //Destroy(alarmTrap);
         if (_indicator == null) yield break;
         _indicator?.SetActive(true);
+        tr.GetComponent<CapsuleCollider>().enabled = false;
 
-
-        // Optional - Reaction to alarm -> Turning right to left
-        /*yield return new WaitForSeconds(0.5f);
-        StartCoroutine(SmoothRotate(90f, 0.1f));
-        yield return new WaitForSeconds(0.5f);
-        StartCoroutine(SmoothRotate(-180f, 0.1f));
-
-        yield return new WaitForSeconds(timeTillFlee);
-
-        // Regain his movement
-        if (_agent != null)
-        {
-            _agent.isStopped = false;
-        }
-
-        // Determine a random direction to flee
-        FleeFromAlarmTrap();
-
-        // Calculate every frame till enemy has reached his flee position
-        yield return StartCoroutine(FleeDestinationReached());*/
-    }
-
-    private void FleeFromAlarmTrap()
-    {
-        // Flee to random direction
-        int randIndex = UnityEngine.Random.Range(0, fleeDirections.Length);
-        Vector3 fleeDirection = fleeDirections[randIndex];
-
-        // Flee position 
-        fleePosition = transform.position + fleeDirection * fleeRange; 
-        _agent.speed *= fleeSpeedMultiplier;
-        hasFleeToDestination = true;
-    }
-
-    private IEnumerator FleeDestinationReached()
-    {
-        while (hasFleeToDestination)
-        {
-            _agent.SetDestination(fleePosition);
-            
-            // Check every frame if reached its flee destination
-            if (Vector3.Distance(transform.position, fleePosition) <= 0.1f)
-            {
-                _agent.speed = agentInitialSpeed;
-                hasFleeToDestination = false;
-                _indicator.SetActive(false);
-                Destroy(alarmTrap);
-            }
-            yield return null; // calculates it in every frame
-        }
-    }
-
-    private IEnumerator SmoothRotate(float angle, float duration)
-    {
-        Quaternion startRotation = transform.rotation;
-        Quaternion endRotation = Quaternion.Euler(transform.eulerAngles.x, transform.eulerAngles.y + angle, transform.eulerAngles.z);
-
-        float elapsedTime = 0f;
-
-        // Quaternion rotation based on the duration
-        while (elapsedTime < duration)
-        {
-            transform.rotation = Quaternion.Slerp(startRotation, endRotation, elapsedTime / duration);
-            elapsedTime += Time.deltaTime;
-            yield return null;
-        }
-
-        transform.rotation = endRotation; 
     }
     #endregion
 
     #region Push Trigger Behaviour
-    public void TriggerPushTrap(PlayerEnum trapOwner = PlayerEnum.NONE)
-    {
-        // Deactivate enemy agent
-        if (_agent != null)
-        {
-            _agent.isStopped = true;
-        }
 
-        // Resets velocity to zero
-        if (_rb != null)
-        {
-            //rb.isKinematic = false;
-            _rb.velocity = Vector3.zero;
-        }
-
-        // Pushes enemy from a forward direction and apply a force instant force 
-        Vector3 pushDirection = _agent.transform.forward * pushDistance; 
-        _rb?.AddForce(pushDirection , ForceMode.Impulse); 
-
-        
-        StartCoroutine(StunAfterPush(trapOwner));
-    }
-
-    IEnumerator StunAfterPush(PlayerEnum trapOwner)
+    public void TriggerPushTrap(Transform tr, PlayerEnum trapOwner = PlayerEnum.NONE)
     {
         robberCapture?.GetSifled(trapOwner, _pushCaptureValue);
-        
-        yield return new WaitForSeconds(timeTillPushIndicatorAppear);
-        if(_indicator == null)yield break;
-        _indicator?.SetActive(true);
+        _agent?.GetComponentInChildren<Animator>()?.SetBool("EstRepousser", true);
 
-        // Push duration till Enemy freezes
-        yield return new WaitForSeconds(timeTillEnemyStop);
-        Destroy(pushTrap);
-
+        if (_agent != null)
+        {
+            _agent.isStopped = true;  
+            _agent.updatePosition = false; 
+        }
 
         if (_rb != null)
         {
             _rb.velocity = Vector3.zero;
-            //rb.isKinematic = true;
+            Vector3 pushDirection = tr.forward * pushDistance;
+            _rb.AddForce(pushDirection, ForceMode.Impulse);
         }
-        else yield break;
 
+        StartCoroutine(StunAfterPush(trapOwner, tr));
+    }
 
-        // Stun duration after being pushed 
+    private IEnumerator StunAfterPush(PlayerEnum trapOwner, Transform tr)
+    {
+        tr.GetComponent<CapsuleCollider>().enabled = false;
+
+        yield return new WaitForSeconds(timeTillPushIndicatorAppear);
+        _indicator?.SetActive(true);
+
+        yield return new WaitForSeconds(timeTillEnemyStop);
+
+        if (_rb != null)
+        {
+            _rb.velocity = Vector3.zero;
+        }
+
         yield return new WaitForSeconds(stunPushDuration);
 
         if (_agent != null)
         {
+            _agent.Warp(_rb.position);
+
             _agent.isStopped = false;
+            _agent.updatePosition = true;
+            _agent.GetComponentInChildren<Animator>()?.SetBool("EstRepousser", false);
         }
-        else yield break;
 
         _indicator?.SetActive(false);
     }
+
     #endregion
-  
+
+
+
     #region Capture Trigger Behaviour
-    public void TriggerCaptureTrap(PlayerEnum trapOwner, Vector3 pos)
+    public void TriggerCaptureTrap(PlayerEnum trapOwner, Transform tr)
     {
         // Disable collider, movement and reset velocity to zero
         if (_agent != null)
         {
             print("_agent.isStopped " + _agent.isStopped);
-            print("capture trap pos: " + pos);
+            print("capture trap pos: " + tr.position);
             //Vector3 test = new Vector3(34.5400009f, -0.141920924f, 9.07999992f);
-            _agent.SetDestination(pos);
+            _agent.SetDestination(tr.position);
             _agent.isStopped = true;
         }
         if (_rb != null)
@@ -306,14 +220,10 @@ public class TrapManager : MonoBehaviour
             print("_rb.velocity " + _rb.velocity);
         }
 
-        //if(_agent.transform.position != captureTrap.transform.position)
-        //    _agent.transform.position = captureTrap.transform.position;
-
-
-        StartCoroutine(StunFromCapture(trapOwner));
+        StartCoroutine(StunFromCapture(trapOwner, tr));
     }
 
-    IEnumerator StunFromCapture(PlayerEnum trapOwner)
+    IEnumerator StunFromCapture(PlayerEnum trapOwner, Transform tr)
     {
         robberCapture?.GetSifled(trapOwner, _captureCaptureValue);
         
@@ -325,7 +235,7 @@ public class TrapManager : MonoBehaviour
         robberCapture.StartVulnerability();
         yield return new WaitForSeconds(captureDuration);
 
-        Destroy(captureTrap);
+        //Destroy(captureTrap);
         if (_agent != null)
         {
             _agent.isStopped = false;
@@ -339,6 +249,7 @@ public class TrapManager : MonoBehaviour
         }
         
         _indicator?.SetActive(false);
+        tr.GetComponent<CapsuleCollider>().enabled = false;
         robberCapture?.StopVulnerability();
     }
     #endregion

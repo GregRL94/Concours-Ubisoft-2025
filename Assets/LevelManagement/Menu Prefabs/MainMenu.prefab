@@ -840,6 +840,7 @@ GameObject:
   - component: {fileID: 114131953037674068}
   - component: {fileID: 114067095325013330}
   - component: {fileID: 1637234142309336299}
+  - component: {fileID: 1269802448041634748}
   m_Layer: 5
   m_Name: MainMenu
   m_TagString: Untagged
@@ -945,7 +946,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _playDelay: 1.4
-  startTransitionPrefab: {fileID: 114970023746679392, guid: 1fd0b6c1869e7974cafab46187ee2cc6, type: 3}
+  startTransitionPrefab: {fileID: 114970023746679392, guid: 1fd0b6c1869e7974cafab46187ee2cc6,
+    type: 3}
 --- !u!82 &1637234142309336299
 AudioSource:
   m_ObjectHideFlags: 0
@@ -1042,6 +1044,19 @@ AudioSource:
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 4
+--- !u!114 &1269802448041634748
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1417821858174238}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f4585dcfe9108d247a8bb7d5592f77dc, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  FirstSelectedButton: {fileID: 1907243947113344}
 --- !u!1 &1750290696951428
 GameObject:
   m_ObjectHideFlags: 0
