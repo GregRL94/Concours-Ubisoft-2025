@@ -8893,6 +8893,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e7883bf4707f1b84190ea97810849078, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  ShowGrid: 0
 --- !u!114 &1074450520
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -8914,9 +8915,9 @@ MonoBehaviour:
   playerZonesMask:
     serializedVersion: 2
     m_Bits: 8
-  gameAgentsMask:
+  _gameObjectsMask:
     serializedVersion: 2
-    m_Bits: 64
+    m_Bits: 0
 --- !u!1 &1080666788
 GameObject:
   m_ObjectHideFlags: 0
@@ -11396,7 +11397,7 @@ PrefabInstance:
     - target: {fileID: 4775475527431028253, guid: 0fc8b0361f3adb04f9da3a1279eaf35d,
         type: 3}
       propertyPath: _isTutoCompleted
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 5496437348749677003, guid: 0fc8b0361f3adb04f9da3a1279eaf35d,
         type: 3}
