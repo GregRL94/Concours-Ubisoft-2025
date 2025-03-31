@@ -15,6 +15,6 @@ EditorBuildSettings:
     path: Assets/Scenes/Tests Scenes/Character Selection.unity
     guid: 5dca4726a3950dd4a836b3b151950917
   - enabled: 1
-    path: Assets/Scenes/Tests Scenes/Gym Thomas Tutorial.unity
-    guid: 55630033359368a4abac8d8b880e85d8
+    path: Assets/Scenes/Final Scenes/Level01.unity
+    guid: 3b19fd726925d3b4f86f045c874e62e5
   m_configObjects: {}
