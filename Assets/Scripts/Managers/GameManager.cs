@@ -217,7 +217,7 @@ public class GameManager : MonoBehaviour
     {
         _players = FindObjectsOfType<PlayerControls>();
         int playerCount = _players.Length;
-        _playersReputation = new PlayerReputation[playerCount];
+        if(GameData.FirstRound) _playersReputation = new PlayerReputation[playerCount];
 
         PlayerControls[] playersSorted = new PlayerControls[playerCount];
 
@@ -228,14 +228,14 @@ public class GameManager : MonoBehaviour
 
             playersSorted[playerIndex] = _players[i];
 
-            _playersReputation[i] = new PlayerReputation
-            {
-                reputationValue = GameData.FirstRound ? _maxPlayersReputation :
-                                (playerIndex == 0 ? GameData.p1Point : GameData.p2Point)
-            };
 
             if (GameData.FirstRound)
             {
+                _playersReputation[i] = new PlayerReputation
+                {
+                    reputationValue = GameData.FirstRound ? _maxPlayersReputation :
+                                    (playerIndex == 0 ? GameData.p1Point : GameData.p2Point)
+                };
                 if (playerIndex == 0) GameData.p1Point = _maxPlayersReputation;
                 else GameData.p2Point = _maxPlayersReputation;
             }
@@ -316,7 +316,7 @@ public class GameManager : MonoBehaviour
         if (index < 0) return;
         if (index > _players.Length) return;
         _playersReputation[index - 1].reputationValue -= loseValue;
-        //Debug.Log($"{_players[index - 1].name} has lose {loseValue}, and is now at {_playersReputation[index - 1].reputationValue} reputation !");
+        Debug.Log($"{_players[index - 1].name} has lose {loseValue}, and is now at {_playersReputation[index - 1].reputationValue} reputation !");
 
         //if (_playersReputation[index - 1].reputationValue > 0) return;
         //_playersReputation[index - 1].isEliminated = true;
