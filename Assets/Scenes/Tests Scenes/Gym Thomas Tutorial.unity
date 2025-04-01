@@ -9741,7 +9741,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!224 &1207221494
 RectTransform:
   m_ObjectHideFlags: 0
@@ -11488,6 +11488,11 @@ PrefabInstance:
         type: 3}
       propertyPath: _captureCaptureValue
       value: 10
+      objectReference: {fileID: 0}
+    - target: {fileID: 6606250537263386074, guid: 0fc8b0361f3adb04f9da3a1279eaf35d,
+        type: 3}
+      propertyPath: _isTutorialCompleted
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 7569506294769515535, guid: 0fc8b0361f3adb04f9da3a1279eaf35d,
         type: 3}
