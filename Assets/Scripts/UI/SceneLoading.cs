@@ -8,7 +8,7 @@ public class SceneLoading : MonoBehaviour
 {
     [Header("Metrics")]
     [SerializeField]
-    private List<SceneAsset> _scenesList;
+    private List<string> _scenesList;
 
     [Header("Debug Reading")]
     [SerializeField]
@@ -32,11 +32,11 @@ public class SceneLoading : MonoBehaviour
     //Load the next scene in scene list, return to 0 when end of list reached
     public void LoadNextScene()
     {
-        LoadScene(_scenesList[_nextSceneIndex]);
+        LoadSpecificScene(_scenesList[_nextSceneIndex]);
         _nextSceneIndex++;
         if(_nextSceneIndex >= _scenesList.Count)_nextSceneIndex = 0;
     }
 
     //load any scene in build settings
-    public void LoadScene(SceneAsset scene) => SceneManager.LoadScene(scene.name);
+    public void LoadSpecificScene(string sceneName) => SceneManager.LoadScene(sceneName);
 }

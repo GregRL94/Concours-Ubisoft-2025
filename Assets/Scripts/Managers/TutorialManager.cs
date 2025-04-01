@@ -91,4 +91,7 @@ public class TutorialManager : MonoBehaviour
         SceneLoading.Instance.IsTutoCompleted = _isTutorialCompleted;
     }
 
+    public void NextScene() => SceneLoading.Instance.LoadNextScene();
+    public void GoToScene(string sceneName) => SceneManager.LoadScene(sceneName);
+
 }

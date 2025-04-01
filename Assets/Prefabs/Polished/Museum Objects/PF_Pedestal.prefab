@@ -10,6 +10,7 @@ GameObject:
   m_Component:
   - component: {fileID: 9177788909562754300}
   - component: {fileID: 4488573719565046832}
+  - component: {fileID: 3187676170035931195}
   m_Layer: 6
   m_Name: PF_Pedestal
   m_TagString: Untagged
@@ -50,10 +51,26 @@ BoxCollider:
   m_LayerOverridePriority: 0
   m_IsTrigger: 0
   m_ProvidesContacts: 0
-  m_Enabled: 1
+  m_Enabled: 0
   serializedVersion: 3
   m_Size: {x: 0.5, y: 0.85, z: 0.5}
   m_Center: {x: 0, y: 0.49, z: 0}
+--- !u!208 &3187676170035931195
+NavMeshObstacle:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5033671439740906470}
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Shape: 1
+  m_Extents: {x: 0.255, y: 0.5, z: 0.255}
+  m_MoveThreshold: 0.1
+  m_Carve: 1
+  m_CarveOnlyStationary: 1
+  m_Center: {x: 0, y: 0.56, z: 0}
+  m_TimeToStationary: 0.5
 --- !u!1001 &7542457679793492253
 PrefabInstance:
   m_ObjectHideFlags: 0
