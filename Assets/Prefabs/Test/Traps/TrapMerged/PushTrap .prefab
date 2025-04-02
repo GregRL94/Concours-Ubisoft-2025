@@ -11,7 +11,7 @@ GameObject:
   - component: {fileID: 2768675146427835473}
   - component: {fileID: 4225632691698739208}
   - component: {fileID: 4010594385064246992}
-  m_Layer: 6
+  m_Layer: 0
   m_Name: Direction
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -97,7 +97,7 @@ GameObject:
   - component: {fileID: 1620196012226260135}
   - component: {fileID: 4053819749181542601}
   - component: {fileID: 8497420447530835987}
-  m_Layer: 6
+  m_Layer: 8
   m_Name: 'PushTrap '
   m_TagString: TRAP
   m_Icon: {fileID: 0}

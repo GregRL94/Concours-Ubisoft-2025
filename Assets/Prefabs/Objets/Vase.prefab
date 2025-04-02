@@ -14,7 +14,7 @@ GameObject:
   - component: {fileID: 378313550334396639}
   - component: {fileID: 2700775265593963603}
   - component: {fileID: 5208392050733716490}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: Vase
   m_TagString: MUSEUMOBJECT
   m_Icon: {fileID: 0}

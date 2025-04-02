@@ -11,7 +11,7 @@ GameObject:
   - component: {fileID: 7668301572695065864}
   - component: {fileID: 5101394467506280049}
   - component: {fileID: 5795829815059918139}
-  m_Layer: 6
+  m_Layer: 9
   m_Name: FieldOfView
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -94,7 +94,7 @@ GameObject:
   - component: {fileID: 3062138138172658885}
   - component: {fileID: 4674146321513387133}
   - component: {fileID: 5697587868948534241}
-  m_Layer: 6
+  m_Layer: 0
   m_Name: Proximity
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -184,7 +184,7 @@ GameObject:
   - component: {fileID: 4603702753971812300}
   - component: {fileID: 5967575360075033495}
   - component: {fileID: 6496361541630276210}
-  m_Layer: 6
+  m_Layer: 11
   m_Name: Player
   m_TagString: Player
   m_Icon: {fileID: 0}
@@ -499,12 +499,15 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _speed: 5
   _rotationSpeed: 8
-  _playerID: 0
+  _playerID: 2
   _raycastStartDistance: 0.52
   _interactionDistance: 2
-  _gameAgentsMask:
+  _trapsMask:
     serializedVersion: 2
-    m_Bits: 64
+    m_Bits: 0
+  _robberMask:
+    serializedVersion: 2
+    m_Bits: 0
   _rJoystickUPBind: 2
   _rJoystickDOWNBind: 1
   _rJoystickLEFTBind: 3
@@ -538,9 +541,6 @@ MonoBehaviour:
   _obstaclesMask:
     serializedVersion: 2
     m_Bits: 128
-  _gameAgentsMask:
-    serializedVersion: 2
-    m_Bits: 64
   _proximityRadius: 2
   _proximityVisualization: {fileID: 4674146321513387133}
   _foVMeshFilter: {fileID: 5101394467506280049}
@@ -573,6 +573,10 @@ MonoBehaviour:
   whistleFillImage: {fileID: 0}
   defaultWarningTime: 0.3
   defaultWarningColor: {r: 1, g: 1, b: 1, a: 1}
+  selection: {fileID: 0}
+  speed: 0.11
+  scaleAmount: 0.05
+  imageSelected: {fileID: 0}
 --- !u!1 &6093196710959670524
 GameObject:
   m_ObjectHideFlags: 0
@@ -584,7 +588,7 @@ GameObject:
   - component: {fileID: 2029819372355169361}
   - component: {fileID: 6367613779811873421}
   - component: {fileID: 2455454673777506867}
-  m_Layer: 6
+  m_Layer: 0
   m_Name: Head
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -667,17 +671,17 @@ PrefabInstance:
     - target: {fileID: 572119566606656985, guid: 497d179171c3f964492c3205d78d9348,
         type: 3}
       propertyPath: m_LocalScale.x
-      value: 0.44
+      value: 0.22
       objectReference: {fileID: 0}
     - target: {fileID: 572119566606656985, guid: 497d179171c3f964492c3205d78d9348,
         type: 3}
       propertyPath: m_LocalScale.y
-      value: 0.44
+      value: 0.22
       objectReference: {fileID: 0}
     - target: {fileID: 572119566606656985, guid: 497d179171c3f964492c3205d78d9348,
         type: 3}
       propertyPath: m_LocalScale.z
-      value: 0.44
+      value: 0.22
       objectReference: {fileID: 0}
     - target: {fileID: 572119566606656985, guid: 497d179171c3f964492c3205d78d9348,
         type: 3}
@@ -732,7 +736,7 @@ PrefabInstance:
     - target: {fileID: 572119566606656985, guid: 497d179171c3f964492c3205d78d9348,
         type: 3}
       propertyPath: m_ConstrainProportionsScale
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 917400729827917667, guid: 497d179171c3f964492c3205d78d9348,
         type: 3}
