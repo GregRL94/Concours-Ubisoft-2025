@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 using UnityEngine.Events;
 
@@ -44,7 +45,7 @@ public class DynamicsPlayersValidation : MonoBehaviour
     public void DynamicValidatePage(PlayerEnum playerID)
     {
         int id = (int)playerID;
-        if (id > _currentValidateButtons.Count || id <= 0) return;
+        if (_currentValidateButtons.Count <= 0 || id > _currentValidateButtons.Count || id <= 0) return;
         if (_currentValidateButtons[id - 1].IsValidated) return;
         for (int i = 0; i < _currentValidateButtons.Count; i++)
         {

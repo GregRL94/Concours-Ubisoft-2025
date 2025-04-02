@@ -283,10 +283,8 @@ public class GameManager : MonoBehaviour
         //_robberManager.DispawnRobber();
 
         //todo: Audio - For Round Finished
-        _uiManager.ShowReputationBoard(_playersReputation, _maxPlayersReputation, _minPlayersReputation);
-        _roundsParameter.hasRoundStarted = false;
-        _robberManager.DispawnRobber();
-    
+        EndRound();
+        CheckEndRound();
 
         //if (_preStartRoundCoroutine != null)
         //{
@@ -295,6 +293,12 @@ public class GameManager : MonoBehaviour
         //}
         //_preStartRoundCoroutine = StartCoroutine(PreStartRound(_roundsParameter.timeBeforeRoundStart));
     }
+    public void EndRound()
+    {
+        _robberManager.DispawnRobber();
+        _uiManager.ShowReputationBoard(_playersReputation, _maxPlayersReputation, _minPlayersReputation);
+        _roundsParameter.hasRoundStarted = false;
+    }
     #endregion
 
     public void CheckEndRound()
@@ -302,7 +306,7 @@ public class GameManager : MonoBehaviour
         if ((ValidateMuseumEmpty() || UIManager.GetCurrentCaptureThiefAmount >= UIManager.GetmaxCaptureThiefAmount) && !_endGame)
         {
             _endGame = true;
-            UIManager.ShowReputationBoard(_playersReputation, _maxPlayersReputation, _minPlayersReputation);
+            EndRound();
         }
     }
 
