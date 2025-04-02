@@ -170,7 +170,7 @@ public class TrapManager : MonoBehaviour
 
     private IEnumerator StunAfterPush(PlayerEnum trapOwner, Transform tr)
     {
-        tr.GetComponent<CapsuleCollider>().enabled = false;
+        tr.GetComponent<Collider>().enabled = false;
 
         yield return new WaitForSeconds(timeTillPushIndicatorAppear);
         _indicator?.SetActive(true);
