@@ -89,6 +89,7 @@ public class PlayerVision : MonoBehaviour
 
         foreach(GameObject obj in _elligibleObjects)
         {
+            if(obj == null) continue;
             if (Vector3.Distance(transform.position, obj.transform.position) <= _proximityRadius)
             {
                 visibleObjects.Add(obj);
@@ -115,6 +116,7 @@ public class PlayerVision : MonoBehaviour
 
         foreach (GameObject obj in newVisibleObjectsList)
         {
+            if (obj == null) continue;
             meshDisplay = obj.GetComponent<DynamicMeshDisplay>();
             if (meshDisplay != null)
             {
@@ -124,6 +126,7 @@ public class PlayerVision : MonoBehaviour
 
         foreach(GameObject obj in _previousVisibleObjects)
         {
+            if (obj == null) continue;
             meshDisplay = obj.GetComponent<DynamicMeshDisplay>();
             if (!newVisibleObjectsList.Contains(obj))
             {

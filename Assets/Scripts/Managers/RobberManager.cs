@@ -101,5 +101,11 @@ public class RobberManager : MonoBehaviour
         return true;
     }
 
-    public void DispawnRobber() => Destroy(_currentRobber);
+    public void DispawnRobber() 
+    {
+        RobberBehaviour robber = _currentRobber.GetComponent<RobberBehaviour>();
+        robber.StopAllCoroutines();
+        robber.enabled = false;
+        //Destroy(_currentRobber);
+    }
 }
