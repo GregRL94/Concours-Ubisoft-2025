@@ -8313,9 +8313,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _scenesList:
-  - {fileID: 102900000, guid: 55630033359368a4abac8d8b880e85d8, type: 3}
-  - {fileID: 102900000, guid: e6d15e59895cc9a4fba43d3fb7eecd11, type: 3}
-  - {fileID: 102900000, guid: e6d15e59895cc9a4fba43d3fb7eecd11, type: 3}
+  - Level01
   _nextSceneIndex: 0
   _isTutoCompleted: 1
 --- !u!1 &8833176572874605691

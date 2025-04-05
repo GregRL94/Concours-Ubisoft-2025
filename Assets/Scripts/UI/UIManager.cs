@@ -550,4 +550,5 @@ public class UIManager : MonoBehaviour
     }
     #endregion
 
+    public void ResetPlayerReput() => GameData.ResetPlayerPoints();
 }
