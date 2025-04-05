@@ -1974,6 +1974,11 @@ PrefabInstance:
       propertyPath: m_Name
       value: Fan
       objectReference: {fileID: 0}
+    - target: {fileID: 5323494932863567307, guid: 2624a96edd9502e489d9d01d51b2df34,
+        type: 3}
+      propertyPath: looping
+      value: 1
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -2124,6 +2129,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Name
       value: PiegeBallon
+      objectReference: {fileID: 0}
+    - target: {fileID: 2140607355769617706, guid: 5217037cc37db9c4c9ab2108d2d68281,
+        type: 3}
+      propertyPath: m_InitialState
+      value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
