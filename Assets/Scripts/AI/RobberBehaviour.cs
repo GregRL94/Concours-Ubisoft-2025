@@ -321,6 +321,7 @@ public class RobberBehaviour : BTAgent
     {
         StopVunerableState();
         _isFleeing = true;
+        if(_currentTargetObject != null)_currentTargetObject.SetObjectStealableCD();
         if (_stealingObjectTimer != null) StopAndClearCoroutine(ref _stealingObjectTimer);
         _currentTargetObject = null;
         _robberAgent.speed = _vFlee;
