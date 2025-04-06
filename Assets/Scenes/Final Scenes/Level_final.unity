@@ -51598,6 +51598,16 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 1308096671972412955, guid: 0fc8b0361f3adb04f9da3a1279eaf35d,
         type: 3}
+      propertyPath: pushTrapBase.setupTime
+      value: 0.5
+      objectReference: {fileID: 0}
+    - target: {fileID: 1308096671972412955, guid: 0fc8b0361f3adb04f9da3a1279eaf35d,
+        type: 3}
+      propertyPath: alarmTrapBase.setupTime
+      value: 0.2
+      objectReference: {fileID: 0}
+    - target: {fileID: 1308096671972412955, guid: 0fc8b0361f3adb04f9da3a1279eaf35d,
+        type: 3}
       propertyPath: pushTrapBase.trapPrefab
       value: 
       objectReference: {fileID: 3220068902153143993, guid: 54b28b48f2c40fd4a9ef9fc1b2ea3452,
@@ -51610,10 +51620,55 @@ PrefabInstance:
         type: 3}
     - target: {fileID: 1308096671972412955, guid: 0fc8b0361f3adb04f9da3a1279eaf35d,
         type: 3}
+      propertyPath: captureTrapBase.setupTime
+      value: 0.7
+      objectReference: {fileID: 0}
+    - target: {fileID: 1308096671972412955, guid: 0fc8b0361f3adb04f9da3a1279eaf35d,
+        type: 3}
+      propertyPath: pushTrapBase.initialCount
+      value: 5
+      objectReference: {fileID: 0}
+    - target: {fileID: 1308096671972412955, guid: 0fc8b0361f3adb04f9da3a1279eaf35d,
+        type: 3}
+      propertyPath: _roundsParameter.roundTime
+      value: 80
+      objectReference: {fileID: 0}
+    - target: {fileID: 1308096671972412955, guid: 0fc8b0361f3adb04f9da3a1279eaf35d,
+        type: 3}
+      propertyPath: alarmTrapBase.initialCount
+      value: 5
+      objectReference: {fileID: 0}
+    - target: {fileID: 1308096671972412955, guid: 0fc8b0361f3adb04f9da3a1279eaf35d,
+        type: 3}
       propertyPath: captureTrapBase.trapPrefab
       value: 
       objectReference: {fileID: 3416370133520111916, guid: ea436e541ef407e4891323cd2acb40f1,
         type: 3}
+    - target: {fileID: 1308096671972412955, guid: 0fc8b0361f3adb04f9da3a1279eaf35d,
+        type: 3}
+      propertyPath: whistleBase.whistleCooldown
+      value: 10
+      objectReference: {fileID: 0}
+    - target: {fileID: 1308096671972412955, guid: 0fc8b0361f3adb04f9da3a1279eaf35d,
+        type: 3}
+      propertyPath: captureTrapBase.initialCount
+      value: 3
+      objectReference: {fileID: 0}
+    - target: {fileID: 1308096671972412955, guid: 0fc8b0361f3adb04f9da3a1279eaf35d,
+        type: 3}
+      propertyPath: whistleBase.whistleFleeRange
+      value: 5
+      objectReference: {fileID: 0}
+    - target: {fileID: 1308096671972412955, guid: 0fc8b0361f3adb04f9da3a1279eaf35d,
+        type: 3}
+      propertyPath: whistleBase.whistleCapturePower
+      value: 10
+      objectReference: {fileID: 0}
+    - target: {fileID: 1308096671972412955, guid: 0fc8b0361f3adb04f9da3a1279eaf35d,
+        type: 3}
+      propertyPath: _roundsParameter.timeBeforeRoundStart
+      value: 20
+      objectReference: {fileID: 0}
     - target: {fileID: 4775475527431028253, guid: 0fc8b0361f3adb04f9da3a1279eaf35d,
         type: 3}
       propertyPath: _scenesList.Array.data[0]
@@ -51673,6 +51728,26 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Name
       value: ---Managers---
+      objectReference: {fileID: 0}
+    - target: {fileID: 6528705165863518113, guid: 0fc8b0361f3adb04f9da3a1279eaf35d,
+        type: 3}
+      propertyPath: pushDistance
+      value: 7
+      objectReference: {fileID: 0}
+    - target: {fileID: 6528705165863518113, guid: 0fc8b0361f3adb04f9da3a1279eaf35d,
+        type: 3}
+      propertyPath: _pushTrapValue
+      value: 5
+      objectReference: {fileID: 0}
+    - target: {fileID: 6528705165863518113, guid: 0fc8b0361f3adb04f9da3a1279eaf35d,
+        type: 3}
+      propertyPath: _alarmTrapValue
+      value: 5
+      objectReference: {fileID: 0}
+    - target: {fileID: 6528705165863518113, guid: 0fc8b0361f3adb04f9da3a1279eaf35d,
+        type: 3}
+      propertyPath: _captureTrapValue
+      value: 10
       objectReference: {fileID: 0}
     - target: {fileID: 7569506294769515535, guid: 0fc8b0361f3adb04f9da3a1279eaf35d,
         type: 3}
@@ -51780,6 +51855,11 @@ PrefabInstance:
       objectReference: {fileID: 724029778}
     - target: {fileID: 7569506294769515535, guid: 0fc8b0361f3adb04f9da3a1279eaf35d,
         type: 3}
+      propertyPath: maxCaptureThiefAmount
+      value: 50
+      objectReference: {fileID: 0}
+    - target: {fileID: 7569506294769515535, guid: 0fc8b0361f3adb04f9da3a1279eaf35d,
+        type: 3}
       propertyPath: fillCaptureGaugeIconImage
       value: 
       objectReference: {fileID: 724029777}
@@ -51793,6 +51873,31 @@ PrefabInstance:
       propertyPath: player2.parentExtraPoints
       value: 
       objectReference: {fileID: 1330742752}
+    - target: {fileID: 9189048240540200624, guid: 0fc8b0361f3adb04f9da3a1279eaf35d,
+        type: 3}
+      propertyPath: _stealObjectList.Array.size
+      value: 6
+      objectReference: {fileID: 0}
+    - target: {fileID: 9189048240540200624, guid: 0fc8b0361f3adb04f9da3a1279eaf35d,
+        type: 3}
+      propertyPath: _stealObjectList.Array.data[1]
+      value: 3
+      objectReference: {fileID: 0}
+    - target: {fileID: 9189048240540200624, guid: 0fc8b0361f3adb04f9da3a1279eaf35d,
+        type: 3}
+      propertyPath: _stealObjectList.Array.data[3]
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 9189048240540200624, guid: 0fc8b0361f3adb04f9da3a1279eaf35d,
+        type: 3}
+      propertyPath: _stealObjectList.Array.data[4]
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 9189048240540200624, guid: 0fc8b0361f3adb04f9da3a1279eaf35d,
+        type: 3}
+      propertyPath: _stealObjectList.Array.data[5]
+      value: 3
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
