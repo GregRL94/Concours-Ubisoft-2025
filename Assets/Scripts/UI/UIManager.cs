@@ -7,6 +7,7 @@ using UnityEngine.UI;
 using UnityEngine.SceneManagement;
 using static GameManager;
 using System.Linq;
+using AkuroTools;
 
 public static class GameData
 {
@@ -686,6 +687,7 @@ public class UIManager : MonoBehaviour
                 StartCoroutine(UpdateCaptureThiefUI(previousAmount, currentCaptureThiefAmount));
                 return;
             }
+            AudioManager.instance.PlayClipAt(AudioManager.instance.allAudio["Robber Captured"], this.transform.position, AudioManager.instance.soundEffectMixer, true, false);
             GameManager.Instance.LosePlayerReputationByCapturingThief(playerID, 1);
         }
     }

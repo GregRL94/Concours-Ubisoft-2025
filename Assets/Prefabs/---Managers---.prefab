@@ -1928,10 +1928,10 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _robber: {fileID: 6366551311000986244, guid: 6fc9a974839716d43bab03ae4fe13187, type: 3}
-  _maxSpawnRobberAttempt: 10
-  _minDistanceToPlayers: 10
-  _minDistanceToMuseumObjects: 10
-  _minDistanceToTraps: 10
+  _maxSpawnRobberAttempt: 5
+  _minDistanceToPlayers: 5
+  _minDistanceToMuseumObjects: 5
+  _minDistanceToTraps: 5
   _stealObjectList: 000000000100000001000000
 --- !u!1 &1828460022032479685
 GameObject:
@@ -4588,18 +4588,22 @@ MonoBehaviour:
   fillCaptureGaugeIconImage: {fileID: 0}
   player1:
     parentPoints: {fileID: 0}
-    uiPoint: {fileID: 0}
+    uiPoint: {fileID: 2520274366345543669, guid: 57b724de2d865f849a1045015f1d3314,
+      type: 3}
     pointsCollection: []
     parentExtraPoints: {fileID: 0}
-    uiExtraPoint: {fileID: 0}
+    uiExtraPoint: {fileID: 3749812254214720527, guid: 6f83fff3d10354740af94445d0275c70,
+      type: 3}
     extraPointsCollection: []
     BG: {fileID: 0}
   player2:
     parentPoints: {fileID: 0}
-    uiPoint: {fileID: 0}
+    uiPoint: {fileID: 4115719021543435862, guid: 1cc596f4a5fcafb4999a6e14236ebf84,
+      type: 3}
     pointsCollection: []
     parentExtraPoints: {fileID: 0}
-    uiExtraPoint: {fileID: 0}
+    uiExtraPoint: {fileID: 1454399029325946345, guid: 51f0791a8122fbf49a5895b4c89df356,
+      type: 3}
     extraPointsCollection: []
     BG: {fileID: 0}
   maxCaptureThiefAmount: 30
@@ -4611,7 +4615,11 @@ MonoBehaviour:
   Player1Win: {fileID: 0}
   Player2Win: {fileID: 0}
   FinalResultOptions: {fileID: 0}
+  radialRevealImage: {fileID: 0}
   roundCountdownText: {fileID: 0}
+  timeUpText: TIME UP
+  capturedThiefText: THIEF CAPTURED
+  museumEmptyText: MUSEUM IS EMPTY
 --- !u!1 &4900854732628712522
 GameObject:
   m_ObjectHideFlags: 0
@@ -6337,6 +6345,7 @@ Transform:
   - {fileID: 6849989548463986765}
   - {fileID: 6702075128129177785}
   - {fileID: 6782908628041347715}
+  - {fileID: 5228063142973665143}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &1308096671972412955
@@ -6403,7 +6412,6 @@ MonoBehaviour:
     timer: 0
   _players: []
   _playersReputation: []
-  _timerText: {fileID: 0}
   showTimeBeforeRoundEnd: 5
 --- !u!1 &6571120282315518400
 GameObject:
@@ -6539,6 +6547,52 @@ MonoBehaviour:
   m_hasFontAssetChanged: 0
   m_baseMaterial: {fileID: 0}
   m_maskOffset: {x: 0, y: 0, z: 0, w: 0}
+--- !u!1 &6576251520207822538
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 5228063142973665143}
+  - component: {fileID: 7172596813542131257}
+  m_Layer: 0
+  m_Name: PauseMenuManager
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &5228063142973665143
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6576251520207822538}
+  serializedVersion: 2
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: 0.36281204, y: -36.683067, z: 63.642277}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 5496437348749677003}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &7172596813542131257
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6576251520207822538}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 87b24a0d40331f647b34e071b141158e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  pauseMenuPrefab: {fileID: 1603976769991062, guid: ea7aab31e533849c1adff5236962df03,
+    type: 3}
 --- !u!1 &6993026367555148232
 GameObject:
   m_ObjectHideFlags: 0

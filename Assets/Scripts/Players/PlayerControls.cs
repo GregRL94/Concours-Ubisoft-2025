@@ -217,7 +217,6 @@ public class PlayerControls : MonoBehaviour
 
     private void Whistle(InputAction.CallbackContext context)
     {
-        if (!GameManager.Instance.TutorialManager.IsTutorialCompleted && GameManager.Instance.TutorialManager.CurrentTutorialType == UITutorialStep.WHISTLE_STEP) GameManager.Instance.UIManager.CurrentPlayerValidation.DynamicValidatePage(_playerID);
         _playerActions.PerformWhistle(_robberMask);
     }
     #endregion
@@ -225,7 +224,6 @@ public class PlayerControls : MonoBehaviour
     #region Traps
     private void OnStartTrapDeployment(InputAction.CallbackContext context)
     {
-        if (!GameManager.Instance.TutorialManager.IsTutorialCompleted && GameManager.Instance.TutorialManager.CurrentTutorialType == UITutorialStep.PLACE_TRAP_STEP) GameManager.Instance.UIManager.CurrentPlayerValidation.DynamicValidatePage(_playerID);
         _playerActions.StartTrapDeployment(_gameGrid.NodeFromWorldPos(_snappedInteractionPoint));
     }
 
@@ -236,7 +234,6 @@ public class PlayerControls : MonoBehaviour
 
     private void OnRotateTrap(InputAction.CallbackContext context)
     {
-        if (!GameManager.Instance.TutorialManager.IsTutorialCompleted && GameManager.Instance.TutorialManager.CurrentTutorialType == UITutorialStep.ROTATE_STRAP_STEP) GameManager.Instance.UIManager.CurrentPlayerValidation.DynamicValidatePage(_playerID);
         _playerActions.RotateTrap(context.ReadValue<float>(), _currentTrap);
     }
 

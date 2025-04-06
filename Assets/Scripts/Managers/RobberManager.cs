@@ -45,6 +45,7 @@ public class RobberManager : MonoBehaviour
             for (int j = 0; j < GameGrid.Instance.Grid.GetLength(1); j++)
             {
                 spawnPosition = GameGrid.Instance.Grid[i, j].worldPos;
+                if (!GameGrid.Instance.Grid[i, j].isFree) continue;
                 if (!IsValidSpawnPosition(spawnPosition)) continue;
                 _currentRobber = Instantiate(_robber, spawnPosition, Quaternion.identity);
                 SetupRobber();
@@ -106,6 +107,7 @@ public class RobberManager : MonoBehaviour
         RobberBehaviour robber = _currentRobber.GetComponent<RobberBehaviour>();
         robber.StopAllCoroutines();
         robber.enabled = false;
+        robber.gameObject.SetActive(false);
         //Destroy(_currentRobber);
     }
 }

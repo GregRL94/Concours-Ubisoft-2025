@@ -1,3 +1,4 @@
+using AkuroTools;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -200,6 +201,7 @@ public class RobberBehaviour : BTAgent
             
             GameManager.Instance.LosePlayerReputation(_currentTargetObject.ObjectOwner, 1);
             _currentTargetObject.StealObject();
+            AudioManager.instance.PlayClipAt(AudioManager.instance.allAudio["Object Stolen"], this.transform.position, AudioManager.instance.soundEffectMixer, true, false);
             print("End round for AI !");
             //GameManager.Instance.CheckEndRound();
 
@@ -233,7 +235,8 @@ public class RobberBehaviour : BTAgent
         for (int i = 0; i < GameManager.Instance.Players.Length; i++)
         {
             if ((GameManager.Instance.Players[i].transform.position - pos).sqrMagnitude <= radiusSqr)
-                playerDetected++;
+            if (Vector3.Distance(GameManager.Instance.Players[i].transform.position, this.transform.position) <= radius)
+            playerDetected++;
         }
         return playerDetected;
     }
@@ -242,6 +245,11 @@ public class RobberBehaviour : BTAgent
     {
         if (_fleeingTimer == null) _fleeingTimer = StartCoroutine(FleeTimer(_robberTimeFleeing));
         //relance le timer si il est en range de vision (nouvel leaf / function)
+        if (Vector3.Distance(GetMostFarPosition(), this.transform.position) <= _stealRange)
+        {
+            _animator.SetBool("Cours", false);
+            return BTNode.Status.SUCCESS;
+        }
         BTNode.Status s = GoToPosition(GetMostFarPosition());
         return s;
     }
@@ -315,7 +323,9 @@ public class RobberBehaviour : BTAgent
     public void StartFleeState()
     {
         StopVunerableState();
+        AudioManager.instance.PlayClipAt(AudioManager.instance.allAudio["Enemy Detected"], this.transform.position, AudioManager.instance.soundEffectMixer, true, false);
         _isFleeing = true;
+        if(_currentTargetObject != null)_currentTargetObject.SetObjectStealableCD();
         if (_stealingObjectTimer != null) StopAndClearCoroutine(ref _stealingObjectTimer);
         _currentTargetObject = null;
         _robberAgent.speed = _vFlee;
