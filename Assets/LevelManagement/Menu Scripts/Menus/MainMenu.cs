@@ -23,8 +23,6 @@ namespace LevelManagement
                 TransitionFader.PlayTransition(startTransitionPrefab);
             yield return new WaitForSeconds(_playDelay);
             LevelLoader.LoadNextLevel();
-
-            GameMenu.Open();
         }
 
         public void OnSettingsPressed()

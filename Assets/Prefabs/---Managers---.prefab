@@ -4160,18 +4160,15 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _agent: {fileID: 0}
   _indicator: {fileID: 0}
-  fleeSpeedMultiplier: 2
-  fleeRange: 8
   timeTillAlarmIndicatorAppear: 0.5
-  timeTillFlee: 1
-  _alarmCaptureValue: 0
+  _alarmTrapValue: 0
   pushDistance: 15
   timeTillEnemyStop: 0.4
   stunPushDuration: 4
-  _pushCaptureValue: 0
+  _pushTrapValue: 0
   timeTillCaptureIndicatorAppear: 0
   captureDuration: 5
-  _captureCaptureValue: 0
+  _captureTrapValue: 0
   robberCapture: {fileID: 0}
 --- !u!1 &4547635551155428499
 GameObject:

@@ -88,6 +88,19 @@ public class PlayerAbilitiesUI : MonoBehaviour
     public float scaleAmount = 0.05f;
     private Vector3 initialScale;
 
+    [Header("UI & Trap Settings")]
+    public GameObject trapUI;
+    public Image fillImage;
+    public float setupTime = 2f;
+
+    [Header("Feedback")]
+    public AudioSource audioSource;
+    public AudioClip chargingSound;
+    public AudioClip completeSound;
+    public ParticleSystem completeEffect;
+
+    private Coroutine trapCoroutine;
+
     void Start()
     {
         if (selection != null)
@@ -95,9 +108,6 @@ public class PlayerAbilitiesUI : MonoBehaviour
             initialScale = selection.transform.localScale;
         }
     }
-
-    public Image imageSelected;
-
     void Update()
     {
         HighlightAnimation();
@@ -118,6 +128,22 @@ public class PlayerAbilitiesUI : MonoBehaviour
         {
             Highlight(PlayerEnum.PLAYER1, whistleFillImage);
         }
+
+        if (Input.GetKeyDown(KeyCode.X))
+        {
+            trapCoroutine = StartCoroutine(HandleTrapDeployment());
+        }
+
+        if (Input.GetKeyUp(KeyCode.X))
+        {
+            if (trapCoroutine != null)
+            {
+                StopCoroutine(trapCoroutine);
+                trapCoroutine = null;
+
+                ResetUI();
+            }
+        }
     }
     public void Highlight(PlayerEnum currentSelection,Image fillImage)
     {
@@ -134,15 +160,59 @@ public class PlayerAbilitiesUI : MonoBehaviour
             SelectionUI(fillImage);
         }
     }
+    #region Trap Deployment Feedback UI
+    
 
+
+    private IEnumerator HandleTrapDeployment()
+    {
+        float elapsedTime = 0f;
+        fillImage.fillAmount = 0f;
+
+        trapUI.SetActive(true);
+
+        if (audioSource && chargingSound)
+            audioSource.PlayOneShot(chargingSound);
+
+        // progress trap deployment
+        while (elapsedTime < setupTime && Input.GetKey(KeyCode.X))
+        {
+            elapsedTime += Time.deltaTime;
+            fillImage.fillAmount = Mathf.Clamp01(elapsedTime / setupTime);
+            yield return null;
+        }
+
+        if (elapsedTime >= setupTime)
+        {
+            fillImage.fillAmount = 1f;
+
+            if (audioSource && completeSound)
+                audioSource.PlayOneShot(completeSound);
+
+            if (completeEffect)
+                completeEffect.Play();
+
+            Debug.Log("Piège prêt !");
+        }
+
+        trapUI.SetActive(false);
+    }
+
+    private void ResetUI()
+    {
+        trapUI.SetActive(false);
+        fillImage.fillAmount = 0f;
+    }
+
+    #endregion
+
+    #region Selection UI / Update Animation
     private void SelectionUI(Image fillImage)
     {
         // Selection
         Transform abilityUIPos = fillImage.transform.parent;
         selection.transform.position = abilityUIPos.position;
     }
-
-    #region Update Selection Animation
     public void HighlightAnimation()
     {
         if (selection != null)
@@ -163,8 +233,6 @@ public class PlayerAbilitiesUI : MonoBehaviour
     #region Update Cooldowns
     public void UpdateCooldownFill(Image fillImage, float cooldownTime)
     {
-
-
         StartCoroutine(StartCooldown(fillImage, cooldownTime));
     }
     public IEnumerator StartCooldown(Image fillImage, float cooldownTime)

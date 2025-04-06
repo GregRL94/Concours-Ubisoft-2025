@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.InputSystem;
+using UnityEngine.InputSystem.Users;
 
 public class PlayerControls : MonoBehaviour
 {
@@ -47,6 +48,8 @@ public class PlayerControls : MonoBehaviour
 
     public PlayerEnum PlayerID => _playerID;
     public GameGrid GameGrid => _gameGrid;
+
+    private Gamepad _gamepad; 
     #endregion
 
     #region MonoBehaviour Flow
@@ -74,6 +77,25 @@ public class PlayerControls : MonoBehaviour
         _currentNode = _gameGrid.NodeFromWorldPos(transform.position);
         _previousNode = _currentNode;
         _gameGrid.UpdateNode(_currentNode);
+    }
+
+    public void Initialize(PlayerEnum id, Gamepad assignedGamepad)
+    {
+        _playerID = id;
+        _gamepad = assignedGamepad;
+
+        var playerInput = GetComponent<PlayerInput>();
+
+        // Dissocier d'abord les anciens périphériques
+        playerInput.user.UnpairDevices();
+
+        // Associer manette spécifique
+        InputUser.PerformPairingWithDevice(assignedGamepad, playerInput.user);
+
+        // Activer le bon scheme (important pour qu'il prenne les bons bindings)
+        playerInput.SwitchCurrentControlScheme("Gamepad", assignedGamepad);
+
+        Debug.Log($"{_playerID} a été initialisé avec {_gamepad.displayName} sur {gameObject.name}");
     }
 
     private void FixedUpdate()
