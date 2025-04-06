@@ -687,6 +687,7 @@ public class UIManager : MonoBehaviour
                 return;
             }
             GameManager.Instance.LosePlayerReputationByCapturingThief(playerID, 1);
+            GameManager.Instance.EndRound();
         }
     }
     public IEnumerator UpdateCaptureThiefUI(float startAmount, float targetAmount)

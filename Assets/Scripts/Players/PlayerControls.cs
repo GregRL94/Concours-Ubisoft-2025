@@ -243,6 +243,7 @@ public class PlayerControls : MonoBehaviour
     private void OnUIValidatePage(InputAction.CallbackContext context)
     {
         if (GameManager.Instance.TutorialManager.CurrentTutorialType != UITutorialStep.TALK_STEP && !GameManager.Instance.UIManager.CurrentPlayerValidation.SimpleValidate) return;
+        if (GameManager.Instance.UIManager.CurrentPlayerValidation == null) return;
         GameManager.Instance.UIManager.CurrentPlayerValidation.DynamicValidatePage(_playerID);
     }
     #endregion

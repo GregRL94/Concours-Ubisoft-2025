@@ -68,8 +68,8 @@ public class PlayerActions : MonoBehaviour
 
         if (_currentAbility == AbilitiesEnum.NONE || _currentAbility == AbilitiesEnum.WHISTLE) { return; }
         if (_trapsDict[_currentAbility].currentCount <= 0 ) { return; }
-
-        PreviewTrap(_currentAbility, interactionPoint, _playerControls.GameGrid.NodeFromWorldPos(interactionPoint));
+        Node node = _playerControls.GameGrid.NodeFromWorldPos(interactionPoint);
+        if (node != null) { PreviewTrap(_currentAbility, interactionPoint, node); }
     }
 
     public void SelectAction(AbilitiesEnum selectedAbility)
