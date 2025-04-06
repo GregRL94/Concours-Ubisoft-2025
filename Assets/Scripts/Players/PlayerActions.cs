@@ -143,6 +143,7 @@ public class PlayerActions : MonoBehaviour
         {
             _currentTrap = Instantiate(_trapsDict[trap].trapPrefab, previewPosition, Quaternion.identity, null);
             _currentTrap.GetComponent<Collider>().enabled = false;
+            _currentTrap.GetComponent<SphereColliderWireframe>().enabled = false;
         }        
 
         try
@@ -225,6 +226,7 @@ public class PlayerActions : MonoBehaviour
             }
 
             _currentTrap.GetComponent<Collider>().enabled = true;
+            _currentTrap.GetComponent<SphereColliderWireframe>().enabled = true;
             _currentTrap.GetComponentInChildren<TypeOfTrap>().TrapOwner = _playerControls.PlayerID;
             _currentTrap = null;
             _playerControls.GameGrid.UpdateNode(dropAtNode);

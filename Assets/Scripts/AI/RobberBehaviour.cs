@@ -200,7 +200,8 @@ public class RobberBehaviour : BTAgent
             
             GameManager.Instance.LosePlayerReputation(_currentTargetObject.ObjectOwner, 1);
             _currentTargetObject.StealObject();
-            GameManager.Instance.CheckEndRound();
+            print("End round for AI !");
+            //GameManager.Instance.CheckEndRound();
 
             _currentTargetObject = null;
             _stealingList.RemoveAt(0);

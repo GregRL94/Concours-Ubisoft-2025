@@ -249,6 +249,34 @@
                     "isPartOfComposite": false
                 }
             ]
+        },
+        {
+            "name": "UI",
+            "id": "397735e4-d6f8-4e15-ad96-4ed15b298bf8",
+            "actions": [
+                {
+                    "name": "Back",
+                    "type": "Button",
+                    "id": "1875baff-c6e6-40fd-816c-a41fb3fe1d6d",
+                    "expectedControlType": "Button",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
+                }
+            ],
+            "bindings": [
+                {
+                    "name": "",
+                    "id": "e8b8abd8-8491-4d62-8127-3701ee492bfa",
+                    "path": "<Gamepad>/buttonEast",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "Back",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                }
+            ]
         }
     ],
     "controlSchemes": [

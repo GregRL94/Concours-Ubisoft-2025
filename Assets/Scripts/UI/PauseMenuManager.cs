@@ -19,15 +19,18 @@ public class PauseMenuManager : MonoBehaviour
 
     void Update()
     {
-        if (Gamepad.current.startButton.wasPressedThisFrame && canToggle)
+        if(Gamepad.current != null)
         {
-            canToggle = false;
-            TogglePause();
-        }
+            if (Gamepad.current.startButton.wasPressedThisFrame && canToggle)
+            {
+                canToggle = false;
+                TogglePause();
+            }
 
-        if (!Gamepad.current.startButton.isPressed) 
-        {
-            canToggle = true;
+            if (!Gamepad.current.startButton.isPressed) 
+            {
+                canToggle = true;
+            }
         }
     }
 
