@@ -4,7 +4,6 @@ using System.Collections.Generic;
 using UnityEngine;
 using TMPro;
 using UnityEngine.UI;
-using Unity.VisualScripting;
 
 #region Action For Player Ability UI (Test)
 //public class PlayerAbilitiesUI : MonoBehaviour
@@ -88,19 +87,18 @@ public class PlayerAbilitiesUI : MonoBehaviour
     public float scaleAmount = 0.05f;
     private Vector3 initialScale;
 
-    [Header("UI & Trap Settings")]
+    [Header("Trap Selections/SetupTime UI")]
     public GameObject trapUI;
     public Image fillImage;
-    public float setupTime = 2f;
+    public float setupTime;
 
-    [Header("Feedback")]
+    [Header("Audio")]
     public AudioSource audioSource;
     public AudioClip chargingSound;
     public AudioClip completeSound;
     public ParticleSystem completeEffect;
 
     private Coroutine trapCoroutine;
-
     void Start()
     {
         if (selection != null)
@@ -111,40 +109,9 @@ public class PlayerAbilitiesUI : MonoBehaviour
     void Update()
     {
         HighlightAnimation();
-
-        if (Input.GetKeyDown(KeyCode.A))
-        {
-            Highlight(PlayerEnum.PLAYER1, alarmTrapUI.fillImage);
-        }
-        if (Input.GetKeyDown(KeyCode.S))
-        {
-            Highlight(PlayerEnum.PLAYER1, pushTrapUI.fillImage);
-        }
-        if (Input.GetKeyDown(KeyCode.D))
-        {
-            Highlight(PlayerEnum.PLAYER1, captureTrapUI.fillImage);
-        }
-        if (Input.GetKeyDown(KeyCode.F))
-        {
-            Highlight(PlayerEnum.PLAYER1, whistleFillImage);
-        }
-
-        /*if (Input.GetKeyDown(KeyCode.X))
-        {
-            trapCoroutine = StartCoroutine(HandleTrapDeployment());
-        }
-
-        if (Input.GetKeyUp(KeyCode.X))
-        {
-            if (trapCoroutine != null)
-            {
-                StopCoroutine(trapCoroutine);
-                trapCoroutine = null;
-
-                ResetUI();
-            }
-        }*/
     }
+
+    #region Trap Deployment Feedback UI
 
     public void DeployTrapUI() => trapCoroutine = StartCoroutine(HandleTrapDeployment());
     public void StopDeployTrapUI()
@@ -157,24 +124,6 @@ public class PlayerAbilitiesUI : MonoBehaviour
             ResetUI();
         }
     }
-    public void Highlight(PlayerEnum currentSelection,Image fillImage)
-    {
-        if(currentSelection == PlayerEnum.PLAYER1)
-        {
-            SelectionUI(fillImage);
-        }
-        else if(currentSelection == PlayerEnum.PLAYER2)
-        {
-            SelectionUI(fillImage);
-        }
-        else if(currentSelection == PlayerEnum.NONE)
-        {
-            SelectionUI(fillImage);
-        }
-    }
-    #region Trap Deployment Feedback UI
-    
-
 
     private IEnumerator HandleTrapDeployment()
     {
@@ -219,6 +168,21 @@ public class PlayerAbilitiesUI : MonoBehaviour
     #endregion
 
     #region Selection UI / Update Animation
+    public void Highlight(PlayerEnum currentSelection, Image fillImage)
+    {
+        if (currentSelection == PlayerEnum.PLAYER1)
+        {
+            SelectionUI(fillImage);
+        }
+        else if (currentSelection == PlayerEnum.PLAYER2)
+        {
+            SelectionUI(fillImage);
+        }
+        else if (currentSelection == PlayerEnum.NONE)
+        {
+            SelectionUI(fillImage);
+        }
+    }
     private void SelectionUI(Image fillImage)
     {
         // Selection
