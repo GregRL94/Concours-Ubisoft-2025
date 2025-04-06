@@ -22,6 +22,7 @@ public class RobberManager : MonoBehaviour
     private float _minDistanceToTraps = 0;
     [SerializeField, Tooltip("Distance between robber and all traps")]
     private List<ObjectType> _stealObjectList;
+    public List<ObjectType> StealObjectList => _stealObjectList;
 
     private MuseumObjects[] _museumObjects;
     private GameObject[] _traps;
@@ -68,7 +69,6 @@ public class RobberManager : MonoBehaviour
     }
     private void SetupRobber()
     {
-        GameManager.Instance.UIManager.CreateListOfMuseumArtefactsUI(_stealObjectList);
         RobberBehaviour robber = _currentRobber.GetComponent<RobberBehaviour>();
         if (robber == null) return;
         robber.StealingList.Clear();

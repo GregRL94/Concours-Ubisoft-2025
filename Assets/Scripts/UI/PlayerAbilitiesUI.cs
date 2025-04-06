@@ -129,7 +129,7 @@ public class PlayerAbilitiesUI : MonoBehaviour
             Highlight(PlayerEnum.PLAYER1, whistleFillImage);
         }
 
-        if (Input.GetKeyDown(KeyCode.X))
+        /*if (Input.GetKeyDown(KeyCode.X))
         {
             trapCoroutine = StartCoroutine(HandleTrapDeployment());
         }
@@ -143,6 +143,18 @@ public class PlayerAbilitiesUI : MonoBehaviour
 
                 ResetUI();
             }
+        }*/
+    }
+
+    public void DeployTrapUI() => trapCoroutine = StartCoroutine(HandleTrapDeployment());
+    public void StopDeployTrapUI()
+    {
+        if (trapCoroutine != null)
+        {
+            StopCoroutine(trapCoroutine);
+            trapCoroutine = null;
+
+            ResetUI();
         }
     }
     public void Highlight(PlayerEnum currentSelection,Image fillImage)
@@ -175,7 +187,7 @@ public class PlayerAbilitiesUI : MonoBehaviour
             audioSource.PlayOneShot(chargingSound);
 
         // progress trap deployment
-        while (elapsedTime < setupTime && Input.GetKey(KeyCode.X))
+        while (elapsedTime < setupTime)
         {
             elapsedTime += Time.deltaTime;
             fillImage.fillAmount = Mathf.Clamp01(elapsedTime / setupTime);

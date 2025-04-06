@@ -276,6 +276,7 @@ public class GameManager : MonoBehaviour
     private IEnumerator PreStartRound(float time)
     {
         float timer = time;
+        GameManager.Instance.UIManager.CreateListOfMuseumArtefactsUI(GameManager.Instance.RobberManager.StealObjectList);
         while (timer > 0)
         {
             _uiManager.ShowUIRoundCountdown((int)timer);

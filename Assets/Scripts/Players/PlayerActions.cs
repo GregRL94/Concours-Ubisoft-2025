@@ -83,6 +83,25 @@ public class PlayerActions : MonoBehaviour
         }
         _currentAbility = selectedAbility;
         Debug.Log(_currentAbility);
+        switch(selectedAbility)
+        {
+            case AbilitiesEnum.CAPTURE_TRAP:
+                _pAbilitiesUI.setupTime = GameManager.Instance.CaptureTrapBase.setupTime;
+                _pAbilitiesUI.Highlight(_playerControls.PlayerID, _pAbilitiesUI.captureTrapUI.fillImage);
+            break;
+            case AbilitiesEnum.PUSH_TRAP:
+                _pAbilitiesUI.setupTime = GameManager.Instance.PushTrapBase.setupTime;
+                _pAbilitiesUI.Highlight(_playerControls.PlayerID, _pAbilitiesUI.pushTrapUI.fillImage);
+                break;
+            case AbilitiesEnum.ALARM_TRAP:
+                _pAbilitiesUI.setupTime = GameManager.Instance.AlarmTrapBase.setupTime;
+                _pAbilitiesUI.Highlight(_playerControls.PlayerID, _pAbilitiesUI.alarmTrapUI.fillImage);
+            break;
+            case AbilitiesEnum.WHISTLE:
+                _pAbilitiesUI.Highlight(_playerControls.PlayerID, _pAbilitiesUI.whistleFillImage);
+            break;
+        }
+        
     }
 
     public void DeselectAction()
@@ -174,7 +193,7 @@ public class PlayerActions : MonoBehaviour
         if (!GameManager.Instance.TutorialManager.IsTutorialCompleted && GameManager.Instance.TutorialManager.CurrentTutorialType == UITutorialStep.PLACE_TRAP_STEP) GameManager.Instance.UIManager.CurrentPlayerValidation.DynamicValidatePage(_playerControls.PlayerID);
 
         AudioManager.instance.PlayClipAt(AudioManager.instance.allAudio["Trap Placing"], this.transform.position, AudioManager.instance.soundEffectMixer, true, false);
-
+        _pAbilitiesUI.DeployTrapUI();
         _animator.SetBool("installePiege", true);
         _animator.SetTrigger("installation");
         GameManager.TrapData currentTrapData = _trapsDict[_currentAbility];
@@ -194,6 +213,7 @@ public class PlayerActions : MonoBehaviour
     {
         if (_trapSetupCoroutine == null) { return; }
         StopCoroutine(_trapSetupCoroutine);
+        _pAbilitiesUI.StopDeployTrapUI();
         _trapSetupCoroutine = null;
         _animator.SetBool("installePiege", false);
         Debug.Log("Trap deployment canceled");
