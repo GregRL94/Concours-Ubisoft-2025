@@ -24249,6 +24249,16 @@ PrefabInstance:
       propertyPath: _roundsParameter.timeBeforeRoundStart
       value: 3
       objectReference: {fileID: 0}
+    - target: {fileID: 4000046413916326697, guid: 0fc8b0361f3adb04f9da3a1279eaf35d,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4403448943426736932, guid: 0fc8b0361f3adb04f9da3a1279eaf35d,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 4775475527431028253, guid: 0fc8b0361f3adb04f9da3a1279eaf35d,
         type: 3}
       propertyPath: _scenesList.Array.size
@@ -24268,6 +24278,11 @@ PrefabInstance:
         type: 3}
       propertyPath: _scenesList.Array.data[2]
       value: Level01 - Ajmal 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 4900854732628712522, guid: 0fc8b0361f3adb04f9da3a1279eaf35d,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 5496437348749677003, guid: 0fc8b0361f3adb04f9da3a1279eaf35d,
         type: 3}
@@ -24357,7 +24372,7 @@ PrefabInstance:
     - target: {fileID: 6528705165863518113, guid: 0fc8b0361f3adb04f9da3a1279eaf35d,
         type: 3}
       propertyPath: _captureTrapValue
-      value: 30
+      value: 40
       objectReference: {fileID: 0}
     - target: {fileID: 6528705165863518113, guid: 0fc8b0361f3adb04f9da3a1279eaf35d,
         type: 3}
@@ -24498,6 +24513,26 @@ PrefabInstance:
       propertyPath: player2.parentExtraPoints
       value: 
       objectReference: {fileID: 540149977}
+    - target: {fileID: 8394691309293358472, guid: 0fc8b0361f3adb04f9da3a1279eaf35d,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8647624199062096067, guid: 0fc8b0361f3adb04f9da3a1279eaf35d,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8704680321107121888, guid: 0fc8b0361f3adb04f9da3a1279eaf35d,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 9111207322475368924, guid: 0fc8b0361f3adb04f9da3a1279eaf35d,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 9189048240540200624, guid: 0fc8b0361f3adb04f9da3a1279eaf35d,
         type: 3}
       propertyPath: _robber
@@ -29339,7 +29374,7 @@ MonoBehaviour:
   m_OverrideTileSize: 0
   m_TileSize: 256
   m_OverrideVoxelSize: 0
-  m_VoxelSize: 0.083333336
+  m_VoxelSize: 0.033333335
   m_MinRegionArea: 2
   m_NavMeshData: {fileID: 23800000, guid: 4992937c18e2ada46ad73525131ef769, type: 2}
   m_BuildHeightMesh: 0

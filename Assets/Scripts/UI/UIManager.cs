@@ -676,7 +676,7 @@ public class UIManager : MonoBehaviour
         currentCaptureThiefAmount = Mathf.Clamp(currentCaptureThiefAmount + amount, 0, maxCaptureThiefAmount);
 
         StartCoroutine(UpdateCaptureThiefUI(previousAmount, currentCaptureThiefAmount));
-
+        print("playerID " + playerID);
         // Determine which player captured the thief at the end of the round
         if (currentCaptureThiefAmount >= maxCaptureThiefAmount)
         {
@@ -687,7 +687,6 @@ public class UIManager : MonoBehaviour
                 return;
             }
             GameManager.Instance.LosePlayerReputationByCapturingThief(playerID, 1);
-            GameManager.Instance.EndRound();
         }
     }
     public IEnumerator UpdateCaptureThiefUI(float startAmount, float targetAmount)
@@ -695,7 +694,6 @@ public class UIManager : MonoBehaviour
         float elapsedTime = 0f;
         float duration = 0.5f;
 
-        // Get initial fill amounts
         float startFill = fillCaptureGaugeImage.fillAmount;
         float targetFill = targetAmount / maxCaptureThiefAmount;
 

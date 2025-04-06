@@ -86,13 +86,13 @@ public class PlayerControls : MonoBehaviour
 
         var playerInput = GetComponent<PlayerInput>();
 
-        // Dissocier d'abord les anciens périphériques
+        // Unpair Controllers
         playerInput.user.UnpairDevices();
 
-        // Associer manette spécifique
+        // Match controllers from Player Character Selection
         InputUser.PerformPairingWithDevice(assignedGamepad, playerInput.user);
 
-        // Activer le bon scheme (important pour qu'il prenne les bons bindings)
+        // Active schemes from each respective gamepad 
         playerInput.SwitchCurrentControlScheme("Gamepad", assignedGamepad);
 
         Debug.Log($"{_playerID} a été initialisé avec {_gamepad.displayName} sur {gameObject.name}");

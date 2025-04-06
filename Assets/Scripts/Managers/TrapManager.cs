@@ -200,6 +200,7 @@ public class TrapManager : MonoBehaviour
     #region Capture Trigger Behaviour
     public void TriggerCaptureTrap(PlayerEnum trapOwner, Transform tr)
     {
+        print("trapOwner " + trapOwner);
         robberCapture?.GetSifled(trapOwner, _captureTrapValue);
 
         if (tr.GetComponent<Collider>() != null)

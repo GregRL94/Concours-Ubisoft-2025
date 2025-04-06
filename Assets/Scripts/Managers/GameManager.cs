@@ -325,10 +325,10 @@ public class GameManager : MonoBehaviour
     {
         CheckEndRound();
     }
-    public void EndRound()
-    {
+    //public void EndRound()
+    //{
 
-    }
+    //}
 
     public void CheckEndRound()
     {
