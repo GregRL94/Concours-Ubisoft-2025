@@ -51667,7 +51667,7 @@ PrefabInstance:
     - target: {fileID: 1308096671972412955, guid: 0fc8b0361f3adb04f9da3a1279eaf35d,
         type: 3}
       propertyPath: _roundsParameter.timeBeforeRoundStart
-      value: 2
+      value: 5
       objectReference: {fileID: 0}
     - target: {fileID: 4775475527431028253, guid: 0fc8b0361f3adb04f9da3a1279eaf35d,
         type: 3}
@@ -51873,6 +51873,26 @@ PrefabInstance:
       propertyPath: player2.parentExtraPoints
       value: 
       objectReference: {fileID: 1330742752}
+    - target: {fileID: 9189048240540200624, guid: 0fc8b0361f3adb04f9da3a1279eaf35d,
+        type: 3}
+      propertyPath: _minDistanceToTraps
+      value: 5
+      objectReference: {fileID: 0}
+    - target: {fileID: 9189048240540200624, guid: 0fc8b0361f3adb04f9da3a1279eaf35d,
+        type: 3}
+      propertyPath: _minDistanceToPlayers
+      value: 5
+      objectReference: {fileID: 0}
+    - target: {fileID: 9189048240540200624, guid: 0fc8b0361f3adb04f9da3a1279eaf35d,
+        type: 3}
+      propertyPath: _maxSpawnRobberAttempt
+      value: 5
+      objectReference: {fileID: 0}
+    - target: {fileID: 9189048240540200624, guid: 0fc8b0361f3adb04f9da3a1279eaf35d,
+        type: 3}
+      propertyPath: _minDistanceToMuseumObjects
+      value: 5
+      objectReference: {fileID: 0}
     - target: {fileID: 9189048240540200624, guid: 0fc8b0361f3adb04f9da3a1279eaf35d,
         type: 3}
       propertyPath: _stealObjectList.Array.size

@@ -54,18 +54,30 @@ public class RobberManager : MonoBehaviour
             }
         }
 
+
+        RandomSpawn();
+    }
+
+    private void RandomSpawn()
+    {
         //random spawn in game map when no grid are suitable to spawn
         int gameGridSizeX = GameGrid.Instance.GameGridSizeX;
         int gameGridSizeY = GameGrid.Instance.GameGridSizeY;
         Vector3 mapSize = new Vector3(gameGridSizeX, 0, gameGridSizeY);
         Vector3 mapMiddlePoint = GameGrid.Instance.Grid[gameGridSizeX / 2, gameGridSizeY / 2].worldPos;
-        spawnPosition = new Vector3(
-                Random.Range(mapMiddlePoint.x - mapSize.x, mapMiddlePoint.x + mapSize.x),
+        Vector3 spawnPosition = new Vector3(
+                Random.Range(0, gameGridSizeX),
                 mapMiddlePoint.y,
-                Random.Range(mapMiddlePoint.z - mapSize.z, mapMiddlePoint.z + mapSize.z));
+                Random.Range(0, gameGridSizeY));
+        while (!GameGrid.Instance.NodeFromWorldPos(spawnPosition).isFree)
+        {
+            spawnPosition = new Vector3(
+                    Random.Range(0, gameGridSizeX),
+                    mapMiddlePoint.y,
+                    Random.Range(0, gameGridSizeY));
+        }
         _currentRobber = Instantiate(_robber, spawnPosition, Quaternion.identity);
         SetupRobber();
-
     }
     private void SetupRobber()
     {
