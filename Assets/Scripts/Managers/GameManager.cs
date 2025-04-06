@@ -352,7 +352,7 @@ public class GameManager : MonoBehaviour
     public void LosePlayerReputation(PlayerEnum playerIndex, int loseValue)
     {
         int index = (int)playerIndex;
-        if (index < 0) return;
+        if (index <= 0) return;
         if (index > _players.Length) return;
         _playersReputation[index - 1].reputationValue -= loseValue;
         Debug.Log($"{_players[index - 1].name} has lose {loseValue}, and is now at {_playersReputation[index - 1].reputationValue} reputation !");
