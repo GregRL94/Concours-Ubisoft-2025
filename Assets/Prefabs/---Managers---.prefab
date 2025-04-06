@@ -1927,7 +1927,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 236838dde74cba140bc7b0a27109b3a2, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _robber: {fileID: 6366551311000986244, guid: 6fc9a974839716d43bab03ae4fe13187, type: 3}
+  _robber: {fileID: 1886371361275277546, guid: f95eb402d5c9eb040b6cae75f7f8eeeb, type: 3}
   _maxSpawnRobberAttempt: 5
   _minDistanceToPlayers: 5
   _minDistanceToMuseumObjects: 5

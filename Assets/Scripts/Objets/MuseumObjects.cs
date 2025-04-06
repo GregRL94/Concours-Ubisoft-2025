@@ -22,6 +22,11 @@ public class MuseumObjects : MonoBehaviour
 
     protected Coroutine _cdCoroutine;
 
+    private void Start()
+    {
+        _objectOwner = GameGrid.Instance.NodeFromWorldPos(this.transform.position).playerZone;
+    }
+
     protected IEnumerator ReduceStealableCD()
     {
         yield return new WaitForSeconds(_timeStealableCD);

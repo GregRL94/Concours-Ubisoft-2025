@@ -9,9 +9,12 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 4457312696654498925}
-  m_Layer: 0
+  - component: {fileID: 5019407444555328018}
+  - component: {fileID: 526354041011364102}
+  - component: {fileID: 1112159124240268413}
+  m_Layer: 6
   m_Name: Statue
-  m_TagString: Untagged
+  m_TagString: MUSEUMOBJECT
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -32,6 +35,60 @@ Transform:
   - {fileID: 4712632545315676724}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!65 &5019407444555328018
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3315802654311397033}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 0
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Size: {x: 0.7617051, y: 1.2184737, z: 1}
+  m_Center: {x: -0.01593399, y: 0.7515614, z: 4.3910717e-18}
+--- !u!114 &526354041011364102
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3315802654311397033}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 358d761e9f3f54b4582152a10cff93fc, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _objectOwner: 0
+  _objectType: 3
+  _objectStealableCD: 10
+  _timeStealableCD: 0
+  _isStolen: 0
+--- !u!208 &1112159124240268413
+NavMeshObstacle:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3315802654311397033}
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Shape: 1
+  m_Extents: {x: 0.385, y: 1.09, z: 0.45}
+  m_MoveThreshold: 0.1
+  m_Carve: 0
+  m_CarveOnlyStationary: 1
+  m_Center: {x: 0, y: 0.28, z: 0}
+  m_TimeToStationary: 0.5
 --- !u!1001 &5110489542931056095
 PrefabInstance:
   m_ObjectHideFlags: 0
