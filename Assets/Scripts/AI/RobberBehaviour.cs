@@ -1,3 +1,4 @@
+using AkuroTools;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -200,6 +201,7 @@ public class RobberBehaviour : BTAgent
             
             GameManager.Instance.LosePlayerReputation(_currentTargetObject.ObjectOwner, 1);
             _currentTargetObject.StealObject();
+            AudioManager.instance.PlayClipAt(AudioManager.instance.allAudio["Object Stolen"], this.transform.position, AudioManager.instance.soundEffectMixer, true, false);
             print("End round for AI !");
             //GameManager.Instance.CheckEndRound();
 
@@ -321,6 +323,7 @@ public class RobberBehaviour : BTAgent
     public void StartFleeState()
     {
         StopVunerableState();
+        AudioManager.instance.PlayClipAt(AudioManager.instance.allAudio["Enemy Detected"], this.transform.position, AudioManager.instance.soundEffectMixer, true, false);
         _isFleeing = true;
         if(_currentTargetObject != null)_currentTargetObject.SetObjectStealableCD();
         if (_stealingObjectTimer != null) StopAndClearCoroutine(ref _stealingObjectTimer);

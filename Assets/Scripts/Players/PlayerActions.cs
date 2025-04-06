@@ -1,3 +1,4 @@
+using AkuroTools;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -106,6 +107,9 @@ public class PlayerActions : MonoBehaviour
         // Play sound
         // Play Animation
         _animator.SetTrigger("Siffle");
+        if (!GameManager.Instance.TutorialManager.IsTutorialCompleted && GameManager.Instance.TutorialManager.CurrentTutorialType == UITutorialStep.WHISTLE_STEP) GameManager.Instance.UIManager.CurrentPlayerValidation.DynamicValidatePage(_playerControls.PlayerID);
+        AudioManager.instance.PlayClipAt(AudioManager.instance.allAudio["Player Whistle"], this.transform.position, AudioManager.instance.soundEffectMixer, true, false);
+
         Collider[] agents = Physics.OverlapSphere(transform.position, _whistle.whistleFleeRange, gameAgentsMask);
 
         if (agents.Length > 0)
@@ -143,7 +147,7 @@ public class PlayerActions : MonoBehaviour
         {
             _currentTrap = Instantiate(_trapsDict[trap].trapPrefab, previewPosition, Quaternion.identity, null);
             _currentTrap.GetComponent<Collider>().enabled = false;
-            _currentTrap.GetComponent<SphereColliderWireframe>().enabled = false;
+            if(_currentTrap.GetComponent<SphereColliderWireframe>() != null) _currentTrap.GetComponent<SphereColliderWireframe>().enabled = false;
         }        
 
         try
@@ -167,6 +171,9 @@ public class PlayerActions : MonoBehaviour
     public void StartTrapDeployment(Node deployTrapAtNode)
     {        
         if (_currentAbility == AbilitiesEnum.NONE || _currentAbility == AbilitiesEnum.WHISTLE) { return; }
+        if (!GameManager.Instance.TutorialManager.IsTutorialCompleted && GameManager.Instance.TutorialManager.CurrentTutorialType == UITutorialStep.PLACE_TRAP_STEP) GameManager.Instance.UIManager.CurrentPlayerValidation.DynamicValidatePage(_playerControls.PlayerID);
+
+        AudioManager.instance.PlayClipAt(AudioManager.instance.allAudio["Trap Placing"], this.transform.position, AudioManager.instance.soundEffectMixer, true, false);
 
         _animator.SetBool("installePiege", true);
         _animator.SetTrigger("installation");
@@ -206,6 +213,9 @@ public class PlayerActions : MonoBehaviour
         }
         if (trap != null && rotationDirection != 0)
         {
+            if (!GameManager.Instance.TutorialManager.IsTutorialCompleted && GameManager.Instance.TutorialManager.CurrentTutorialType == UITutorialStep.ROTATE_STRAP_STEP) GameManager.Instance.UIManager.CurrentPlayerValidation.DynamicValidatePage(_playerControls.PlayerID);
+            AudioManager.instance.PlayClipAt(AudioManager.instance.allAudio["Trap Turning"], this.transform.position, AudioManager.instance.soundEffectMixer, true, false);
+
             trap.transform.Rotate(new Vector3(0f, rotationDirection * 90f, 0f));
         }
     }
@@ -226,7 +236,7 @@ public class PlayerActions : MonoBehaviour
             }
 
             _currentTrap.GetComponent<Collider>().enabled = true;
-            _currentTrap.GetComponent<SphereColliderWireframe>().enabled = true;
+            if(_currentTrap.GetComponent<SphereColliderWireframe>() != null) _currentTrap.GetComponent<SphereColliderWireframe>().enabled = true;
             _currentTrap.GetComponentInChildren<TypeOfTrap>().TrapOwner = _playerControls.PlayerID;
             _currentTrap = null;
             _playerControls.GameGrid.UpdateNode(dropAtNode);

@@ -1,3 +1,4 @@
+using AkuroTools;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -294,6 +295,8 @@ public class GameManager : MonoBehaviour
     {
         _roundsParameter.hasRoundStarted = true;
         _robberManager.SpawnRobber();
+        AudioManager.instance.PlayClipAt(AudioManager.instance.allAudio["Round Start"], this.transform.position, AudioManager.instance.soundEffectMixer, true, false);
+
         yield return new WaitForSeconds(timeLeftWarning);
 
         if (_endGame) yield break; // game already ended by capturing thief or thief stolen everything 
@@ -306,6 +309,8 @@ public class GameManager : MonoBehaviour
         }
 
         //todo: Audio - For Round Finished
+        AudioManager.instance.PlayClipAt(AudioManager.instance.allAudio["Round End"], this.transform.position, AudioManager.instance.soundEffectMixer, true, false);
+
         _roundsParameter.hasRoundStarted = false;
         _robberManager.DispawnRobber();
 
@@ -335,6 +340,7 @@ public class GameManager : MonoBehaviour
         if ((ValidateMuseumEmpty() || UIManager.GetCurrentCaptureThiefAmount >= UIManager.GetmaxCaptureThiefAmount) && !_endGame)
         {
             _endGame = true;
+            AudioManager.instance.PlayClipAt(AudioManager.instance.allAudio["Round End"], this.transform.position, AudioManager.instance.soundEffectMixer, true, false);
             UIManager.ShowReputationBoard(_playersReputation, _maxPlayersReputation, _minPlayersReputation);
         }
     }
