@@ -834,6 +834,16 @@ PrefabInstance:
       propertyPath: m_AnchoredPosition.y
       value: -10
       objectReference: {fileID: 0}
+    - target: {fileID: 2453765075258336035, guid: 719973ecf1d58a34daae2535725dbfeb,
+        type: 3}
+      propertyPath: _eventToTrigger.m_PersistentCalls.m_Calls.Array.data[0].m_Target
+      value: 
+      objectReference: {fileID: 1674003944}
+    - target: {fileID: 2453765075258336035, guid: 719973ecf1d58a34daae2535725dbfeb,
+        type: 3}
+      propertyPath: _eventToTrigger.m_PersistentCalls.m_Calls.Array.data[1].m_Target
+      value: 
+      objectReference: {fileID: 2108386555}
     - target: {fileID: 3391360414039088166, guid: 719973ecf1d58a34daae2535725dbfeb,
         type: 3}
       propertyPath: m_AnchorMax.y
@@ -859,6 +869,16 @@ PrefabInstance:
       propertyPath: m_AnchoredPosition.y
       value: -10
       objectReference: {fileID: 0}
+    - target: {fileID: 4892941621790438867, guid: 719973ecf1d58a34daae2535725dbfeb,
+        type: 3}
+      propertyPath: _eventToTrigger.m_PersistentCalls.m_Calls.Array.data[0].m_Target
+      value: 
+      objectReference: {fileID: 1674003944}
+    - target: {fileID: 4892941621790438867, guid: 719973ecf1d58a34daae2535725dbfeb,
+        type: 3}
+      propertyPath: _eventToTrigger.m_PersistentCalls.m_Calls.Array.data[1].m_Target
+      value: 
+      objectReference: {fileID: 2108386555}
     - target: {fileID: 5802780095851300044, guid: 719973ecf1d58a34daae2535725dbfeb,
         type: 3}
       propertyPath: m_SizeDelta.x
@@ -899,6 +919,11 @@ PrefabInstance:
       propertyPath: m_AnchoredPosition.y
       value: -10
       objectReference: {fileID: 0}
+    - target: {fileID: 7441899383561019506, guid: 719973ecf1d58a34daae2535725dbfeb,
+        type: 3}
+      propertyPath: _eventToTrigger.m_PersistentCalls.m_Calls.Array.data[0].m_Target
+      value: 
+      objectReference: {fileID: 2108386555}
     - target: {fileID: 7510084252556137003, guid: 719973ecf1d58a34daae2535725dbfeb,
         type: 3}
       propertyPath: m_SizeDelta.x
@@ -51773,6 +51798,18 @@ PrefabInstance:
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 0fc8b0361f3adb04f9da3a1279eaf35d, type: 3}
+--- !u!114 &1674003944 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 7569506294769515535, guid: 0fc8b0361f3adb04f9da3a1279eaf35d,
+    type: 3}
+  m_PrefabInstance: {fileID: 1674003943}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 760faa2af91c2834bae148ad233313f2, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1001 &1676047428
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -63380,6 +63417,18 @@ PrefabInstance:
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 8ddf461cdb16515429fa668a65774900, type: 3}
+--- !u!114 &2108386555 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 6606250537263386074, guid: 0fc8b0361f3adb04f9da3a1279eaf35d,
+    type: 3}
+  m_PrefabInstance: {fileID: 1674003943}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e359b683e8cf16c4fb7e236994dc795f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1001 &2108719511
 PrefabInstance:
   m_ObjectHideFlags: 0

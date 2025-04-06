@@ -107,6 +107,7 @@ public class RobberManager : MonoBehaviour
         RobberBehaviour robber = _currentRobber.GetComponent<RobberBehaviour>();
         robber.StopAllCoroutines();
         robber.enabled = false;
+        robber.gameObject.SetActive(false);
         //Destroy(_currentRobber);
     }
 }
