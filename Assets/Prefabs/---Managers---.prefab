@@ -1928,10 +1928,10 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _robber: {fileID: 6366551311000986244, guid: 6fc9a974839716d43bab03ae4fe13187, type: 3}
-  _maxSpawnRobberAttempt: 10
-  _minDistanceToPlayers: 10
-  _minDistanceToMuseumObjects: 10
-  _minDistanceToTraps: 10
+  _maxSpawnRobberAttempt: 5
+  _minDistanceToPlayers: 5
+  _minDistanceToMuseumObjects: 5
+  _minDistanceToTraps: 5
   _stealObjectList: 000000000100000001000000
 --- !u!1 &1828460022032479685
 GameObject:
