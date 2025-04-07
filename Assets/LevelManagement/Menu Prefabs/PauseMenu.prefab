@@ -91,6 +91,7 @@ GameObject:
   - component: {fileID: 222490647668407796}
   - component: {fileID: 114696257943787150}
   - component: {fileID: 114346460745178820}
+  - component: {fileID: 5402529307267853347}
   m_Layer: 5
   m_Name: QuitButton
   m_TagString: Untagged
@@ -200,6 +201,18 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
+      - m_Target: {fileID: 5402529307267853347}
+        m_TargetAssemblyTypeName: AkuroTools.AudioAction, Assembly-CSharp
+        m_MethodName: OnButtonPerformed
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
       - m_Target: {fileID: 114105161577538716}
         m_TargetAssemblyTypeName: 
         m_MethodName: OnQuitPressed
@@ -212,6 +225,22 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
+--- !u!114 &5402529307267853347
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1094882022601412}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9a5516feadc60fb469a39b6f3f6aa265, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  musicName: UI Confirm
+  _tagName: 
+  collideType: 8
+  actionType: 1
 --- !u!1 &1116029322944512
 GameObject:
   m_ObjectHideFlags: 0
@@ -299,6 +328,7 @@ GameObject:
   - component: {fileID: 222923359550773796}
   - component: {fileID: 114571740705772988}
   - component: {fileID: 114205792435277246}
+  - component: {fileID: 4567663707483265812}
   m_Layer: 5
   m_Name: RestartButton
   m_TagString: Untagged
@@ -408,6 +438,18 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
+      - m_Target: {fileID: 4567663707483265812}
+        m_TargetAssemblyTypeName: AkuroTools.AudioAction, Assembly-CSharp
+        m_MethodName: OnButtonPerformed
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
       - m_Target: {fileID: 114105161577538716}
         m_TargetAssemblyTypeName: 
         m_MethodName: OnRestartPressed
@@ -420,6 +462,22 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
+--- !u!114 &4567663707483265812
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1394497582208288}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9a5516feadc60fb469a39b6f3f6aa265, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  musicName: UI Confirm
+  _tagName: 
+  collideType: 8
+  actionType: 1
 --- !u!1 &1461541210345288
 GameObject:
   m_ObjectHideFlags: 0
@@ -975,6 +1033,7 @@ GameObject:
   - component: {fileID: 222748777198904924}
   - component: {fileID: 114783319556776612}
   - component: {fileID: 114533768692894704}
+  - component: {fileID: 8856656798771159234}
   m_Layer: 5
   m_Name: MainMenuButton
   m_TagString: Untagged
@@ -1084,6 +1143,18 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
+      - m_Target: {fileID: 8856656798771159234}
+        m_TargetAssemblyTypeName: AkuroTools.AudioAction, Assembly-CSharp
+        m_MethodName: OnButtonPerformed
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
       - m_Target: {fileID: 114105161577538716}
         m_TargetAssemblyTypeName: 
         m_MethodName: OnMainMenuPressed
@@ -1096,6 +1167,22 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
+--- !u!114 &8856656798771159234
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1787590591510778}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9a5516feadc60fb469a39b6f3f6aa265, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  musicName: UI Confirm
+  _tagName: 
+  collideType: 8
+  actionType: 1
 --- !u!1 &1959017056228194
 GameObject:
   m_ObjectHideFlags: 0

@@ -8,6 +8,7 @@ using UnityEngine.InputSystem.Controls;
 using UnityEngine.UI;
 using System.Linq;
 using LevelManagement;
+using AkuroTools;
 
 public class PlayerSelectionManager : MonoBehaviour
 {
@@ -120,12 +121,14 @@ public class PlayerSelectionManager : MonoBehaviour
                 Debug.Log($"{playerName} pressed CONFIRM !");
                 join.SetActive(false);
                 character.SetActive(true);
+                AudioManager.instance.PlayClipAt(AudioManager.instance.allAudio["UI Selection 1"], this.transform.position, AudioManager.instance.soundEffectMixer, true, false);
             }
             else if (character.activeInHierarchy)
             {
                 Debug.Log($"{playerName} pressed CONFIRM !");
                 character.SetActive(false);
                 ready.SetActive(true);
+                AudioManager.instance.PlayClipAt(AudioManager.instance.allAudio["UI Confirm"], this.transform.position, AudioManager.instance.soundEffectMixer, true, false);
             }
         }
 

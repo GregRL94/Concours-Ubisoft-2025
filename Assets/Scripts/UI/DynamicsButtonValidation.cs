@@ -1,3 +1,4 @@
+using AkuroTools;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -17,5 +18,6 @@ public class DynamicsButtonValidation : MonoBehaviour
     {
         _image.sprite = _validateSprite;
         _isValidated = true;
+        AudioManager.instance.PlayClipAt(AudioManager.instance.allAudio["UI Selection 1"], this.transform.position, AudioManager.instance.soundEffectMixer, true, false);
     }
 }
