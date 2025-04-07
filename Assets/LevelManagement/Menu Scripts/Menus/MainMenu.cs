@@ -1,4 +1,5 @@
-﻿ using System.Collections;
+﻿using AkuroTools;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -44,5 +45,9 @@ namespace LevelManagement
             #endif
         }
 
+        private void Start()
+        {
+            AudioManager.instance.PlayClipAt(AudioManager.instance.allAudio["Music Menu"], this.transform.position, AudioManager.instance.ostMixer, false, true);
+        }
     }
 }

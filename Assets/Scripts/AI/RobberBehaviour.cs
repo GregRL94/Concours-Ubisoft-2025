@@ -324,6 +324,7 @@ public class RobberBehaviour : BTAgent
     {
         StopVunerableState();
         AudioManager.instance.PlayClipAt(AudioManager.instance.allAudio["Enemy Detected"], this.transform.position, AudioManager.instance.soundEffectMixer, true, false);
+        if(!GameManager.Instance.EndGame)AudioManager.instance.SpeedUpMusic();
         _isFleeing = true;
         if(_currentTargetObject != null)_currentTargetObject.SetObjectStealableCD();
         if (_stealingObjectTimer != null) StopAndClearCoroutine(ref _stealingObjectTimer);
@@ -336,6 +337,7 @@ public class RobberBehaviour : BTAgent
 
     private void StopFleeingState()
     {
+        AudioManager.instance.OriginalMusicSpeed();
         _isFleeing = false;
         if (_fleeingTimer != null) StopAndClearCoroutine(ref _fleeingTimer);
         _robberAgent.speed = _vBase;

@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.Audio;
 
@@ -45,7 +46,8 @@ namespace AkuroTools
         public Image omoriBG;
         public Image iromoBG;
 
-
+        [SerializeField]
+        private float _speedupMusic = 1.25f;
 
         public enum TransitionType
         {
@@ -56,7 +58,11 @@ namespace AkuroTools
 
         private void Awake()
         {
-            if (instance != null)Destroy(this.gameObject);
+            if (instance != null)
+            {
+                instance.playingSounds.Clear();
+                Destroy(this.gameObject);
+            }
             instance = this;
 
             DontDestroyOnLoad(this.gameObject);
@@ -360,6 +366,10 @@ namespace AkuroTools
             }
             adaptativeSounds.Clear();
         }
+        
+        public void SpeedUpMusic() => playingSounds[0].GetComponent<AudioSource>().pitch = _speedupMusic;
+        
+        public void OriginalMusicSpeed() => playingSounds[0].GetComponent<AudioSource>().pitch = 1;
     }
 
 }
