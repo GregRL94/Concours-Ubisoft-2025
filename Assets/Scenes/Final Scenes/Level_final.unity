@@ -51685,7 +51685,7 @@ PrefabInstance:
         type: 3}
       propertyPath: m_text
       value: "\"<i>Lastly, you were given a whistle. <b>Select it by pushing your
-        Right Joystick down and press X</b>. \n\nIf you're too far  from the thief,
+        Right Joystick down and press X</b>. \n\nIf you're too far from the thief,
         you'll only alert him, so make sure you're close enough to whistle to capture
         him.</i>\""
       objectReference: {fileID: 0}
@@ -51790,6 +51790,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_IsActive
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4547635551155428499, guid: 0fc8b0361f3adb04f9da3a1279eaf35d,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 4775475527431028253, guid: 0fc8b0361f3adb04f9da3a1279eaf35d,
         type: 3}
@@ -51963,6 +51968,11 @@ PrefabInstance:
 
         We recommend
         that you <b>use them in combination</b> to do your duty efficiently.</i>"'
+      objectReference: {fileID: 0}
+    - target: {fileID: 7491566344008775267, guid: 0fc8b0361f3adb04f9da3a1279eaf35d,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 7569506294769515535, guid: 0fc8b0361f3adb04f9da3a1279eaf35d,
         type: 3}
