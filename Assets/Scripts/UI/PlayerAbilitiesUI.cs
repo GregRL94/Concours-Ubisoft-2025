@@ -112,22 +112,22 @@ public class PlayerAbilitiesUI : MonoBehaviour
     {
         HighlightAnimation();
 
-        if (Input.GetKeyDown(KeyCode.A))
-        {
-            Highlight(PlayerEnum.PLAYER1, alarmTrapUI.fillImage);
-        }
-        if (Input.GetKeyDown(KeyCode.S))
-        {
-            Highlight(PlayerEnum.PLAYER1, pushTrapUI.fillImage);
-        }
-        if (Input.GetKeyDown(KeyCode.D))
-        {
-            Highlight(PlayerEnum.PLAYER1, captureTrapUI.fillImage);
-        }
-        if (Input.GetKeyDown(KeyCode.F))
-        {
-            Highlight(PlayerEnum.PLAYER1, whistleFillImage);
-        }
+        //if (Input.GetKeyDown(KeyCode.A))
+        //{
+        //    Highlight(PlayerEnum.PLAYER1, alarmTrapUI.fillImage);
+        //}
+        //if (Input.GetKeyDown(KeyCode.S))
+        //{
+        //    Highlight(PlayerEnum.PLAYER1, pushTrapUI.fillImage);
+        //}
+        //if (Input.GetKeyDown(KeyCode.D))
+        //{
+        //    Highlight(PlayerEnum.PLAYER1, captureTrapUI.fillImage);
+        //}
+        //if (Input.GetKeyDown(KeyCode.F))
+        //{
+        //    Highlight(PlayerEnum.PLAYER1, whistleFillImage);
+        //}
 
         /*if (Input.GetKeyDown(KeyCode.X))
         {

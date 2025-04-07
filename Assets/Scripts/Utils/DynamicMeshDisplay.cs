@@ -4,14 +4,22 @@ using UnityEngine;
 public class DynamicMeshDisplay : MonoBehaviour
 {
     List<MeshRenderer> _meshes = new List<MeshRenderer>();
+    List<SkinnedMeshRenderer> _skinnedMeshes = new List<SkinnedMeshRenderer>();
 
     void Start()
     {
         foreach (Transform child in GetFirstLevelChidren(transform))
         {
-            if(child.GetComponent<MeshRenderer>() != null)
+            foreach (Transform child2 in GetFirstLevelChidren(child))
             {
-                _meshes.Add(child.GetComponent<MeshRenderer>());
+                if (child2.GetComponent<MeshRenderer>() != null)
+                {
+                    _meshes.Add(child2.GetComponent<MeshRenderer>());
+                }
+                if (child2.GetComponent<SkinnedMeshRenderer>() != null)
+                {
+                    _skinnedMeshes.Add(child2.GetComponent<SkinnedMeshRenderer>());
+                }
             }
         }
     }
@@ -24,6 +32,10 @@ public class DynamicMeshDisplay : MonoBehaviour
             {
                 _meshes[i].enabled = show;
             }
+            for (int i = 0; i <  _skinnedMeshes.Count; i++)
+            {
+                _skinnedMeshes[i].enabled = show;
+            }
         }
 
         if (gameObject.CompareTag("MUSEUMOBJECT"))
@@ -31,6 +43,7 @@ public class DynamicMeshDisplay : MonoBehaviour
             MuseumObjects museumObject = gameObject.GetComponent<MuseumObjects>();
             if (museumObject.IsStolen)
             {
+                Debug.Log(gameObject.name + "set inactive");
                 gameObject.SetActive(false);
             }
         }

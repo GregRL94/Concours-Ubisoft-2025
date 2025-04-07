@@ -8,6 +8,26 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 4467173628983735615}
     m_Modifications:
+    - target: {fileID: 63640714402607570, guid: 588e862e80780564d825bedc1f72f76c,
+        type: 3}
+      propertyPath: m_Size.x
+      value: 1.2210591
+      objectReference: {fileID: 0}
+    - target: {fileID: 63640714402607570, guid: 588e862e80780564d825bedc1f72f76c,
+        type: 3}
+      propertyPath: m_Size.y
+      value: 1.2572352
+      objectReference: {fileID: 0}
+    - target: {fileID: 63640714402607570, guid: 588e862e80780564d825bedc1f72f76c,
+        type: 3}
+      propertyPath: m_Center.x
+      value: -0.108528435
+      objectReference: {fileID: 0}
+    - target: {fileID: 63640714402607570, guid: 588e862e80780564d825bedc1f72f76c,
+        type: 3}
+      propertyPath: m_Center.y
+      value: 0.5844423
+      objectReference: {fileID: 0}
     - target: {fileID: 4340366931527352272, guid: 588e862e80780564d825bedc1f72f76c,
         type: 3}
       propertyPath: m_LocalScale.x
@@ -36,7 +56,7 @@ PrefabInstance:
     - target: {fileID: 4340366931527352272, guid: 588e862e80780564d825bedc1f72f76c,
         type: 3}
       propertyPath: m_LocalPosition.z
-      value: -0.035069942
+      value: 0.005
       objectReference: {fileID: 0}
     - target: {fileID: 4340366931527352272, guid: 588e862e80780564d825bedc1f72f76c,
         type: 3}
@@ -86,11 +106,7 @@ PrefabInstance:
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
-    m_AddedComponents:
-    - targetCorrespondingSourceObject: {fileID: 6014738385124892676, guid: 588e862e80780564d825bedc1f72f76c,
-        type: 3}
-      insertIndex: -1
-      addedObject: {fileID: 1935327568431299567}
+    m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 588e862e80780564d825bedc1f72f76c, type: 3}
 --- !u!4 &2096596484200966651 stripped
 Transform:
@@ -98,33 +114,6 @@ Transform:
     type: 3}
   m_PrefabInstance: {fileID: 2388191889190524459}
   m_PrefabAsset: {fileID: 0}
---- !u!1 &8240509174542054959 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 6014738385124892676, guid: 588e862e80780564d825bedc1f72f76c,
-    type: 3}
-  m_PrefabInstance: {fileID: 2388191889190524459}
-  m_PrefabAsset: {fileID: 0}
---- !u!65 &1935327568431299567
-BoxCollider:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 8240509174542054959}
-  m_Material: {fileID: 0}
-  m_IncludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_ExcludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_LayerOverridePriority: 0
-  m_IsTrigger: 0
-  m_ProvidesContacts: 0
-  m_Enabled: 1
-  serializedVersion: 3
-  m_Size: {x: 3.5699036, y: 3.671338, z: 3.466412}
-  m_Center: {x: 0.9665368, y: -0.34773856, z: 0.08151442}
 --- !u!1001 &2531221291925724795
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -187,6 +176,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Name
       value: PF_Pedestal_Jewel_Model (4) Variant
+      objectReference: {fileID: 0}
+    - target: {fileID: 6902525654280424328, guid: 78dd137b84071c8498ae6ae1862114df,
+        type: 3}
+      propertyPath: m_Enabled
+      value: 1
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects:

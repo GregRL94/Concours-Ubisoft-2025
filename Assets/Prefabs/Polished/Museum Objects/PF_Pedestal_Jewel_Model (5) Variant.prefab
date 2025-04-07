@@ -63,6 +63,16 @@ PrefabInstance:
       propertyPath: m_Name
       value: PF_Pedestal_Jewel_Model (5) Variant
       objectReference: {fileID: 0}
+    - target: {fileID: 2832971458586746015, guid: 78dd137b84071c8498ae6ae1862114df,
+        type: 3}
+      propertyPath: m_Enabled
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6902525654280424328, guid: 78dd137b84071c8498ae6ae1862114df,
+        type: 3}
+      propertyPath: m_Enabled
+      value: 1
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects:
     - {fileID: 983651622938109567, guid: 78dd137b84071c8498ae6ae1862114df, type: 3}
@@ -87,6 +97,41 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 986162217539024805}
     m_Modifications:
+    - target: {fileID: 773140550914510788, guid: ea6acad8a6dddb7499f306632d317d3d,
+        type: 3}
+      propertyPath: m_Size.x
+      value: 2.0186615
+      objectReference: {fileID: 0}
+    - target: {fileID: 773140550914510788, guid: ea6acad8a6dddb7499f306632d317d3d,
+        type: 3}
+      propertyPath: m_Size.y
+      value: 1.7809583
+      objectReference: {fileID: 0}
+    - target: {fileID: 773140550914510788, guid: ea6acad8a6dddb7499f306632d317d3d,
+        type: 3}
+      propertyPath: m_Size.z
+      value: 1.846852
+      objectReference: {fileID: 0}
+    - target: {fileID: 773140550914510788, guid: ea6acad8a6dddb7499f306632d317d3d,
+        type: 3}
+      propertyPath: m_Enabled
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 773140550914510788, guid: ea6acad8a6dddb7499f306632d317d3d,
+        type: 3}
+      propertyPath: m_Center.x
+      value: -0.0050500766
+      objectReference: {fileID: 0}
+    - target: {fileID: 773140550914510788, guid: ea6acad8a6dddb7499f306632d317d3d,
+        type: 3}
+      propertyPath: m_Center.y
+      value: 0.76547897
+      objectReference: {fileID: 0}
+    - target: {fileID: 773140550914510788, guid: ea6acad8a6dddb7499f306632d317d3d,
+        type: 3}
+      propertyPath: m_Center.z
+      value: -0.030884953
+      objectReference: {fileID: 0}
     - target: {fileID: 5043355970935854423, guid: ea6acad8a6dddb7499f306632d317d3d,
         type: 3}
       propertyPath: m_Name
@@ -160,11 +205,7 @@ PrefabInstance:
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
-    m_AddedComponents:
-    - targetCorrespondingSourceObject: {fileID: 9190837326453149047, guid: ea6acad8a6dddb7499f306632d317d3d,
-        type: 3}
-      insertIndex: -1
-      addedObject: {fileID: 7806246000211646420}
+    m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: ea6acad8a6dddb7499f306632d317d3d, type: 3}
 --- !u!4 &4767051557782306634 stripped
 Transform:
@@ -172,30 +213,3 @@ Transform:
     type: 3}
   m_PrefabInstance: {fileID: 3367860084862814130}
   m_PrefabAsset: {fileID: 0}
---- !u!1 &5850566505192950469 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 9190837326453149047, guid: ea6acad8a6dddb7499f306632d317d3d,
-    type: 3}
-  m_PrefabInstance: {fileID: 3367860084862814130}
-  m_PrefabAsset: {fileID: 0}
---- !u!65 &7806246000211646420
-BoxCollider:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 5850566505192950469}
-  m_Material: {fileID: 0}
-  m_IncludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_ExcludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_LayerOverridePriority: 0
-  m_IsTrigger: 0
-  m_ProvidesContacts: 0
-  m_Enabled: 1
-  serializedVersion: 3
-  m_Size: {x: 4.9041057, y: 5.3698072, z: 4.8059497}
-  m_Center: {x: -0.54337806, y: -0.6980802, z: -2.1319308}

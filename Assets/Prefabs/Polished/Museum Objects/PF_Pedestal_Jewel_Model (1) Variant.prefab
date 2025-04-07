@@ -116,39 +116,8 @@ PrefabInstance:
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
-    m_AddedComponents:
-    - targetCorrespondingSourceObject: {fileID: 1267897971646812265, guid: 007b7e1b11e77ce4f910e74088a310e9,
-        type: 3}
-      insertIndex: -1
-      addedObject: {fileID: 6161030380830555775}
+    m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 007b7e1b11e77ce4f910e74088a310e9, type: 3}
---- !u!1 &1672822689032909149 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 1267897971646812265, guid: 007b7e1b11e77ce4f910e74088a310e9,
-    type: 3}
-  m_PrefabInstance: {fileID: 481732481481400628}
-  m_PrefabAsset: {fileID: 0}
---- !u!65 &6161030380830555775
-BoxCollider:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1672822689032909149}
-  m_Material: {fileID: 0}
-  m_IncludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_ExcludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_LayerOverridePriority: 0
-  m_IsTrigger: 0
-  m_ProvidesContacts: 0
-  m_Enabled: 1
-  serializedVersion: 3
-  m_Size: {x: 1.4477941, y: 2.042755, z: 1.4485027}
-  m_Center: {x: 0.04081363, y: 0.5213767, z: -0.22425058}
 --- !u!4 &8443858075721590241 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 8323189828573562069, guid: 007b7e1b11e77ce4f910e74088a310e9,
@@ -217,6 +186,16 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Name
       value: PF_Pedestal_Jewel_Model (1) Variant
+      objectReference: {fileID: 0}
+    - target: {fileID: 2832971458586746015, guid: 78dd137b84071c8498ae6ae1862114df,
+        type: 3}
+      propertyPath: m_Enabled
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6902525654280424328, guid: 78dd137b84071c8498ae6ae1862114df,
+        type: 3}
+      propertyPath: m_Enabled
+      value: 1
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects:
