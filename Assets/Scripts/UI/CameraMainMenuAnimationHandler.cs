@@ -36,7 +36,8 @@ public class CameraMainMenuAnimationHandler : MonoBehaviour
             //Interpolation
             transform.position = Vector3.Slerp(
                 lastPositionCamera, 
-                direction, t * Mathf.Sin(t * Mathf.PI)
+                direction, 
+                Mathf.Sin(Mathf.Clamp01(t) * Mathf.PI)
             );
             transform.LookAt(cameraLookAt);
             yield return null;
@@ -53,9 +54,9 @@ public class CameraMainMenuAnimationHandler : MonoBehaviour
     /// Fonction qui gere le calcule de la nouvelle direction du mouvement de la camera
     /// </summary>
     private void SetNewDirection() {
-        float x = Random.Range(0f, 1f);
-        float y = Random.Range(0f, 1f);
-        float z = Random.Range(0f, 1f);
+        float x = Random.Range(-1f, 1f);
+        float y = Random.Range(-1f, 1f);
+        float z = Random.Range(-1f, 1f);
         direction = positionOrigin + (new Vector3(x, y, z)).normalized * distance;
     }
 }

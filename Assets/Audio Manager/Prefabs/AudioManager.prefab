@@ -83,8 +83,21 @@ MonoBehaviour:
     audio: {fileID: 8300000, guid: aa9f387a5bf41384d916d2e6a77eeb42, type: 3}
   - audioName: Music Menu
     audio: {fileID: 8300000, guid: 4cc082a560be2e247a29fb796da672b8, type: 3}
+  - audioName: UI Confirm
+    audio: {fileID: 8300000, guid: 3aafa3e4f07e0fc4385dcd25d13054ad, type: 3}
+  - audioName: UI Open Menu
+    audio: {fileID: 8300000, guid: e016040fbf133924baaf9f29753e2f01, type: 3}
+  - audioName: UI Close Menu
+    audio: {fileID: 8300000, guid: 2b5132bcd2287e34d999295ecf245dc4, type: 3}
+  - audioName: UI Cancel
+    audio: {fileID: 8300000, guid: 068516318d1f5fc4ebb2ac67bb2fd653, type: 3}
+  - audioName: UI Selection 1
+    audio: {fileID: 8300000, guid: bda50ec994a747745bda4929bb3e31b6, type: 3}
+  - audioName: UI Selection 2
+    audio: {fileID: 8300000, guid: 26308c8a14e30ed46bb2070609eda1aa, type: 3}
   playingSounds: []
   maxFadeInTime: 1
   maxFadeOutTime: 1
   omoriBG: {fileID: 0}
   iromoBG: {fileID: 0}
+  _speedupMusic: 1.25
