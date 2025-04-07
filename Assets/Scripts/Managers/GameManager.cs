@@ -138,6 +138,7 @@ public class GameManager : MonoBehaviour
     private Coroutine _preStartRoundCoroutine;
     private Coroutine _startRoundCoroutine;
     private bool _endGame = false;
+    public bool EndGame => _endGame;
 
 
     public static GameManager Instance { get; private set; }
@@ -311,6 +312,7 @@ public class GameManager : MonoBehaviour
 
         //todo: Audio - For Round Finished
         AudioManager.instance.PlayClipAt(AudioManager.instance.allAudio["Round End"], this.transform.position, AudioManager.instance.soundEffectMixer, true, false);
+        AudioManager.instance.OriginalMusicSpeed();
 
         _roundsParameter.hasRoundStarted = false;
         _robberManager.DispawnRobber();
@@ -342,6 +344,7 @@ public class GameManager : MonoBehaviour
         {
             _endGame = true;
             AudioManager.instance.PlayClipAt(AudioManager.instance.allAudio["Round End"], this.transform.position, AudioManager.instance.soundEffectMixer, true, false);
+            AudioManager.instance.OriginalMusicSpeed();
             UIManager.ShowReputationBoard(_playersReputation, _maxPlayersReputation, _minPlayersReputation);
         }
     }

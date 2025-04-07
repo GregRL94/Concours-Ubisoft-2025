@@ -510,6 +510,7 @@ public class UIManager : MonoBehaviour
             
             if (GameData.p1Point != GameData.p2Point) // NOT DRAW
             {
+                AudioManager.instance.PlayClipAt(AudioManager.instance.allAudio["Win"], this.transform.position, AudioManager.instance.soundEffectMixer, true, false);
                 FinalResult?.SetActive(true);
                 if (GameData.p1Point > GameData.p2Point)
                 {
@@ -548,6 +549,7 @@ public class UIManager : MonoBehaviour
     }
     public IEnumerator AnimateReputationPointRemoval(Image fillImage, float cooldownTime)
     {
+        AudioManager.instance.PlayClipAt(AudioManager.instance.allAudio["Reputation Lost"], this.transform.position, AudioManager.instance.soundEffectMixer, true, false);
         float elapsedTime = 0f;
         while (elapsedTime < cooldownTime)
         {

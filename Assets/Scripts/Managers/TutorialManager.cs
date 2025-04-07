@@ -1,3 +1,4 @@
+using AkuroTools;
 using System.Collections;
 using System.Collections.Generic;
 using System.Runtime.CompilerServices;
@@ -31,6 +32,7 @@ public class TutorialManager : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
+        AudioManager.instance.PlayClipAt(AudioManager.instance.allAudio["Music Ingame"], this.transform.position, AudioManager.instance.ostMixer, false, true);
         _isTutorialCompleted = SceneLoading.Instance.IsTutoCompleted;
         AutoGetTutorialPages();
         if (!_isTutorialCompleted) StartTutorial();

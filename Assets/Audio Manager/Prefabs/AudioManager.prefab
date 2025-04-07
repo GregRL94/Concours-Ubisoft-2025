@@ -75,6 +75,14 @@ MonoBehaviour:
     audio: {fileID: 8300000, guid: c1fdff3582761c840bb1fa1785f379ca, type: 3}
   - audioName: Round End
     audio: {fileID: 8300000, guid: 0821b168aec4c604badddb69c7101129, type: 3}
+  - audioName: Win
+    audio: {fileID: 8300000, guid: 7c2b1d8aa79f8064a8eccbc1231cb085, type: 3}
+  - audioName: Reputation Lost
+    audio: {fileID: 8300000, guid: 56f553c821a406d409d809fd122f17f5, type: 3}
+  - audioName: Music Ingame
+    audio: {fileID: 8300000, guid: aa9f387a5bf41384d916d2e6a77eeb42, type: 3}
+  - audioName: Music Menu
+    audio: {fileID: 8300000, guid: 4cc082a560be2e247a29fb796da672b8, type: 3}
   playingSounds: []
   maxFadeInTime: 1
   maxFadeOutTime: 1
