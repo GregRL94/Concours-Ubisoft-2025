@@ -88,7 +88,7 @@ public class PlayerVision : MonoBehaviour
         List<GameObject> visibleObjects = new List<GameObject>();
 
         foreach(GameObject obj in _elligibleObjects)
-        {
+        {            
             if(obj == null) continue;
             if (Vector3.Distance(transform.position, obj.transform.position) <= _proximityRadius)
             {
@@ -133,7 +133,6 @@ public class PlayerVision : MonoBehaviour
                 meshDisplay = obj.GetComponent<DynamicMeshDisplay>();
                 if(meshDisplay != null)
                 {
-                    Debug.Log("Hiding Mesh for: " + obj.name);
                     meshDisplay.OnGetVision(false);
                 }
             }
@@ -257,6 +256,7 @@ public class PlayerVision : MonoBehaviour
 
     private void OnTriggerEnter(Collider other)
     {
+        if (!other.gameObject.CompareTag("MUSEUMOBJECT") && !other.gameObject.CompareTag("ENEMY")) { return; }
         if (!_elligibleObjects.Contains(other.gameObject))
         {
             _elligibleObjects.Add(other.gameObject);
@@ -265,6 +265,7 @@ public class PlayerVision : MonoBehaviour
 
     private void OnTriggerExit(Collider other)
     {
+        if (!other.gameObject.CompareTag("MUSEUMOBJECT") && !other.gameObject.CompareTag("ENEMY")) { return; }
         if (_elligibleObjects.Contains(other.gameObject))
         {
             _elligibleObjects.Remove(other.gameObject);
