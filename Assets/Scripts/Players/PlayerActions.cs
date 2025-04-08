@@ -17,6 +17,7 @@ public class PlayerActions : MonoBehaviour
     private GameObject _currentTrap;
     private Coroutine _trapSetupCoroutine;
     private Animator _animator;
+    private ParticleSystem _particleSystem;
     #endregion
 
     #region MonoBehaviour Flow
@@ -26,6 +27,7 @@ public class PlayerActions : MonoBehaviour
         _playerControls = GetComponent<PlayerControls>();
         _pAbilitiesUI = GetComponent<PlayerAbilitiesUI>();
         _animator = GetComponentInChildren<Animator>();
+        _particleSystem = GetComponentInChildren<ParticleSystem>();
 
         GameManager.WhistleData wBase = _gameManager.WhistleBase;
         GameManager.TrapData aTBase = _gameManager.AlarmTrapBase;
@@ -126,6 +128,7 @@ public class PlayerActions : MonoBehaviour
         // Play sound
         // Play Animation
         _animator.SetTrigger("Siffle");
+        _particleSystem.Play();
         if (!GameManager.Instance.TutorialManager.IsTutorialCompleted && GameManager.Instance.TutorialManager.CurrentTutorialType == UITutorialStep.WHISTLE_STEP) GameManager.Instance.UIManager.CurrentPlayerValidation.DynamicValidatePage(_playerControls.PlayerID);
         AudioManager.instance.PlayClipAt(AudioManager.instance.allAudio["Player Whistle"], this.transform.position, AudioManager.instance.soundEffectMixer, true, false);
 
