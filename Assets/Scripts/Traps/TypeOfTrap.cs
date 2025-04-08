@@ -6,6 +6,7 @@ public class TypeOfTrap : MonoBehaviour, ITrap
 {
     [SerializeField] AbilitiesEnum selectedTrap;
     [SerializeField] private PlayerEnum trapOwner;
+    [SerializeField] private ParticleSystem _particleSystem;
 
     public PlayerEnum TrapOwner
     {
@@ -40,6 +41,7 @@ public class TypeOfTrap : MonoBehaviour, ITrap
         if (other.CompareTag("ENEMY"))
         {
             trap.ActivateTrap(transform);
+            _particleSystem?.Play();
         }
     }
 }

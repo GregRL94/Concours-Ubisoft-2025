@@ -10,8 +10,8 @@ GameObject:
   m_Component:
   - component: {fileID: 7681504577941542834}
   - component: {fileID: 562577196844534664}
+  - component: {fileID: 6794289702969680957}
   - component: {fileID: 2617348523708140279}
-  - component: {fileID: 3196586832135171493}
   m_Layer: 6
   m_Name: PF_Cadre
   m_TagString: MUSEUMOBJECT
@@ -54,8 +54,25 @@ BoxCollider:
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 3
-  m_Size: {x: 1, y: 0.8, z: 0.3}
-  m_Center: {x: 0, y: -0.10383655, z: 0.15}
+  m_Size: {x: 1, y: 0.484465, z: 0.1980457}
+  m_Center: {x: 0, y: 0.0013427053, z: -0.03606659}
+--- !u!114 &6794289702969680957
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7893659717737151811}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 358d761e9f3f54b4582152a10cff93fc, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _objectOwner: 0
+  _objectType: 0
+  _objectStealableCD: 10
+  _timeStealableCD: 0
+  _isStolen: 0
 --- !u!114 &2617348523708140279
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -68,23 +85,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a383df0079a9dd3449b3889148860067, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
---- !u!114 &3196586832135171493
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 7893659717737151811}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 12152c8fc56e8504f98b4d5defa3c51c, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  _objectOwner: 0
-  _objectType: 0
-  _objectStealableCD: 10
-  _timeStealableCD: 0
-  _isStolen: 0
 --- !u!1001 &5596633462301059367
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -121,7 +121,7 @@ PrefabInstance:
     - target: {fileID: -8679921383154817045, guid: faee1cab23dd00042b2c8ac9b9253e84,
         type: 3}
       propertyPath: m_LocalPosition.z
-      value: 0
+      value: -0.155
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: faee1cab23dd00042b2c8ac9b9253e84,
         type: 3}
