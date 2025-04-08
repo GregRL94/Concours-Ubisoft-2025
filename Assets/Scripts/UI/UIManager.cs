@@ -69,8 +69,10 @@ public class UIManager : MonoBehaviour
     [SerializeField] private GameObject NextRound;
     [SerializeField] private GameObject Draw;
     [SerializeField] private GameObject FinalResult;
-    [SerializeField] private GameObject Player1Win;
-    [SerializeField] private GameObject Player2Win;
+    [SerializeField] private GameObject P1Win;
+    [SerializeField] private GameObject P1WinnerCrown;
+    [SerializeField] private GameObject P2Win;
+    [SerializeField] private GameObject P2WinnerCrown;
     [SerializeField] private GameObject FinalResultOptions;
     public RawImage radialRevealImage;
     private Material revealMat;
@@ -372,7 +374,6 @@ public class UIManager : MonoBehaviour
             yield return new WaitForSeconds(0.5f);
             yield return StartCoroutine(ShowTextWithPopEffect(capturedThiefText));
 
-            // Trouver tous les joueurs
             PlayerControls[] players = FindObjectsOfType<PlayerControls>();
             List<Animator> animators = new List<Animator>();
 
@@ -381,7 +382,7 @@ public class UIManager : MonoBehaviour
                 Animator animator = player.GetComponentInChildren<Animator>();
                 if (animator != null)
                 {
-                    // Réinitialiser toutes les animations
+                    // Reinitialize players animation
                     foreach (AnimatorControllerParameter param in animator.parameters)
                     {
                         if (param.type == AnimatorControllerParameterType.Bool)
@@ -514,13 +515,15 @@ public class UIManager : MonoBehaviour
                 FinalResult?.SetActive(true);
                 if (GameData.p1Point > GameData.p2Point)
                 {
-                    Player1Win?.SetActive(true);
-                    //todo : Ajmal - trophy animation for winner 
+                    P1Win?.SetActive(true);
+                    P1WinnerCrown?.SetActive(true);
                 }
                 else if (GameData.p1Point < GameData.p2Point)
                 {
-                    Player2Win?.SetActive(true);
-
+                    P2Win?.SetActive(true);
+                    P2WinnerCrown?.SetActive(true);
+                    //float scaleFactor = 1 + Mathf.PingPong(Time.time * 1, 1.2f);
+                    //P2WinnerCrown.transform.localScale = initialScale * scaleFactor;
                 }
                 // todo: Ajmal - animate restart game or back to menu
                 FinalResultOptions?.SetActive(true);
@@ -579,7 +582,6 @@ public class UIManager : MonoBehaviour
         if (canvasGroup == null)
             canvasGroup = roundCountdownText.gameObject.AddComponent<CanvasGroup>();
 
-        // Initial setup
         canvasGroup.alpha = 0f;
         roundCountdownText.transform.localScale = Vector3.zero;
 
@@ -600,7 +602,6 @@ public class UIManager : MonoBehaviour
             yield return null;
         }
 
-        // Ensuring final values are set
         roundCountdownText.transform.localScale = Vector3.one;
         canvasGroup.alpha = 1f;
     }
@@ -617,12 +618,10 @@ public class UIManager : MonoBehaviour
 
         uiObject.SetActive(true);
 
-        // Ajouter CanvasGroup si manquant
         CanvasGroup canvasGroup = uiObject.GetComponent<CanvasGroup>();
         if (canvasGroup == null)
             canvasGroup = uiObject.AddComponent<CanvasGroup>();
 
-        // Initialiser les valeurs
         canvasGroup.alpha = 0f;
         uiObject.transform.localScale = Vector3.zero;
 
@@ -633,7 +632,6 @@ public class UIManager : MonoBehaviour
             time += Time.deltaTime;
             float t = time / duration;
 
-            // Effet d'overshoot sur le scale
             float scale = Mathf.SmoothStep(0f, 1.1f, t);
             if (t > 0.8f)
                 scale = Mathf.Lerp(1.1f, 1f, (t - 0.8f) / 0.2f);
@@ -644,7 +642,6 @@ public class UIManager : MonoBehaviour
             yield return null;
         }
 
-        // Set valeurs finales pour être sûr
         canvasGroup.alpha = 1f;
         uiObject.transform.localScale = Vector3.one;
     }
@@ -679,7 +676,7 @@ public class UIManager : MonoBehaviour
         currentCaptureThiefAmount = Mathf.Clamp(currentCaptureThiefAmount + amount, 0, maxCaptureThiefAmount);
 
         StartCoroutine(UpdateCaptureThiefUI(previousAmount, currentCaptureThiefAmount));
-        print("playerID " + playerID);
+
         // Determine which player captured the thief at the end of the round
         if (currentCaptureThiefAmount >= maxCaptureThiefAmount)
         {
