@@ -19,43 +19,25 @@ public class TrapManager : MonoBehaviour
     private GameObject _indicator;
 
     [Header("Alarm Trap Effects")]
-    [SerializeField] float fleeSpeedMultiplier = 2f;
-    [SerializeField] float fleeRange = 8f;
     [SerializeField] float timeTillAlarmIndicatorAppear = 0.5f;
-    [SerializeField] int timeTillFlee = 1;
-    float agentInitialSpeed;
-    private Vector3 fleePosition;
-    private bool hasFleeToDestination;
-    Vector3[] fleeDirections =
-    {
-        new Vector3(1, 0, 0),
-        new Vector3(-1, 0, 0),
-        new Vector3(0, 0, 1),
-        new Vector3(0, 0, -1)
-    };
-    [SerializeField] int _alarmCaptureValue = 0;
+    const float timeTillFlee = 1f;
+    [SerializeField] int _alarmTrapValue = 0;
 
     [Header("Push Trap Effects")]
     [SerializeField] float pushDistance = 15f;
     float timeTillPushIndicatorAppear = 0.05f;
     [SerializeField] private float timeTillEnemyStop = 0.4f;
     [SerializeField] float stunPushDuration = 4f;
-    [SerializeField] int _pushCaptureValue = 0;
+    [SerializeField] int _pushTrapValue = 0;
 
     [Header("Capture Trap Effects")]
     [SerializeField] float timeTillCaptureIndicatorAppear = 0f;
     [SerializeField] float captureDuration = 5f;
-    [SerializeField] int _captureCaptureValue = 0;
+    [SerializeField] int _captureTrapValue = 0;
 
     [SerializeField]
     public RobberCapture robberCapture;
 
-    private void Start()
-    {
-
-        // Actions for later
-        //SubscribeToTrapEvents();
-    }
     public void SetRobber(NavMeshAgent agent, Rigidbody rb, GameObject indicator, RobberCapture robber, Animator animator)
     {
         _agent = agent;
@@ -65,153 +47,167 @@ public class TrapManager : MonoBehaviour
         _animator = animator;
     }
 
-    #region Action Traps (Later)
-    //private void SubscribeToTrapEvents()
-    //{
-    //    OnTrapTriggered += TriggerAlarmTrap;
-    //    //OnTrapTriggered += ShowFleeIndicator;
-    //    OnTrapTriggered += PlayEscapeSound;
-    //    OnTrapTriggered += TriggerFleeAnimation;
-    //}
-
-    //public void UnsubscribeFromTrapEvents()
-    //{
-    //    OnTrapTriggered -= TriggerAlarmTrap;
-    //    //OnTrapTriggered -= ShowFleeIndicator;
-    //    OnTrapTriggered -= PlayEscapeSound;
-    //    OnTrapTriggered -= TriggerFleeAnimation;
-    //}
-
-
-
-    // TRY ADD COROUTINE THERE 
-    //public void ShowFleeIndicator()
-    //{
-    //    if (indicator != null)
-    //    {
-    //        indicator.SetActive(true);
-    //    }
-    //}
-
-    public void PlayEscapeSound()
-    {
-        AudioSource audioSource = GetComponent<AudioSource>();
-        if (audioSource != null)
-        {
-            audioSource.Play();
-        }
-    }
-
-
-    public void TriggerFleeAnimation()
-    {
-        Animator animator = GetComponent<Animator>();
-        if (animator != null)
-        {
-            animator.SetTrigger("Flee"); 
-        }
-    }
-    #endregion
-
     #region Alarm Trigger Behaviour
     public void TriggerAlarmTrap(Transform tr, PlayerEnum trapOwner = PlayerEnum.NONE)
     {
-        // Stops enemy agent
-        if (_agent != null)
+        Debug.Log($"[TriggerAlarmTrap] Alarm triggered by {trapOwner}");
+        robberCapture?.GetSifled(trapOwner, _alarmTrapValue);
+
+        if(tr.GetComponent<Collider>() != null)
         {
-            _agent.isStopped = true;
-            _agent.velocity = Vector3.zero;
-            _animator.SetTrigger("Surpris");
-            _animator.SetBool("Cours", false);
+            tr.GetComponent<Collider>().enabled = false;
+            tr.GetComponent<Collider>().providesContacts = true;
         }
 
-        // Reaction time before flee
-        StartCoroutine(RunAwayDelay(tr,trapOwner));
+        if (_agent != null)
+        {
+            Debug.Log("[TriggerAlarmTrap] Stopping agent and applying stun.");
+            _agent.isStopped = true;
+            _agent.updatePosition = false;
+            _agent.updateRotation = false;
+            _agent.velocity = Vector3.zero;
+        }
+
+        _animator.SetTrigger("Surpris");
+        _animator.SetBool("Cours", false);
+
+        StartCoroutine(RunAwayDelay(tr, trapOwner));
     }
 
     private IEnumerator RunAwayDelay(Transform tr, PlayerEnum trapOwner)
     {
-        //Run Away for RobberBehaviour
-        robberCapture?.GetSifled(trapOwner, _alarmCaptureValue);
+        Debug.Log($"[RunAwayDelay] Stun duration: {timeTillFlee} seconds");
+        float elapsedTime = 0f;
+
+        while (elapsedTime < timeTillFlee)
+        {
+            elapsedTime += Time.deltaTime;
+            yield return null;
+        }
+
+        Debug.Log("[RunAwayDelay] Stun time elapsed, preparing to flee.");
+
+        if (_agent != null)
+        {
+            _agent.Warp(_rb.position);
+            _agent.updatePosition = true;
+            _agent.updateRotation = true;
+            _agent.isStopped = false;
+            Debug.Log("[RunAwayDelay] Agent re-enabled and ready to flee.");
+        }
 
         _animator.SetBool("Cours", true);
+        Debug.Log("[RunAwayDelay] Animation updated: running.");
 
-        yield return new WaitForSeconds(timeTillAlarmIndicatorAppear);
-        //Destroy(alarmTrap);
-        if (_indicator == null) yield break;
-        _indicator?.SetActive(true);
-        tr.GetComponent<CapsuleCollider>().enabled = false;
-
+        if (_indicator != null)
+        {
+            _indicator.SetActive(true);
+            Debug.Log("[RunAwayDelay] Indicator activated.");
+        }
+        else
+        {
+            Debug.LogWarning("[RunAwayDelay] Warning: Indicator is null!");
+        }
     }
     #endregion
 
     #region Push Trigger Behaviour
-
+    private Coroutine activePushCoroutine = null; // Un seul ennemi, donc une seule coroutine active
     public void TriggerPushTrap(Transform tr, PlayerEnum trapOwner = PlayerEnum.NONE)
     {
-        robberCapture?.GetSifled(trapOwner, _pushCaptureValue);
+        Debug.Log($"[PushTrap] L'ennemi a activé un piège !");
+
+        robberCapture?.GetSifled(trapOwner, _pushTrapValue);
         _agent?.GetComponentInChildren<Animator>()?.SetBool("EstRepousser", true);
+
+        if (tr.GetComponent<Collider>() != null)
+        {
+            tr.GetComponent<Collider>().enabled = false;
+            tr.GetComponent<Collider>().providesContacts = true;
+        }
 
         if (_agent != null)
         {
-            _agent.isStopped = true;  
-            _agent.updatePosition = false; 
+            _agent.isStopped = true;
+            _agent.updatePosition = false;
         }
 
         if (_rb != null)
         {
             _rb.velocity = Vector3.zero;
-            Vector3 pushDirection = tr.forward * pushDistance;
-            _rb.AddForce(pushDirection, ForceMode.Impulse);
+
+            // Direction normalized
+            Vector3 pushDirection = tr.forward.normalized * (pushDistance / timeTillEnemyStop);
+            _rb.velocity = pushDirection;
+
+            _agent.transform.rotation = Quaternion.LookRotation(-tr.forward);
+            _agent.updateRotation = false;
+            Debug.Log($"[PushTrap] L'ennemi est repoussé avec une vitesse de {pushDirection}");
         }
 
-        StartCoroutine(StunAfterPush(trapOwner, tr));
+        // if stuned, reset the timer for enemy to stop
+        if (activePushCoroutine != null)
+        {
+            Debug.Log($"[PushTrap] Ancien stun annulé, un nouveau stun démarre !");
+            StopCoroutine(activePushCoroutine);
+        }
+
+        // Démarrer une nouvelle coroutine et l'enregistrer
+        activePushCoroutine = StartCoroutine(StunAfterPush(trapOwner, tr));
     }
 
     private IEnumerator StunAfterPush(PlayerEnum trapOwner, Transform tr)
     {
-        tr.GetComponent<Collider>().enabled = false;
+        Debug.Log($"[Stun] Début du stun, apparition de l'indicateur dans {timeTillPushIndicatorAppear} sec");
 
         yield return new WaitForSeconds(timeTillPushIndicatorAppear);
         _indicator?.SetActive(true);
 
-        yield return new WaitForSeconds(timeTillEnemyStop);
+        Debug.Log($"[Stun] Indicateur activé, l'ennemi sera bloqué progressivement sur {timeTillEnemyStop} sec");
 
-        if (_rb != null)
+        float elapsedTime = 0f;
+        Vector3 initialVelocity = _rb.velocity;
+
+        while (elapsedTime < timeTillEnemyStop)
         {
-            _rb.velocity = Vector3.zero;
+            elapsedTime += Time.deltaTime;
+            _rb.velocity = Vector3.Lerp(initialVelocity, Vector3.zero, elapsedTime / timeTillEnemyStop);
+            yield return null;
         }
+
+        _rb.velocity = Vector3.zero;
+        Debug.Log($"[Stun] L'ennemi est immobilisé");
 
         yield return new WaitForSeconds(stunPushDuration);
 
         if (_agent != null)
         {
             _agent.Warp(_rb.position);
-
             _agent.isStopped = false;
             _agent.updatePosition = true;
+            _agent.updateRotation = true;
             _agent.GetComponentInChildren<Animator>()?.SetBool("EstRepousser", false);
         }
 
         _indicator?.SetActive(false);
+        Debug.Log($"[Stun] Fin du stun, l'ennemi peut à nouveau bouger.");
+
+        // coroutine null if push trap behaviour done
+        activePushCoroutine = null;
     }
-
     #endregion
-
-
 
     #region Capture Trigger Behaviour
     public void TriggerCaptureTrap(PlayerEnum trapOwner, Transform tr)
     {
-        // Disable collider, movement and reset velocity to zero
-        if (_agent != null)
+        robberCapture?.GetSifled(trapOwner, _captureTrapValue);
+
+        if (tr.GetComponent<Collider>() != null)
         {
-            print("_agent.isStopped " + _agent.isStopped);
-            print("capture trap pos: " + tr.position);
-            //Vector3 test = new Vector3(34.5400009f, -0.141920924f, 9.07999992f);
-            _agent.SetDestination(tr.position);
-            _agent.isStopped = true;
+            tr.GetComponent<Collider>().enabled = false;
+            tr.GetComponent<Collider>().providesContacts = true;
         }
+
         if (_rb != null)
         {
             _rb.angularVelocity = Vector3.zero;
@@ -219,13 +215,20 @@ public class TrapManager : MonoBehaviour
             print("Angular ");
             print("_rb.velocity " + _rb.velocity);
         }
+        if (_agent != null)
+        {
+            print("_agent.isStopped " + _agent.isStopped);
+            print("capture trap pos: " + tr.position);
+            _agent.SetDestination(tr.position);
+            _agent.isStopped = true;
+            _agent.GetComponentInChildren<ParticleSystem>()?.Play();
+        }
 
         StartCoroutine(StunFromCapture(trapOwner, tr));
     }
 
     IEnumerator StunFromCapture(PlayerEnum trapOwner, Transform tr)
     {
-        robberCapture?.GetSifled(trapOwner, _captureCaptureValue);
         
         yield return new WaitForSeconds(timeTillCaptureIndicatorAppear);
         if(_indicator == null) yield break;
@@ -249,10 +252,8 @@ public class TrapManager : MonoBehaviour
         }
         
         _indicator?.SetActive(false);
-        tr.GetComponent<CapsuleCollider>().enabled = false;
         robberCapture?.StopVulnerability();
     }
     #endregion
 }
-// TODOS:
-// Different indicator for each trap ??? 
+

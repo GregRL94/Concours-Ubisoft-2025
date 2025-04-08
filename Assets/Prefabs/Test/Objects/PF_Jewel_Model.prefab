@@ -12,6 +12,7 @@ GameObject:
   - component: {fileID: 8501697521169064515}
   - component: {fileID: 3116506431282321568}
   - component: {fileID: 2935229175105098317}
+  - component: {fileID: 779506804639203176}
   - component: {fileID: 5612155474924771758}
   m_Layer: 6
   m_Name: PF_Jewel_Model
@@ -106,6 +107,23 @@ BoxCollider:
   serializedVersion: 3
   m_Size: {x: 1, y: 1, z: 1}
   m_Center: {x: 0, y: 0, z: 0}
+--- !u!114 &779506804639203176
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 821430384158797267}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 358d761e9f3f54b4582152a10cff93fc, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _objectOwner: 0
+  _objectType: 1
+  _objectStealableCD: 10
+  _timeStealableCD: 0
+  _isStolen: 0
 --- !u!114 &5612155474924771758
 MonoBehaviour:
   m_ObjectHideFlags: 0

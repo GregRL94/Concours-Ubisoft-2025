@@ -1,7 +1,10 @@
+using AkuroTools;
 using System;
 using System.Collections;
 using System.Collections.Generic;
 using TMPro;
+using Unity.VisualScripting;
+using UnityEditor;
 using UnityEngine;
 using UnityEngine.Rendering;
 using UnityEngine.SceneManagement;
@@ -117,8 +120,8 @@ public class GameManager : MonoBehaviour
     private PlayerControls[] _players;
     [SerializeField]
     private PlayerReputation[] _playersReputation;
-    [SerializeField]
-    private TextMeshProUGUI _timerText;
+    //[SerializeField]
+    //private TextMeshProUGUI _timerText;
 
     //getter
     public PlayerControls[] Players => _players;
@@ -135,6 +138,7 @@ public class GameManager : MonoBehaviour
     private Coroutine _preStartRoundCoroutine;
     private Coroutine _startRoundCoroutine;
     private bool _endGame = false;
+    public bool EndGame => _endGame;
 
 
     public static GameManager Instance { get; private set; }
@@ -175,6 +179,10 @@ public class GameManager : MonoBehaviour
 
             UIManager.CreatePlayersReputationUI(_maxPlayersReputation, _minPlayersReputation, _playersReputation);
         }
+        else
+        {
+            Destroy(gameObject); // if return to main menu destroy GameManager
+        }
     }
     public void StartGameLoop()
     {
@@ -203,6 +211,25 @@ public class GameManager : MonoBehaviour
         }
     }
 
+    void Start()
+    {
+        StartGame();
+    }
+
+    void StartGame()
+    {
+        if (PlayerInfo.Instance == null) return;
+        var players = FindObjectsOfType<PlayerControls>();
+
+        foreach (var player in players)
+        {
+            if (player.PlayerID == PlayerEnum.PLAYER1)
+                player.Initialize(PlayerEnum.PLAYER1, PlayerInfo.Instance.player1Gamepad);
+            else if (player.PlayerID == PlayerEnum.PLAYER2)
+                player.Initialize(PlayerEnum.PLAYER2, PlayerInfo.Instance.player2Gamepad);
+        }
+    }
+
     private void AssignManagers()
     {
         if(!_museumObjectManager) _museumObjectManager = FindAnyObjectByType<MuseumObjectsManager>();
@@ -210,7 +237,6 @@ public class GameManager : MonoBehaviour
         if(!_trapManager)_trapManager = FindAnyObjectByType<TrapManager>();
         if(!_uiManager)_uiManager = FindAnyObjectByType<UIManager>();
         if(!_tutorialManager) _tutorialManager = FindAnyObjectByType<TutorialManager>();
-        if(!_timerText) _timerText = _uiManager.roundCountdownText;
     }
 
     private void InitializePlayers()
@@ -251,9 +277,10 @@ public class GameManager : MonoBehaviour
     private IEnumerator PreStartRound(float time)
     {
         float timer = time;
+        GameManager.Instance.UIManager.CreateListOfMuseumArtefactsUI(GameManager.Instance.RobberManager.StealObjectList);
         while (timer > 0)
         {
-            _timerText.text = timer.ToString();
+            _uiManager.ShowUIRoundCountdown((int)timer);
             yield return new WaitForSeconds(1);
             timer--;
         }
@@ -262,15 +289,19 @@ public class GameManager : MonoBehaviour
             StopCoroutine(_startRoundCoroutine);
             _startRoundCoroutine = null;
         }
-        _timerText.text = "";
+        _uiManager.ShowUIRoundCountdown(0);
+
         _startRoundCoroutine = StartCoroutine(StartRound(_roundsParameter.roundTime, _roundsParameter.roundTime - showTimeBeforeRoundEnd)); 
     }
     private IEnumerator StartRound(float time, float timeLeftWarning)
     {
         _roundsParameter.hasRoundStarted = true;
         _robberManager.SpawnRobber();
+        AudioManager.instance.PlayClipAt(AudioManager.instance.allAudio["Round Start"], this.transform.position, AudioManager.instance.soundEffectMixer, true, false);
+
         yield return new WaitForSeconds(timeLeftWarning);
 
+        if (_endGame) yield break; // game already ended by capturing thief or thief stolen everything 
         for (int i = 0; i < time - timeLeftWarning ; i++)
         {
             int timeLeft = (int)((int)time - timeLeftWarning - i);
@@ -279,12 +310,15 @@ public class GameManager : MonoBehaviour
             print(Time.time);
         }
 
-        //_roundsParameter.hasRoundStarted = false;
-        //_robberManager.DispawnRobber();
-
         //todo: Audio - For Round Finished
-        EndRound();
-        CheckEndRound();
+        AudioManager.instance.PlayClipAt(AudioManager.instance.allAudio["Round End"], this.transform.position, AudioManager.instance.soundEffectMixer, true, false);
+        AudioManager.instance.OriginalMusicSpeed();
+
+        _roundsParameter.hasRoundStarted = false;
+        _robberManager.DispawnRobber();
+
+        _uiManager.ShowReputationBoard(_playersReputation, _maxPlayersReputation, _minPlayersReputation);
+    
 
         //if (_preStartRoundCoroutine != null)
         //{
@@ -293,20 +327,25 @@ public class GameManager : MonoBehaviour
         //}
         //_preStartRoundCoroutine = StartCoroutine(PreStartRound(_roundsParameter.timeBeforeRoundStart));
     }
+    #endregion
+
+    private void Update()
+    {
+        CheckEndRound();
+    }
     public void EndRound()
     {
-        _robberManager.DispawnRobber();
-        _uiManager.ShowReputationBoard(_playersReputation, _maxPlayersReputation, _minPlayersReputation);
-        _roundsParameter.hasRoundStarted = false;
+
     }
-    #endregion
 
     public void CheckEndRound()
     {
         if ((ValidateMuseumEmpty() || UIManager.GetCurrentCaptureThiefAmount >= UIManager.GetmaxCaptureThiefAmount) && !_endGame)
         {
             _endGame = true;
-            EndRound();
+            AudioManager.instance.PlayClipAt(AudioManager.instance.allAudio["Round End"], this.transform.position, AudioManager.instance.soundEffectMixer, true, false);
+            AudioManager.instance.OriginalMusicSpeed();
+            UIManager.ShowReputationBoard(_playersReputation, _maxPlayersReputation, _minPlayersReputation);
         }
     }
 
@@ -317,7 +356,7 @@ public class GameManager : MonoBehaviour
     public void LosePlayerReputation(PlayerEnum playerIndex, int loseValue)
     {
         int index = (int)playerIndex;
-        if (index < 0) return;
+        if (index <= 0) return;
         if (index > _players.Length) return;
         _playersReputation[index - 1].reputationValue -= loseValue;
         Debug.Log($"{_players[index - 1].name} has lose {loseValue}, and is now at {_playersReputation[index - 1].reputationValue} reputation !");
@@ -335,10 +374,19 @@ public class GameManager : MonoBehaviour
         int index = (int)playerIndex;
         if (index < 0 || index > _players.Length) return;
 
-        // Oppose player -1 point to its reputation if the adversary captured at last the thief
-        if (index == (int)PlayerEnum.PLAYER1) index++;
-        else if (index == (int)PlayerEnum.PLAYER2) index--;
+        // Oppose player -1 point (by index) to its reputation if the adversary captured at last the thief
+        if (index == (int)PlayerEnum.PLAYER1)
+        {
+            index++;
+            UIManager.WhichPlayerCapturedThiefUI("by P1");
+        }
+        else if (index == (int)PlayerEnum.PLAYER2) 
+        {
+            index--;
+            UIManager.WhichPlayerCapturedThiefUI("by P2");
+        } 
         else Debug.Log("Player ID NULL");
+
         _playersReputation[index - 1].reputationValue -= loseValue;
         
     }

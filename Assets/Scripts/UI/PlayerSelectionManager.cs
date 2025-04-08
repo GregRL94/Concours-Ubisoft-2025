@@ -7,6 +7,8 @@ using UnityEngine.SceneManagement;
 using UnityEngine.InputSystem.Controls;
 using UnityEngine.UI;
 using System.Linq;
+using LevelManagement;
+using AkuroTools;
 
 public class PlayerSelectionManager : MonoBehaviour
 {
@@ -28,9 +30,32 @@ public class PlayerSelectionManager : MonoBehaviour
     private Gamepad player1Controller;
     private Gamepad player2Controller;
 
+    [SerializeField]
+    private float _playDelay = 0.5f;
+
+    [SerializeField]
+    private TransitionFader startTransitionPrefab;
+    
     void Start()
     {
         DetectControllers();
+
+
+    }
+
+    public void NextSceneTransition()
+    {
+        StartCoroutine(NextSceneTransitionRoutine());
+    }
+
+    private IEnumerator NextSceneTransitionRoutine()
+    {
+        if (startTransitionPrefab)
+            TransitionFader.PlayTransition(startTransitionPrefab);
+        
+        yield return new WaitForSeconds(_playDelay);
+
+        SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex + 1);
     }
 
     void Update()
@@ -42,6 +67,8 @@ public class PlayerSelectionManager : MonoBehaviour
                 player1Controller.buttonSouth, player1Controller.buttonEast,
                 ref P1Join, ref P1PlayerCharacter, ref P1Ready, "P1 (PS5)"
             );
+            PlayerInfo.Instance.player1Gamepad = player1Controller;
+
         }
 
         if (player2Controller != null)
@@ -50,6 +77,7 @@ public class PlayerSelectionManager : MonoBehaviour
                 player2Controller.buttonSouth, player2Controller.buttonEast,
                 ref P2Join, ref P2PlayerCharacter, ref P2Ready, "P2 (PS5)"
             );
+            PlayerInfo.Instance.player2Gamepad = player2Controller;
         }
 
         if (P1Ready.activeInHierarchy && P2Ready.activeInHierarchy && !countDownState)
@@ -93,12 +121,14 @@ public class PlayerSelectionManager : MonoBehaviour
                 Debug.Log($"{playerName} pressed CONFIRM !");
                 join.SetActive(false);
                 character.SetActive(true);
+                AudioManager.instance.PlayClipAt(AudioManager.instance.allAudio["UI Selection 1"], this.transform.position, AudioManager.instance.soundEffectMixer, true, false);
             }
             else if (character.activeInHierarchy)
             {
                 Debug.Log($"{playerName} pressed CONFIRM !");
                 character.SetActive(false);
                 ready.SetActive(true);
+                AudioManager.instance.PlayClipAt(AudioManager.instance.allAudio["UI Confirm"], this.transform.position, AudioManager.instance.soundEffectMixer, true, false);
             }
         }
 
@@ -191,7 +221,7 @@ public class PlayerSelectionManager : MonoBehaviour
         {
             if (i == 0)
             {
-                SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex + 1);
+                NextSceneTransition();
                 yield break;
             }
             countDownText.text = i.ToString();

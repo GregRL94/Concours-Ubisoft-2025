@@ -1,3 +1,4 @@
+using AkuroTools;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
@@ -19,15 +20,18 @@ public class PauseMenuManager : MonoBehaviour
 
     void Update()
     {
-        if (Gamepad.current.startButton.wasPressedThisFrame && canToggle)
+        if(Gamepad.current != null)
         {
-            canToggle = false;
-            TogglePause();
-        }
+            if (Gamepad.current.startButton.wasPressedThisFrame && canToggle)
+            {
+                canToggle = false;
+                TogglePause();
+            }
 
-        if (!Gamepad.current.startButton.isPressed) 
-        {
-            canToggle = true;
+            if (!Gamepad.current.startButton.isPressed) 
+            {
+                canToggle = true;
+            }
         }
     }
 
@@ -45,6 +49,7 @@ public class PauseMenuManager : MonoBehaviour
 
     void PauseGame()
     {
+        AudioManager.instance.PlayClipAt(AudioManager.instance.allAudio["UI Open Menu"], this.transform.position, AudioManager.instance.soundEffectMixer, true, false);
         pauseMenuInstance.SetActive(true);
         isPaused = true;
         Time.timeScale = 0f;
@@ -52,6 +57,7 @@ public class PauseMenuManager : MonoBehaviour
 
     public void ResumeGame()
     {
+        AudioManager.instance.PlayClipAt(AudioManager.instance.allAudio["UI Close Menu"], this.transform.position, AudioManager.instance.soundEffectMixer, true, false);
         pauseMenuInstance.SetActive(false);
         isPaused = false;
         Time.timeScale = 1f;

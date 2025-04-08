@@ -22,6 +22,7 @@ public class RobberManager : MonoBehaviour
     private float _minDistanceToTraps = 0;
     [SerializeField, Tooltip("Distance between robber and all traps")]
     private List<ObjectType> _stealObjectList;
+    public List<ObjectType> StealObjectList => _stealObjectList;
 
     private MuseumObjects[] _museumObjects;
     private GameObject[] _traps;
@@ -45,6 +46,7 @@ public class RobberManager : MonoBehaviour
             for (int j = 0; j < GameGrid.Instance.Grid.GetLength(1); j++)
             {
                 spawnPosition = GameGrid.Instance.Grid[i, j].worldPos;
+                if (!GameGrid.Instance.Grid[i, j].isFree) continue;
                 if (!IsValidSpawnPosition(spawnPosition)) continue;
                 _currentRobber = Instantiate(_robber, spawnPosition, Quaternion.identity);
                 SetupRobber();
@@ -52,22 +54,33 @@ public class RobberManager : MonoBehaviour
             }
         }
 
+
+        RandomSpawn();
+    }
+
+    private void RandomSpawn()
+    {
         //random spawn in game map when no grid are suitable to spawn
         int gameGridSizeX = GameGrid.Instance.GameGridSizeX;
         int gameGridSizeY = GameGrid.Instance.GameGridSizeY;
         Vector3 mapSize = new Vector3(gameGridSizeX, 0, gameGridSizeY);
         Vector3 mapMiddlePoint = GameGrid.Instance.Grid[gameGridSizeX / 2, gameGridSizeY / 2].worldPos;
-        spawnPosition = new Vector3(
-                Random.Range(mapMiddlePoint.x - mapSize.x, mapMiddlePoint.x + mapSize.x),
+        Vector3 spawnPosition = new Vector3(
+                Random.Range(0, gameGridSizeX),
                 mapMiddlePoint.y,
-                Random.Range(mapMiddlePoint.z - mapSize.z, mapMiddlePoint.z + mapSize.z));
+                Random.Range(0, gameGridSizeY));
+        while (!GameGrid.Instance.NodeFromWorldPos(spawnPosition).isFree)
+        {
+            spawnPosition = new Vector3(
+                    Random.Range(0, gameGridSizeX),
+                    mapMiddlePoint.y,
+                    Random.Range(0, gameGridSizeY));
+        }
         _currentRobber = Instantiate(_robber, spawnPosition, Quaternion.identity);
         SetupRobber();
-
     }
     private void SetupRobber()
     {
-        GameManager.Instance.UIManager.CreateListOfMuseumArtefactsUI(_stealObjectList);
         RobberBehaviour robber = _currentRobber.GetComponent<RobberBehaviour>();
         if (robber == null) return;
         robber.StealingList.Clear();
@@ -106,6 +119,7 @@ public class RobberManager : MonoBehaviour
         RobberBehaviour robber = _currentRobber.GetComponent<RobberBehaviour>();
         robber.StopAllCoroutines();
         robber.enabled = false;
+        robber.gameObject.SetActive(false);
         //Destroy(_currentRobber);
     }
 }

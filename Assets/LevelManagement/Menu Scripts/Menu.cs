@@ -1,11 +1,14 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.InputSystem;
 
 namespace LevelManagement
 {
     public abstract class Menu<T> : Menu where T : Menu<T>
     {
+        protected PlayerInputActions playerInput;
+
         private static T _instance;
         public static T Instance { get { return _instance; } }
 
@@ -19,6 +22,9 @@ namespace LevelManagement
             {
                 _instance = (T)this;
             }
+
+            playerInput = new PlayerInputActions();
+
         }
 
         protected virtual void OnDestroy()

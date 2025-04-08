@@ -14,7 +14,7 @@ public class SceneLoading : MonoBehaviour
     [SerializeField]
     private int _nextSceneIndex = 0;
     [SerializeField]
-    private bool _isTutoCompleted = false;
+    private bool _isTutoCompleted = true; //todo: a changer
     public bool IsTutoCompleted { get { return _isTutoCompleted; } set {  _isTutoCompleted = value; } }
 
     public static SceneLoading Instance;
@@ -32,6 +32,7 @@ public class SceneLoading : MonoBehaviour
     //Load the next scene in scene list, return to 0 when end of list reached
     public void LoadNextScene()
     {
+        print("_nextSceneIndex " + _nextSceneIndex);
         LoadSpecificScene(_scenesList[_nextSceneIndex]);
         _nextSceneIndex++;
         if(_nextSceneIndex >= _scenesList.Count)_nextSceneIndex = 0;

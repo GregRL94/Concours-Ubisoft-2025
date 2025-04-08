@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.InputSystem;
+using UnityEngine.InputSystem.Users;
 
 public class PlayerControls : MonoBehaviour
 {
@@ -47,6 +48,8 @@ public class PlayerControls : MonoBehaviour
 
     public PlayerEnum PlayerID => _playerID;
     public GameGrid GameGrid => _gameGrid;
+
+    private Gamepad _gamepad; 
     #endregion
 
     #region MonoBehaviour Flow
@@ -74,6 +77,25 @@ public class PlayerControls : MonoBehaviour
         _currentNode = _gameGrid.NodeFromWorldPos(transform.position);
         _previousNode = _currentNode;
         _gameGrid.UpdateNode(_currentNode);
+    }
+
+    public void Initialize(PlayerEnum id, Gamepad assignedGamepad)
+    {
+        _playerID = id;
+        _gamepad = assignedGamepad;
+
+        var playerInput = GetComponent<PlayerInput>();
+
+        // Dissocier d'abord les anciens périphériques
+        playerInput.user.UnpairDevices();
+
+        // Associer manette spécifique
+        InputUser.PerformPairingWithDevice(assignedGamepad, playerInput.user);
+
+        // Activer le bon scheme (important pour qu'il prenne les bons bindings)
+        playerInput.SwitchCurrentControlScheme("Gamepad", assignedGamepad);
+
+        Debug.Log($"{_playerID} a été initialisé avec {_gamepad.displayName} sur {gameObject.name}");
     }
 
     private void FixedUpdate()
@@ -195,7 +217,6 @@ public class PlayerControls : MonoBehaviour
 
     private void Whistle(InputAction.CallbackContext context)
     {
-        if (!GameManager.Instance.TutorialManager.IsTutorialCompleted && GameManager.Instance.TutorialManager.CurrentTutorialType == UITutorialStep.WHISTLE_STEP) GameManager.Instance.UIManager.CurrentPlayerValidation.DynamicValidatePage(_playerID);
         _playerActions.PerformWhistle(_robberMask);
     }
     #endregion
@@ -203,7 +224,6 @@ public class PlayerControls : MonoBehaviour
     #region Traps
     private void OnStartTrapDeployment(InputAction.CallbackContext context)
     {
-        if (!GameManager.Instance.TutorialManager.IsTutorialCompleted && GameManager.Instance.TutorialManager.CurrentTutorialType == UITutorialStep.PLACE_TRAP_STEP) GameManager.Instance.UIManager.CurrentPlayerValidation.DynamicValidatePage(_playerID);
         _playerActions.StartTrapDeployment(_gameGrid.NodeFromWorldPos(_snappedInteractionPoint));
     }
 
@@ -214,7 +234,6 @@ public class PlayerControls : MonoBehaviour
 
     private void OnRotateTrap(InputAction.CallbackContext context)
     {
-        if (!GameManager.Instance.TutorialManager.IsTutorialCompleted && GameManager.Instance.TutorialManager.CurrentTutorialType == UITutorialStep.ROTATE_STRAP_STEP) GameManager.Instance.UIManager.CurrentPlayerValidation.DynamicValidatePage(_playerID);
         _playerActions.RotateTrap(context.ReadValue<float>(), _currentTrap);
     }
 

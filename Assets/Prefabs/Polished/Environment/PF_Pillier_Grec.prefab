@@ -94,6 +94,7 @@ GameObject:
   - component: {fileID: 4945559687814459289}
   - component: {fileID: 6297267944515047083}
   - component: {fileID: 1571322472968153872}
+  - component: {fileID: 3522322426777084138}
   m_Layer: 7
   m_Name: PF_Pillier_Grec
   m_TagString: Untagged
@@ -156,3 +157,18 @@ NavMeshObstacle:
   m_CarveOnlyStationary: 1
   m_Center: {x: 0, y: 1, z: 0}
   m_TimeToStationary: 0.5
+--- !u!114 &3522322426777084138
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4665150934815027390}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 889c5b9c2a3099640ab903091634e488, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _seeThroughMat: {fileID: 2100000, guid: f8cf74d2dfe5d474ba8624414d386232, type: 2}
+  _renderers:
+  - {fileID: -7511558181221131132}
