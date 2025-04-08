@@ -33,6 +33,8 @@ public class RobberBehaviour : BTAgent
     private RobberCapture _robberCapture;
     [SerializeField]
     private Animator _animator;
+    [SerializeField]
+    private ParticleSystem _particleSystem;
     
 
     [Header("DEBUG READING")]
@@ -306,7 +308,7 @@ public class RobberBehaviour : BTAgent
         _rb.angularVelocity = Vector3.zero;
         _rb.velocity = Vector3.zero;
         //lance l'animation vulnerable
-        _animator.SetBool("EstPieger", true);
+        _animator.SetBool("EstPieger", true);        
     }
 
     public void StopVunerableState()

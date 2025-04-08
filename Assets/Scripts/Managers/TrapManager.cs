@@ -221,6 +221,7 @@ public class TrapManager : MonoBehaviour
             print("capture trap pos: " + tr.position);
             _agent.SetDestination(tr.position);
             _agent.isStopped = true;
+            _agent.GetComponentInChildren<ParticleSystem>()?.Play();
         }
 
         StartCoroutine(StunFromCapture(trapOwner, tr));

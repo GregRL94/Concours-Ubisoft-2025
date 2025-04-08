@@ -469,6 +469,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   selectedTrap: 2
   trapOwner: 0
+  _particleSystem: {fileID: 0}
 --- !u!1 &5001638701341687367
 GameObject:
   m_ObjectHideFlags: 0

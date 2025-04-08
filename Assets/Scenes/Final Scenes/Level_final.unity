@@ -52459,13 +52459,13 @@ PrefabInstance:
         type: 3}
       propertyPath: pushTrapBase.trapPrefab
       value: 
-      objectReference: {fileID: 3220068902153143993, guid: 54b28b48f2c40fd4a9ef9fc1b2ea3452,
+      objectReference: {fileID: 5354938375276220566, guid: 6dec6df1cb895eb438b2d1e2ad37cc49,
         type: 3}
     - target: {fileID: 1308096671972412955, guid: 0fc8b0361f3adb04f9da3a1279eaf35d,
         type: 3}
       propertyPath: alarmTrapBase.trapPrefab
       value: 
-      objectReference: {fileID: 3415493380668556041, guid: 3676792b0f741d344bd141e976067d30,
+      objectReference: {fileID: 6068576871829732595, guid: 6420b40663b20694c9fd444218cb98bc,
         type: 3}
     - target: {fileID: 1308096671972412955, guid: 0fc8b0361f3adb04f9da3a1279eaf35d,
         type: 3}
@@ -52491,7 +52491,7 @@ PrefabInstance:
         type: 3}
       propertyPath: captureTrapBase.trapPrefab
       value: 
-      objectReference: {fileID: 3416370133520111916, guid: ea436e541ef407e4891323cd2acb40f1,
+      objectReference: {fileID: 5772873612793821327, guid: c3dd2a5796484e843b1c104b1f391f1d,
         type: 3}
     - target: {fileID: 1308096671972412955, guid: 0fc8b0361f3adb04f9da3a1279eaf35d,
         type: 3}
