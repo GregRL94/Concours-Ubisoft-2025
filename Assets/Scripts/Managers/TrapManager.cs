@@ -207,6 +207,9 @@ public class TrapManager : MonoBehaviour
             tr.GetComponent<Collider>().enabled = false;
             tr.GetComponent<Collider>().providesContacts = true;
         }
+        
+        BearTrapAnimation btAnimation = tr.GetComponent<BearTrapAnimation>();
+        if (btAnimation != null) btAnimation.ActivateTrap();
 
         if (_rb != null)
         {
