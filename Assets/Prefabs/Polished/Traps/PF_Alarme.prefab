@@ -114,6 +114,7 @@ GameObject:
   - component: {fileID: 4887867580449354759}
   - component: {fileID: 465745400511747047}
   - component: {fileID: 2923907066789790336}
+  - component: {fileID: 1181703610677564670}
   m_Layer: 8
   m_Name: PF_Alarme
   m_TagString: TRAP
@@ -173,6 +174,22 @@ BoxCollider:
   serializedVersion: 3
   m_Size: {x: 0.4, y: 1.2, z: 0.4}
   m_Center: {x: 0, y: 0.6, z: 0}
+--- !u!114 &1181703610677564670
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6068576871829732595}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9a5516feadc60fb469a39b6f3f6aa265, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  musicName: Trap Alarm
+  _tagName: ENEMY
+  collideType: 1
+  actionType: 1
 --- !u!1001 &2094149961886304133
 PrefabInstance:
   m_ObjectHideFlags: 0
