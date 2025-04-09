@@ -435,11 +435,6 @@ public class GameManager : MonoBehaviour
     //Check if museum has any remaining  artefacts
     public bool ValidateMuseumEmpty()
     {
-        // Checks Museum List is Empty or Not
-        if (_museumObjectManager.CountAllMuseumObjects() == 0)
-        {
-            return true;
-        }
-        return false;
+        return _museumObjectManager.IsAllObjectsStealed();
     }
 }
