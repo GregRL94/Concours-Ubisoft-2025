@@ -691,7 +691,6 @@ public class UIManager : MonoBehaviour
             }
             AudioManager.instance.PlayClipAt(AudioManager.instance.allAudio["Robber Captured"], this.transform.position, AudioManager.instance.soundEffectMixer, true, false);
             GameManager.Instance.LosePlayerReputationByCapturingThief(playerID, 1);
-            GameManager.Instance.EndRound();
         }
     }
     public IEnumerator UpdateCaptureThiefUI(float startAmount, float targetAmount)
