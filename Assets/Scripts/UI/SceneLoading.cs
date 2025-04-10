@@ -18,7 +18,7 @@ public class SceneLoading : MonoBehaviour
     public bool IsTutoCompleted { get { return _isTutoCompleted; } set {  _isTutoCompleted = value; } }
 
     public static SceneLoading Instance;
-    private void Awake()
+    private void Start()
     {
         if (Instance != null) 
             Destroy(this.gameObject);
