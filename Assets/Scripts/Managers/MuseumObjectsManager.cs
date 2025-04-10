@@ -14,7 +14,7 @@ public class MuseumObjectsManager : MonoBehaviour
     private Dictionary<ObjectType, MuseumObjects[]> _sortedObjects = new Dictionary<ObjectType, MuseumObjects[]>();
 
     public List<MuseumObjects> AllMuseumObjects => _allMuseumObjects;
-
+    public bool StealAllObject = false;
 
     public UIManager uiManager;
 
@@ -86,15 +86,9 @@ public class MuseumObjectsManager : MonoBehaviour
         return _sortedObjects.GetValueOrDefault(objectType);
     }
 
-    public int CountAllMuseumObjects()
+    public bool IsAllObjectsStealed()
     {
-        int totalCount = 0;
-        foreach (var kvp in _sortedObjects)
-        {
-            totalCount += kvp.Value.Length;
-        }
-
-        return totalCount;
+        return StealAllObject;
     }
 
 }

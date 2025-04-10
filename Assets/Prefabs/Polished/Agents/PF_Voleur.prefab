@@ -127,8 +127,8 @@ MonoBehaviour:
   agent: {fileID: 4113390362049012725}
   state: 0
   treeStatus: 1
-  _vBase: 5
-  _vFlee: 6
+  _vBase: 2
+  _vFlee: 10
   _radialVision: 3
   _fleeVision: 3
   _stealTime: 2
@@ -143,7 +143,7 @@ MonoBehaviour:
   _currentTargetObject: {fileID: 0}
   _isVulnerable: 0
   _isFleeing: 0
-  _robberTimeFleeing: 5
+  _robberTimeFleeing: 2
 --- !u!114 &3098735542020985986
 MonoBehaviour:
   m_ObjectHideFlags: 0

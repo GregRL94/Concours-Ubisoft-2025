@@ -19,21 +19,21 @@ public class TrapManager : MonoBehaviour
     private GameObject _indicator;
 
     [Header("Alarm Trap Effects")]
-    [SerializeField] float timeTillAlarmIndicatorAppear = 0.5f;
+    [SerializeField, Range(0, 3)] float timeTillAlarmIndicatorAppear = 0.5f;
     const float timeTillFlee = 1f;
-    [SerializeField] int _alarmTrapValue = 0;
+    [SerializeField,Range(0,100)] int _alarmTrapValue = 0;
 
     [Header("Push Trap Effects")]
-    [SerializeField] float pushDistance = 15f;
+    [SerializeField, Range(0, 20)] float pushDistance = 15f;
     float timeTillPushIndicatorAppear = 0.05f;
-    [SerializeField] private float timeTillEnemyStop = 0.4f;
-    [SerializeField] float stunPushDuration = 4f;
-    [SerializeField] int _pushTrapValue = 0;
+    [SerializeField, Range(0,2)] private float timeTillEnemyStop = 0.4f;
+    [SerializeField, Range(0, 10)] float stunPushDuration = 4;
+    [SerializeField, Range(0, 100)] int _pushTrapValue = 0;
 
     [Header("Capture Trap Effects")]
-    [SerializeField] float timeTillCaptureIndicatorAppear = 0f;
-    [SerializeField] float captureDuration = 5f;
-    [SerializeField] int _captureTrapValue = 0;
+    [SerializeField, Range(0, 3)] float timeTillCaptureIndicatorAppear = 0f;
+    [SerializeField, Range(0, 10)] float captureDuration = 5f;
+    [SerializeField, Range(0, 100)] int _captureTrapValue = 0;
 
     [SerializeField]
     public RobberCapture robberCapture;
@@ -200,6 +200,7 @@ public class TrapManager : MonoBehaviour
     #region Capture Trigger Behaviour
     public void TriggerCaptureTrap(PlayerEnum trapOwner, Transform tr)
     {
+        print("trapOwner " + trapOwner);
         robberCapture?.GetSifled(trapOwner, _captureTrapValue);
 
         if (tr.GetComponent<Collider>() != null)

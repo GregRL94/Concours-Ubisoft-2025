@@ -87,10 +87,11 @@ public class TutorialManager : MonoBehaviour
     private void CompleteTutorial()
     {
 
+        SceneLoading.Instance.IsTutoCompleted = true;
         _tutorialUI.SetActive(false);
         _isTutorialCompleted = true;
         GameManager.Instance.StartGameLoop();
-        SceneLoading.Instance.IsTutoCompleted = _isTutorialCompleted;
+        //SceneLoading.Instance.IsTutoCompleted = _isTutorialCompleted;
     }
 
     public void NextScene() => SceneLoading.Instance.LoadNextScene();

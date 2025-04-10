@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿using AkuroTools;
+using UnityEngine;
 using UnityEngine.InputSystem;
 
 namespace LevelManagement
@@ -8,8 +9,10 @@ namespace LevelManagement
         private InputAction backAction;
         public GameObject mainMenu;
 
+
         private void OnEnable()
         {
+            AudioManager.instance.PlayClipAt(AudioManager.instance.allAudio["UI Open Menu"], this.transform.position, AudioManager.instance.soundEffectMixer, true, false);
             backAction = playerInput.UI.Back; 
             backAction.Enable();
             backAction.performed += OnBackPressedAction;
@@ -17,6 +20,7 @@ namespace LevelManagement
 
         private void OnDisable()
         {
+            AudioManager.instance.PlayClipAt(AudioManager.instance.allAudio["UI Close Menu"], this.transform.position, AudioManager.instance.soundEffectMixer, true, false);
             backAction.performed -= OnBackPressedAction;
             backAction.Disable();
         }
