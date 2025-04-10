@@ -1,12 +1,14 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.VFX;
 
 public class TypeOfTrap : MonoBehaviour, ITrap
 {
     [SerializeField] AbilitiesEnum selectedTrap;
     [SerializeField] private PlayerEnum trapOwner;
     [SerializeField] private ParticleSystem _particleSystem;
+    [SerializeField] private VisualEffect _optionalVisualEffect;
 
     public PlayerEnum TrapOwner
     {
@@ -41,7 +43,14 @@ public class TypeOfTrap : MonoBehaviour, ITrap
         if (other.CompareTag("ENEMY"))
         {
             trap.ActivateTrap(transform);
-            _particleSystem?.Play();
+            if (_particleSystem != null)
+            {
+                _particleSystem.Play();
+            }
+            else if (_optionalVisualEffect != null)
+            {
+                _optionalVisualEffect.Play();
+            }
         }
     }
 }
