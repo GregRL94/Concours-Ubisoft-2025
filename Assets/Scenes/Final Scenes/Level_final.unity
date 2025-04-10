@@ -53424,7 +53424,7 @@ PrefabInstance:
     - target: {fileID: 6528705165863518113, guid: 0fc8b0361f3adb04f9da3a1279eaf35d,
         type: 3}
       propertyPath: _alarmTrapValue
-      value: 5
+      value: 2
       objectReference: {fileID: 0}
     - target: {fileID: 6528705165863518113, guid: 0fc8b0361f3adb04f9da3a1279eaf35d,
         type: 3}
@@ -53801,7 +53801,7 @@ PrefabInstance:
     - target: {fileID: 7569506294769515535, guid: 0fc8b0361f3adb04f9da3a1279eaf35d,
         type: 3}
       propertyPath: maxCaptureThiefAmount
-      value: 50
+      value: 100
       objectReference: {fileID: 0}
     - target: {fileID: 7569506294769515535, guid: 0fc8b0361f3adb04f9da3a1279eaf35d,
         type: 3}
