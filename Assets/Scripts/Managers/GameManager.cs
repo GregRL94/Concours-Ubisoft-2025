@@ -333,11 +333,6 @@ public class GameManager : MonoBehaviour
     {
         CheckEndRound();
     }
-    //public void EndRound()
-    //{
-
-    //}
-
     public void CheckEndRound()
     {
         if ((ValidateMuseumEmpty() || UIManager.GetCurrentCaptureThiefAmount >= UIManager.GetmaxCaptureThiefAmount) && !_endGame)
@@ -346,6 +341,9 @@ public class GameManager : MonoBehaviour
             AudioManager.instance.PlayClipAt(AudioManager.instance.allAudio["Round End"], this.transform.position, AudioManager.instance.soundEffectMixer, true, false);
             AudioManager.instance.OriginalMusicSpeed();
             UIManager.ShowReputationBoard(_playersReputation, _maxPlayersReputation, _minPlayersReputation);
+            _robberManager.DispawnRobber();
+            _roundsParameter.hasRoundStarted = false;
+
         }
     }
 
@@ -435,11 +433,6 @@ public class GameManager : MonoBehaviour
     //Check if museum has any remaining  artefacts
     public bool ValidateMuseumEmpty()
     {
-        // Checks Museum List is Empty or Not
-        if (_museumObjectManager.CountAllMuseumObjects() == 0)
-        {
-            return true;
-        }
-        return false;
+        return _museumObjectManager.IsAllObjectsStealed();
     }
 }

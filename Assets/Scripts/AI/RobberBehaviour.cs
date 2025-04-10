@@ -114,7 +114,7 @@ public class RobberBehaviour : BTAgent
     {
         if (_stealingList.Count <= 0)
         {
-            Debug.Log("huh");
+            GameManager.Instance.MuseumObjectsManager.StealAllObject = true;
             return BTNode.Status.FAILURE;
         }
         else return BTNode.Status.SUCCESS;
