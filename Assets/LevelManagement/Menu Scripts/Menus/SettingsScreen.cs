@@ -1,19 +1,18 @@
-﻿using AkuroTools;
+using AkuroTools;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
 namespace LevelManagement
 {
-    public class CreditsScreen : Menu<CreditsScreen>
+    public class SettingsScreen : Menu<SettingsScreen>
     {
         private InputAction backAction;
         public GameObject mainMenu;
 
-
         private void OnEnable()
         {
             AudioManager.instance.PlayClipAt(AudioManager.instance.allAudio["UI Open Menu"], this.transform.position, AudioManager.instance.soundEffectMixer, true, false);
-            backAction = playerInput.UI.Back; 
+            backAction = playerInput.UI.Back;
             backAction.Enable();
             backAction.performed += OnBackPressedAction;
         }
@@ -27,6 +26,7 @@ namespace LevelManagement
 
         private void OnBackPressedAction(InputAction.CallbackContext context)
         {
+            AudioManager.instance.PlayClipAt(AudioManager.instance.allAudio["UI Close Menu"], this.transform.position, AudioManager.instance.soundEffectMixer, true, false);
             mainMenu.SetActive(true);
             gameObject.SetActive(false);
         }
