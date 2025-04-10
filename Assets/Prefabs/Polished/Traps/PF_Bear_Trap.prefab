@@ -14,7 +14,6 @@ GameObject:
   - component: {fileID: 7912455985782425088}
   - component: {fileID: 7714718285427980929}
   - component: {fileID: 5832484265771115712}
-  - component: {fileID: 2030744024683269050}
   m_Layer: 8
   m_Name: PF_Bear_Trap
   m_TagString: TRAP
@@ -121,20 +120,6 @@ MonoBehaviour:
   circleSegments: 30
   drawInPlayMode: 1
   lineWidth: 0.1
---- !u!114 &2030744024683269050
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 5772873612793821327}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 9c7ff51a24b3ddc418ebce0372424b81, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  _director: {fileID: 3871294143600945987}
-  _asset: {fileID: 11400000, guid: 886ce52130270644a815927d9a5c773d, type: 2}
 --- !u!1001 &615534876524553593
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -535,7 +520,7 @@ PlayableDirector:
   m_GameObject: {fileID: 6863123381835459259}
   m_Enabled: 1
   serializedVersion: 3
-  m_PlayableAsset: {fileID: 11400000, guid: 5dec4dd2afe90fa47b3f4f71c1682128, type: 2}
+  m_PlayableAsset: {fileID: 11400000, guid: 886ce52130270644a815927d9a5c773d, type: 2}
   m_InitialState: 1
   m_WrapMode: 2
   m_DirectorUpdateMode: 1

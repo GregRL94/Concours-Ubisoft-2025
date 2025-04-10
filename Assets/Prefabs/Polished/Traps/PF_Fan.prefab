@@ -102,7 +102,7 @@ MonoBehaviour:
   musicName: Trap Bump
   _tagName: ENEMY
   collideType: 1
-  actionType: 1
+  actionType: 0
 --- !u!114 &1875852629700500061
 MonoBehaviour:
   m_ObjectHideFlags: 0
