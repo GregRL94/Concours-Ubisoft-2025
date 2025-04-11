@@ -311,8 +311,8 @@ public class RobberBehaviour : BTAgent
         _robberAgent.isStopped = true;
         _rb.angularVelocity = Vector3.zero;
         _rb.velocity = Vector3.zero;
-        //lance l'animation vulnerable
-        _animator.SetBool("EstPieger", true);        
+        ////lance l'animation vulnerable
+        //_animator.SetBool("EstPieger", true);        
     }
 
     public void StopVunerableState()
@@ -322,8 +322,8 @@ public class RobberBehaviour : BTAgent
         _robberAgent.speed = _vBase;
         _currentVision = _radialVision;
         _robberAgent.isStopped = false;
-        //animation vulnerable fini
-        _animator.SetBool("EstPieger", false);
+        ////animation vulnerable fini
+        //_animator.SetBool("EstPieger", false);
     }
 
     public void StartFleeState()

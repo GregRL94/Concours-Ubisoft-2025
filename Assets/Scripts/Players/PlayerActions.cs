@@ -168,10 +168,11 @@ public class PlayerActions : MonoBehaviour
         else
         {
             _currentTrap = Instantiate(_trapsDict[trap].trapPrefab, previewPosition, Quaternion.identity, null);
-            _currentTrap.GetComponent<Collider>().enabled = false;
-            if (!_currentTrap.GetComponent<Collider>().enabled) // no animation while holding trap
+            _currentTrap.GetComponent<Collider>().enabled = false; // active wireframe circle 
+            _currentTrap.GetComponent<Collider>().isTrigger = false; // no trigger while in hand
+            if (!_currentTrap.GetComponent<Collider>().enabled)
             {
-                _currentTrap.transform.GetChild(0).gameObject.SetActive(false);
+                _currentTrap.transform.GetChild(0).gameObject.SetActive(false); // no animation while in hand
             }
             if (_currentTrap.GetComponent<SphereColliderWireframe>() != null) _currentTrap.GetComponent<SphereColliderWireframe>().enabled = false;
         }        
@@ -263,7 +264,7 @@ public class PlayerActions : MonoBehaviour
             }
 
             _currentTrap.GetComponent<Collider>().enabled = true;
-
+            _currentTrap.GetComponent<Collider>().isTrigger = true;
             if (_currentTrap.GetComponent<SphereColliderWireframe>() != null) _currentTrap.GetComponent<SphereColliderWireframe>().enabled = true;
             _currentTrap.GetComponentInChildren<TypeOfTrap>().TrapOwner = _playerControls.PlayerID;
             _currentTrap = null;
