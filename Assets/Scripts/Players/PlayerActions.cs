@@ -1,3 +1,4 @@
+using AkuroTools;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -15,6 +16,8 @@ public class PlayerActions : MonoBehaviour
     private Dictionary<AbilitiesEnum, GameManager.TrapData> _trapsDict;
     private GameObject _currentTrap;
     private Coroutine _trapSetupCoroutine;
+    private Animator _animator;
+    private ParticleSystem _particleSystem;
     #endregion
 
     #region MonoBehaviour Flow
@@ -23,6 +26,8 @@ public class PlayerActions : MonoBehaviour
         _gameManager = GameManager.Instance;
         _playerControls = GetComponent<PlayerControls>();
         _pAbilitiesUI = GetComponent<PlayerAbilitiesUI>();
+        _animator = GetComponentInChildren<Animator>();
+        _particleSystem = GetComponentInChildren<ParticleSystem>();
 
         GameManager.WhistleData wBase = _gameManager.WhistleBase;
         GameManager.TrapData aTBase = _gameManager.AlarmTrapBase;
@@ -66,8 +71,8 @@ public class PlayerActions : MonoBehaviour
 
         if (_currentAbility == AbilitiesEnum.NONE || _currentAbility == AbilitiesEnum.WHISTLE) { return; }
         if (_trapsDict[_currentAbility].currentCount <= 0 ) { return; }
-
-        PreviewTrap(_currentAbility, interactionPoint, _playerControls.GameGrid.NodeFromWorldPos(interactionPoint));
+        Node node = _playerControls.GameGrid.NodeFromWorldPos(interactionPoint);
+        if (node != null) { PreviewTrap(_currentAbility, interactionPoint, node); }
     }
 
     public void SelectAction(AbilitiesEnum selectedAbility)
@@ -80,6 +85,25 @@ public class PlayerActions : MonoBehaviour
         }
         _currentAbility = selectedAbility;
         Debug.Log(_currentAbility);
+        switch(selectedAbility)
+        {
+            case AbilitiesEnum.CAPTURE_TRAP:
+                _pAbilitiesUI.setupTime = GameManager.Instance.CaptureTrapBase.setupTime;
+                _pAbilitiesUI.Highlight(_playerControls.PlayerID, _pAbilitiesUI.captureTrapUI.fillImage);
+            break;
+            case AbilitiesEnum.PUSH_TRAP:
+                _pAbilitiesUI.setupTime = GameManager.Instance.PushTrapBase.setupTime;
+                _pAbilitiesUI.Highlight(_playerControls.PlayerID, _pAbilitiesUI.pushTrapUI.fillImage);
+                break;
+            case AbilitiesEnum.ALARM_TRAP:
+                _pAbilitiesUI.setupTime = GameManager.Instance.AlarmTrapBase.setupTime;
+                _pAbilitiesUI.Highlight(_playerControls.PlayerID, _pAbilitiesUI.alarmTrapUI.fillImage);
+            break;
+            case AbilitiesEnum.WHISTLE:
+                _pAbilitiesUI.Highlight(_playerControls.PlayerID, _pAbilitiesUI.whistleFillImage);
+            break;
+        }
+        
     }
 
     public void DeselectAction()
@@ -103,6 +127,11 @@ public class PlayerActions : MonoBehaviour
         if (_currentAbility != AbilitiesEnum.WHISTLE || _whistle.timer > 0f) { return; }
         // Play sound
         // Play Animation
+        _animator.SetTrigger("Siffle");
+        _particleSystem.Play();
+        if (!GameManager.Instance.TutorialManager.IsTutorialCompleted && GameManager.Instance.TutorialManager.CurrentTutorialType == UITutorialStep.WHISTLE_STEP) GameManager.Instance.UIManager.CurrentPlayerValidation.DynamicValidatePage(_playerControls.PlayerID);
+        AudioManager.instance.PlayClipAt(AudioManager.instance.allAudio["Player Whistle"], this.transform.position, AudioManager.instance.soundEffectMixer, true, false);
+
         Collider[] agents = Physics.OverlapSphere(transform.position, _whistle.whistleFleeRange, gameAgentsMask);
 
         if (agents.Length > 0)
@@ -140,6 +169,7 @@ public class PlayerActions : MonoBehaviour
         {
             _currentTrap = Instantiate(_trapsDict[trap].trapPrefab, previewPosition, Quaternion.identity, null);
             _currentTrap.GetComponent<Collider>().enabled = false;
+            if(_currentTrap.GetComponent<SphereColliderWireframe>() != null) _currentTrap.GetComponent<SphereColliderWireframe>().enabled = false;
         }        
 
         try
@@ -163,7 +193,12 @@ public class PlayerActions : MonoBehaviour
     public void StartTrapDeployment(Node deployTrapAtNode)
     {        
         if (_currentAbility == AbilitiesEnum.NONE || _currentAbility == AbilitiesEnum.WHISTLE) { return; }
+        if (!GameManager.Instance.TutorialManager.IsTutorialCompleted && GameManager.Instance.TutorialManager.CurrentTutorialType == UITutorialStep.PLACE_TRAP_STEP) GameManager.Instance.UIManager.CurrentPlayerValidation.DynamicValidatePage(_playerControls.PlayerID);
 
+        AudioManager.instance.PlayClipAt(AudioManager.instance.allAudio["Trap Placing"], this.transform.position, AudioManager.instance.soundEffectMixer, true, false);
+        _pAbilitiesUI.DeployTrapUI();
+        _animator.SetBool("installePiege", true);
+        _animator.SetTrigger("installation");
         GameManager.TrapData currentTrapData = _trapsDict[_currentAbility];
         if (currentTrapData.currentCount <= 0 || currentTrapData.timer > 0) 
         {
@@ -181,7 +216,9 @@ public class PlayerActions : MonoBehaviour
     {
         if (_trapSetupCoroutine == null) { return; }
         StopCoroutine(_trapSetupCoroutine);
+        _pAbilitiesUI.StopDeployTrapUI();
         _trapSetupCoroutine = null;
+        _animator.SetBool("installePiege", false);
         Debug.Log("Trap deployment canceled");
     }
 
@@ -199,6 +236,9 @@ public class PlayerActions : MonoBehaviour
         }
         if (trap != null && rotationDirection != 0)
         {
+            if (!GameManager.Instance.TutorialManager.IsTutorialCompleted && GameManager.Instance.TutorialManager.CurrentTutorialType == UITutorialStep.ROTATE_STRAP_STEP) GameManager.Instance.UIManager.CurrentPlayerValidation.DynamicValidatePage(_playerControls.PlayerID);
+            AudioManager.instance.PlayClipAt(AudioManager.instance.allAudio["Trap Turning"], this.transform.position, AudioManager.instance.soundEffectMixer, true, false);
+
             trap.transform.Rotate(new Vector3(0f, rotationDirection * 90f, 0f));
         }
     }
@@ -219,6 +259,7 @@ public class PlayerActions : MonoBehaviour
             }
 
             _currentTrap.GetComponent<Collider>().enabled = true;
+            if(_currentTrap.GetComponent<SphereColliderWireframe>() != null) _currentTrap.GetComponent<SphereColliderWireframe>().enabled = true;
             _currentTrap.GetComponentInChildren<TypeOfTrap>().TrapOwner = _playerControls.PlayerID;
             _currentTrap = null;
             _playerControls.GameGrid.UpdateNode(dropAtNode);
@@ -240,6 +281,7 @@ public class PlayerActions : MonoBehaviour
     IEnumerator TrapSetupTimer(float setupTime, Node trapAtNode)
     {
         yield return new WaitForSeconds(setupTime);
+        _animator.SetBool("installePiege", false);
         DropTrap(trapAtNode);
     }
     #endregion

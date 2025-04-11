@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.InputSystem;
+using UnityEngine.InputSystem.Users;
 
 public class PlayerControls : MonoBehaviour
 {
@@ -14,7 +15,8 @@ public class PlayerControls : MonoBehaviour
     [SerializeField] private PlayerEnum _playerID;
     [SerializeField, Range(0f, 10f)] private float _raycastStartDistance;
     [SerializeField, Range(0f, 10f)] private float _interactionDistance;
-    [SerializeField] private LayerMask _gameAgentsMask;
+    [SerializeField] private LayerMask _trapsMask;
+    [SerializeField] private LayerMask _robberMask;
     [Space]
     [Header("ABILITIES BINDING")]
     [SerializeField] private AbilitiesEnum _rJoystickUPBind;
@@ -40,11 +42,14 @@ public class PlayerControls : MonoBehaviour
     private Rigidbody _rb;
     private Vector2 _leftJoystickInput;
     private Vector3 _leftjoystickVirtualPoint;
+    private Animator _animator;
 
     private readonly float _joystickPointDisplayDistance = 2f;
 
     public PlayerEnum PlayerID => _playerID;
     public GameGrid GameGrid => _gameGrid;
+
+    private Gamepad _gamepad; 
     #endregion
 
     #region MonoBehaviour Flow
@@ -67,10 +72,30 @@ public class PlayerControls : MonoBehaviour
             [R_JoystickDirection.NONE] = AbilitiesEnum.NONE,
         };
         _rb = GetComponent<Rigidbody>();
+        _animator = GetComponentInChildren<Animator>();
         EnablePlayerInputs(true);
         _currentNode = _gameGrid.NodeFromWorldPos(transform.position);
         _previousNode = _currentNode;
         _gameGrid.UpdateNode(_currentNode);
+    }
+
+    public void Initialize(PlayerEnum id, Gamepad assignedGamepad)
+    {
+        _playerID = id;
+        _gamepad = assignedGamepad;
+
+        var playerInput = GetComponent<PlayerInput>();
+
+        // Unpair Controllers
+        playerInput.user.UnpairDevices();
+
+        // Match controllers from Player Character Selection
+        InputUser.PerformPairingWithDevice(assignedGamepad, playerInput.user);
+
+        // Active schemes from each respective gamepad 
+        playerInput.SwitchCurrentControlScheme("Gamepad", assignedGamepad);
+
+        Debug.Log($"{_playerID} a été initialisé avec {_gamepad.displayName} sur {gameObject.name}");
     }
 
     private void FixedUpdate()
@@ -80,6 +105,10 @@ public class PlayerControls : MonoBehaviour
         _leftjoystickVirtualPoint = new Vector3(transform.position.x + _leftJoystickInput.x * _joystickPointDisplayDistance, transform.position.y, transform.position.z + _leftJoystickInput.y * _joystickPointDisplayDistance);
         transform.rotation = Quaternion.LookRotation(Vector3.RotateTowards(transform.forward, _leftjoystickVirtualPoint - transform.position, _rotationSpeed * Time.deltaTime, 0.0f));
         _rb.velocity = joystickInputMagnitude * _speed * transform.forward;
+
+        //Gestion de l'animation de marche
+        _animator.SetBool("EstEnMouvement", _rb.velocity.magnitude > 0f);
+        _animator.SetFloat("Mouvement", joystickInputMagnitude);
 
         Node node = _gameGrid.NodeFromWorldPos(transform.position);
 
@@ -101,7 +130,7 @@ public class PlayerControls : MonoBehaviour
 
         Ray ray = new Ray(raycastStartPoint, transform.forward);
 
-        if (Physics.Raycast(ray, out RaycastHit hit, _interactionDistance, _gameAgentsMask))
+        if (Physics.Raycast(ray, out RaycastHit hit, _interactionDistance, _trapsMask))
         {
             if (hit.collider.gameObject.CompareTag("TRAP"))
             {
@@ -142,6 +171,7 @@ public class PlayerControls : MonoBehaviour
     #region Movement
     public void Movement(InputAction.CallbackContext context)
     {
+        if (!GameManager.Instance.TutorialManager.IsTutorialCompleted && GameManager.Instance.TutorialManager.CurrentTutorialType == UITutorialStep.MOVE_STEP) GameManager.Instance.UIManager.CurrentPlayerValidation.DynamicValidatePage(_playerID);
         _leftJoystickInput = context.ReadValue<Vector2>();        
     }
 
@@ -187,7 +217,7 @@ public class PlayerControls : MonoBehaviour
 
     private void Whistle(InputAction.CallbackContext context)
     {
-        _playerActions.PerformWhistle(_gameAgentsMask);
+        _playerActions.PerformWhistle(_robberMask);
     }
     #endregion
 
@@ -206,6 +236,13 @@ public class PlayerControls : MonoBehaviour
     {
         _playerActions.RotateTrap(context.ReadValue<float>(), _currentTrap);
     }
+
+    private void OnUIValidatePage(InputAction.CallbackContext context)
+    {
+        if (GameManager.Instance.TutorialManager.CurrentTutorialType != UITutorialStep.TALK_STEP && !GameManager.Instance.UIManager.CurrentPlayerValidation.SimpleValidate) return;
+        if (GameManager.Instance.UIManager.CurrentPlayerValidation == null) return;
+        GameManager.Instance.UIManager.CurrentPlayerValidation.DynamicValidatePage(_playerID);
+    }
     #endregion
 
     #region Enable & Disable
@@ -213,6 +250,7 @@ public class PlayerControls : MonoBehaviour
     {
         InputAction movementAction = _playerControls.FindAction("Movement");
         InputAction actionActivation = _playerControls.FindAction("ActionActivation");
+        InputAction actionUIValidate = _playerControls.FindAction("UIValidate");
 
         if (enableState)
         {
@@ -225,6 +263,8 @@ public class PlayerControls : MonoBehaviour
             actionActivation.started += OnStartTrapDeployment;
             actionActivation.canceled += OnCancelTrapDeployment;
             _playerControls.FindAction("TrapRotation").performed += OnRotateTrap;
+
+            actionUIValidate.performed += OnUIValidatePage;
         }
         else
         {
@@ -236,6 +276,8 @@ public class PlayerControls : MonoBehaviour
             actionActivation.started -= OnStartTrapDeployment;
             actionActivation.canceled -= OnCancelTrapDeployment;
             _playerControls.FindAction("TrapRotation").performed -= OnRotateTrap;
+            
+            actionUIValidate.performed -= OnUIValidatePage;
             _playerControls.Disable();
         }
 

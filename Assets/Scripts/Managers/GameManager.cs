@@ -1,9 +1,13 @@
+using AkuroTools;
 using System;
 using System.Collections;
 using System.Collections.Generic;
 using TMPro;
+using Unity.VisualScripting;
+using UnityEditor;
 using UnityEngine;
 using UnityEngine.Rendering;
+using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 
 public class GameManager : MonoBehaviour
@@ -28,7 +32,7 @@ public class GameManager : MonoBehaviour
     {
         public GameObject trapPrefab;
         [Range(0f, 10f)] public float setupTime;
-        [Range(0, 5)] public int initialCount;
+        [Range(0, 10)] public int initialCount;
         [Range(0f, 10f)] public float cooldown;
         [HideInInspector] public TextMeshProUGUI countText;
         [HideInInspector] public Image fillImage;
@@ -78,13 +82,20 @@ public class GameManager : MonoBehaviour
     private TrapManager _trapManager;
     [SerializeField]
     private UIManager _uiManager;
+    [SerializeField]
+    private TutorialManager _tutorialManager;
 
     [Header("Metrics")]
-    [SerializeField]
+    [Range(0,13)][SerializeField]
     private int _maxPlayersReputation = 10;
+    const int _minPlayersReputation = -4;
     [SerializeField]
     private Rounds _roundsParameter;
     public Rounds RoundParameter => _roundsParameter;
+
+    [SerializeField]
+    private Color[] _playerColor;
+    public Color[] PlayerColor => _playerColor;
 
     [Header("-- ABILITIES --")]
     [Header("Whistle")]
@@ -109,77 +120,234 @@ public class GameManager : MonoBehaviour
     private PlayerControls[] _players;
     [SerializeField]
     private PlayerReputation[] _playersReputation;
-    
+    //[SerializeField]
+    //private TextMeshProUGUI _timerText;
+
     //getter
     public PlayerControls[] Players => _players;
     public MuseumObjectsManager MuseumObjectsManager => _museumObjectManager;
     public RobberManager RobberManager => _robberManager;
     public TrapManager TrapManager => _trapManager;
     public UIManager UIManager => _uiManager;
+    public TutorialManager TutorialManager => _tutorialManager;
 
 
-    public static GameManager Instance;
-
+    [Header("Round Metrics")]
+    [SerializeField]
+    private int showTimeBeforeRoundEnd = 5;
     private Coroutine _preStartRoundCoroutine;
     private Coroutine _startRoundCoroutine;
-    private void Awake()
+    private bool _endGame = false;
+    public bool EndGame => _endGame;
+
+
+    public static GameManager Instance { get; private set; }
+    void Awake()
     {
+        DetachGameManager();
+
         if (Instance == null)
+        {
             Instance = this;
+            DontDestroyOnLoad(gameObject);
+        }
         else
             Destroy(this.gameObject);
+
     }
-    // Start is called before the first frame update
+    void OnEnable()
+    {
+        SceneManager.sceneLoaded += OnSceneLoaded;
+    }
+
+    void OnDisable()
+    {
+        SceneManager.sceneLoaded -= OnSceneLoaded;
+    }
+    void OnApplicationQuit()
+    {
+        print("Reset Player Points on Quit");
+        GameData.ResetPlayerPoints();
+    }
+
+    void OnSceneLoaded(Scene scene, LoadSceneMode mode)
+    {
+        if(SceneManager.GetActiveScene().buildIndex > 2) // After Player Character Selection Scene
+        {
+            AssignManagers();
+            InitializePlayers();
+
+            UIManager.CreatePlayersReputationUI(_maxPlayersReputation, _minPlayersReputation, _playersReputation);
+        }
+        else
+        {
+            Destroy(gameObject); // if return to main menu destroy GameManager
+        }
+    }
+    public void StartGameLoop()
+    {
+        // Start gameplay loop
+        _endGame = false;
+        if (_preStartRoundCoroutine != null) StopCoroutine(_preStartRoundCoroutine);
+        _preStartRoundCoroutine = StartCoroutine(PreStartRound(_roundsParameter.timeBeforeRoundStart));
+    }
+
+    void DetachGameManager()
+    {
+        if (transform.childCount > 0)
+        {
+            // Store all children before detaching to avoid modification issues during iteration
+            List<Transform> children = new List<Transform>();
+
+            foreach (Transform child in transform)
+            {
+                children.Add(child);
+            }
+
+            // Detach each child
+            foreach (Transform child in children)
+            {
+                child.SetParent(null); // Removes the parent-child relationship
+            }
+        }
+    }
+
     void Start()
     {
-        InitializePlayers();
+        StartGame();
+    }
 
-        //start gameplay loop
-        _preStartRoundCoroutine = StartCoroutine(PreStartRound(_roundsParameter.timeBeforeRoundStart));
+    void StartGame()
+    {
+        if (PlayerInfo.Instance == null) return;
+        var players = FindObjectsOfType<PlayerControls>();
+
+        foreach (var player in players)
+        {
+            if (player.PlayerID == PlayerEnum.PLAYER1)
+                player.Initialize(PlayerEnum.PLAYER1, PlayerInfo.Instance.player1Gamepad);
+            else if (player.PlayerID == PlayerEnum.PLAYER2)
+                player.Initialize(PlayerEnum.PLAYER2, PlayerInfo.Instance.player2Gamepad);
+        }
+    }
+
+    private void AssignManagers()
+    {
+        if(!_museumObjectManager) _museumObjectManager = FindAnyObjectByType<MuseumObjectsManager>();
+        if(!_robberManager)_robberManager = FindAnyObjectByType<RobberManager>();
+        if(!_trapManager)_trapManager = FindAnyObjectByType<TrapManager>();
+        if(!_uiManager)_uiManager = FindAnyObjectByType<UIManager>();
+        if(!_tutorialManager) _tutorialManager = FindAnyObjectByType<TutorialManager>();
     }
 
     private void InitializePlayers()
     {
         _players = FindObjectsOfType<PlayerControls>();
-        _playersReputation = new PlayerReputation[_players.Length];
-        //sort player depending on its id
-        PlayerControls[] playersSorted = new PlayerControls[_players.Length];
-        for (int i = 0; i < _players.Length; i++)
+        int playerCount = _players.Length;
+        if(GameData.FirstRound) _playersReputation = new PlayerReputation[playerCount];
+
+        PlayerControls[] playersSorted = new PlayerControls[playerCount];
+
+        for (int i = 0; i < playerCount; i++)
         {
-            if ((int)_players[i].PlayerID - 1 < 0) continue;
-            playersSorted[(int)_players[i].PlayerID - 1] = _players[i];
-            //initialize player reputation
-            _playersReputation[i].reputationValue = _maxPlayersReputation;
+            int playerIndex = (int)_players[i].PlayerID - 1;
+            if (playerIndex < 0 || playerIndex >= playerCount) continue;
+
+            playersSorted[playerIndex] = _players[i];
+
+
+            if (GameData.FirstRound)
+            {
+                _playersReputation[i] = new PlayerReputation
+                {
+                    reputationValue = GameData.FirstRound ? _maxPlayersReputation :
+                                    (playerIndex == 0 ? GameData.p1Point : GameData.p2Point)
+                };
+                if (playerIndex == 0) GameData.p1Point = _maxPlayersReputation;
+                else GameData.p2Point = _maxPlayersReputation;
+            }
         }
+
         _players = playersSorted;
+
+        //print($"P1 {_playersReputation[0].reputationValue} | P2 {_playersReputation[1].reputationValue} in scene on Loaded!");
     }
 
-    #region Rounds management
+
+    #region Rounds Management
     private IEnumerator PreStartRound(float time)
     {
-        yield return new WaitForSeconds(time);
+        float timer = time;
+        GameManager.Instance.UIManager.CreateListOfMuseumArtefactsUI(GameManager.Instance.RobberManager.StealObjectList);
+        while (timer > 0)
+        {
+            _uiManager.ShowUIRoundCountdown((int)timer);
+            yield return new WaitForSeconds(1);
+            timer--;
+        }
         if (_startRoundCoroutine != null)
         {
             StopCoroutine(_startRoundCoroutine);
             _startRoundCoroutine = null;
         }
-        _startRoundCoroutine = StartCoroutine(StartRound(_roundsParameter.roundTime));
+        _uiManager.ShowUIRoundCountdown(0);
+
+        _startRoundCoroutine = StartCoroutine(StartRound(_roundsParameter.roundTime, _roundsParameter.roundTime - showTimeBeforeRoundEnd)); 
     }
-    private IEnumerator StartRound(float time)
+    private IEnumerator StartRound(float time, float timeLeftWarning)
     {
         _roundsParameter.hasRoundStarted = true;
         _robberManager.SpawnRobber();
-        yield return new WaitForSeconds(time);
+        AudioManager.instance.PlayClipAt(AudioManager.instance.allAudio["Round Start"], this.transform.position, AudioManager.instance.soundEffectMixer, true, false);
+
+        yield return new WaitForSeconds(timeLeftWarning);
+
+        if (_endGame) yield break; // game already ended by capturing thief or thief stolen everything 
+        for (int i = 0; i < time - timeLeftWarning ; i++)
+        {
+            int timeLeft = (int)((int)time - timeLeftWarning - i);
+            _uiManager.ShowUIRoundCountdown(timeLeft);
+            yield return new WaitForSeconds(1);
+            print(Time.time);
+        }
+
+        //todo: Audio - For Round Finished
+        AudioManager.instance.PlayClipAt(AudioManager.instance.allAudio["Round End"], this.transform.position, AudioManager.instance.soundEffectMixer, true, false);
+        AudioManager.instance.OriginalMusicSpeed();
+
         _roundsParameter.hasRoundStarted = false;
         _robberManager.DispawnRobber();
-        if (_preStartRoundCoroutine != null)
-        {
-            StopCoroutine(_preStartRoundCoroutine);
-            _preStartRoundCoroutine = null;
-        }
-        _preStartRoundCoroutine = StartCoroutine(PreStartRound(_roundsParameter.timeBeforeRoundStart));
+
+        _uiManager.ShowReputationBoard(_playersReputation, _maxPlayersReputation, _minPlayersReputation);
+    
+
+        //if (_preStartRoundCoroutine != null)
+        //{
+        //    StopCoroutine(_preStartRoundCoroutine);
+        //    _preStartRoundCoroutine = null;
+        //}
+        //_preStartRoundCoroutine = StartCoroutine(PreStartRound(_roundsParameter.timeBeforeRoundStart));
     }
     #endregion
+
+    private void Update()
+    {
+        CheckEndRound();
+    }
+    public void CheckEndRound()
+    {
+        if ((ValidateMuseumEmpty() || UIManager.GetCurrentCaptureThiefAmount >= UIManager.GetmaxCaptureThiefAmount) && !_endGame)
+        {
+            _endGame = true;
+            AudioManager.instance.PlayClipAt(AudioManager.instance.allAudio["Round End"], this.transform.position, AudioManager.instance.soundEffectMixer, true, false);
+            AudioManager.instance.OriginalMusicSpeed();
+            UIManager.ShowReputationBoard(_playersReputation, _maxPlayersReputation, _minPlayersReputation);
+            _robberManager.DispawnRobber();
+            _roundsParameter.hasRoundStarted = false;
+
+        }
+    }
+
 
     //make a player lose reputation
     //check if player is registered in player list
@@ -187,14 +355,41 @@ public class GameManager : MonoBehaviour
     public void LosePlayerReputation(PlayerEnum playerIndex, int loseValue)
     {
         int index = (int)playerIndex;
-        if (index < 0) return;
+        if (index <= 0) return;
         if (index > _players.Length) return;
         _playersReputation[index - 1].reputationValue -= loseValue;
         Debug.Log($"{_players[index - 1].name} has lose {loseValue}, and is now at {_playersReputation[index - 1].reputationValue} reputation !");
-        if (_playersReputation[index - 1].reputationValue > 0) return;
-        _playersReputation[index - 1].isEliminated = true;
-        CheckPlayersElimination();
+
+        //if (_playersReputation[index - 1].reputationValue > 0) return;
+        //_playersReputation[index - 1].isEliminated = true;
+        //CheckPlayersElimination();
     }
+
+
+    // Determine which player did catch the thief at 100%
+    // Opposite player loses a point at the end of the round
+    public void LosePlayerReputationByCapturingThief(PlayerEnum playerIndex, int loseValue)
+    {
+        int index = (int)playerIndex;
+        if (index < 0 || index > _players.Length) return;
+
+        // Oppose player -1 point (by index) to its reputation if the adversary captured at last the thief
+        if (index == (int)PlayerEnum.PLAYER1)
+        {
+            index++;
+            UIManager.WhichPlayerCapturedThiefUI("by P1");
+        }
+        else if (index == (int)PlayerEnum.PLAYER2) 
+        {
+            index--;
+            UIManager.WhichPlayerCapturedThiefUI("by P2");
+        } 
+        else Debug.Log("Player ID NULL");
+
+        _playersReputation[index - 1].reputationValue -= loseValue;
+        
+    }
+
 
     //make all other players lose reputation
     //using this with robber capture
@@ -207,6 +402,7 @@ public class GameManager : MonoBehaviour
             LosePlayerReputation((PlayerEnum)i + 1, loseValue);
         }
     }
+
 
     //check all players reputation
     //when there is only one player not eliminated, make that one player win
@@ -232,5 +428,12 @@ public class GameManager : MonoBehaviour
 
         if (eliminatedValue >= _playersReputation.Length)
             Debug.Log("It's a DRAW !");
+    }
+
+
+    //Check if museum has any remaining  artefacts
+    public bool ValidateMuseumEmpty()
+    {
+        return _museumObjectManager.IsAllObjectsStealed();
     }
 }

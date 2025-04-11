@@ -1,11 +1,14 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.VFX;
 
 public class TypeOfTrap : MonoBehaviour, ITrap
 {
     [SerializeField] AbilitiesEnum selectedTrap;
     [SerializeField] private PlayerEnum trapOwner;
+    [SerializeField] private ParticleSystem _particleSystem;
+    [SerializeField] private VisualEffect _optionalVisualEffect;
 
     public PlayerEnum TrapOwner
     {
@@ -19,19 +22,19 @@ public class TypeOfTrap : MonoBehaviour, ITrap
         trap = GetComponent<ITrap>();
     }
 
-    public void ActivateTrap()
+    public void ActivateTrap(Transform tr)
     {
         if(selectedTrap == AbilitiesEnum.ALARM_TRAP)
         {
-            GameManager.Instance.TrapManager.TriggerAlarmTrap();
+            GameManager.Instance.TrapManager.TriggerAlarmTrap(tr);
         }
         else if (selectedTrap == AbilitiesEnum.PUSH_TRAP)
         {
-            GameManager.Instance.TrapManager.TriggerPushTrap();
+            GameManager.Instance.TrapManager.TriggerPushTrap(tr);
         }
         else if (selectedTrap == AbilitiesEnum.CAPTURE_TRAP)
         {
-            GameManager.Instance.TrapManager.TriggerCaptureTrap();
+            GameManager.Instance.TrapManager.TriggerCaptureTrap(trapOwner,tr);
         }
     }
 
@@ -39,7 +42,15 @@ public class TypeOfTrap : MonoBehaviour, ITrap
     {
         if (other.CompareTag("ENEMY"))
         {
-            trap.ActivateTrap();
+            trap.ActivateTrap(transform);
+            if (_particleSystem != null)
+            {
+                _particleSystem.Play();
+            }
+            else if (_optionalVisualEffect != null)
+            {
+                _optionalVisualEffect.Play();
+            }
         }
     }
 }

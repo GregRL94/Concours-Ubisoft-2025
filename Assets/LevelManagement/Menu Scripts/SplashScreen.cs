@@ -1,6 +1,7 @@
 ﻿using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.InputSystem;
+using UnityEngine.InputSystem.Controls;
 
 namespace LevelManagement
 {
@@ -13,6 +14,8 @@ namespace LevelManagement
         [SerializeField]
         private float delay;
 
+        private bool _isFading = false;
+
         private void Awake()
         {
             _screenFader = GetComponent<ScreenFader>();
@@ -23,6 +26,15 @@ namespace LevelManagement
             _screenFader.FadeOn();
         }
 
+        private void Update()
+        {
+            if (!_isFading && AnyGamepadButtonPressed())
+            {
+                _isFading = true;
+                FadeAndLoad();
+            }
+        }
+
         public void FadeAndLoad()
         {
             StartCoroutine(FadeAndLoadRoutine());
@@ -30,15 +42,23 @@ namespace LevelManagement
 
         private IEnumerator FadeAndLoadRoutine()
         {
-            print("delay "+ delay);
-            yield return new WaitForSeconds(delay); // before when clicked splash screen
+            yield return new WaitForSeconds(delay);
             _screenFader.FadeOff();
             LevelLoader.LoadMainMenuLevel();
-
-            yield return new WaitForSeconds(_screenFader.FadeOffDuration); // wait x second till splash screen disappears
-
+            yield return new WaitForSeconds(_screenFader.FadeOffDuration);
             Destroy(gameObject);
+        }
 
+        private bool AnyGamepadButtonPressed()
+        {
+            if (Gamepad.current == null) return false;
+
+            foreach (var control in Gamepad.current.allControls)
+            {
+                if (control is ButtonControl button && button.isPressed)
+                    return true;
+            }
+            return false;
         }
     }
 }

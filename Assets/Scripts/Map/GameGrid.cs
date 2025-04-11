@@ -17,7 +17,7 @@ public class GameGrid : MonoBehaviour
     [Space]
     [Header("GAME OBJECTS LAYER MASK")]
     [SerializeField] private LayerMask playerZonesMask;
-    [SerializeField] private LayerMask gameAgentsMask;
+    [SerializeField] private LayerMask _gameObjectsMask;
 
     private Node[,] gameGrid;
     private int gameGridSizeX;
@@ -100,13 +100,15 @@ public class GameGrid : MonoBehaviour
     {
         int i = Mathf.FloorToInt(worldPos.x) / (int)nodeDiameter;
         int j = Mathf.FloorToInt(worldPos.z) / (int)nodeDiameter;
-
+        //return null if pos not in grid
+        if (i > gameGrid.GetLength(0) - 1 || j > gameGrid.GetLength(1) - 1) return null;
+        if (i < 0 || j < 0) return null;
         return gameGrid[i, j];
-    }    
+    }
 
     private bool IsNodeFree(Vector3 worldPos)
     {        
-        if (Physics.OverlapBox(worldPos, Vector3.one * (nodeRadius - nodeFreeTolerance * nodeRadius), Quaternion.identity, gameAgentsMask).Length > 0)
+        if (Physics.OverlapBox(worldPos, Vector3.one * (nodeRadius - nodeFreeTolerance * nodeRadius), Quaternion.identity, _gameObjectsMask).Length > 0)
         {
             return false;
         }

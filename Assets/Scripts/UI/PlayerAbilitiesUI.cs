@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using TMPro;
 using UnityEngine.UI;
+using Unity.VisualScripting;
 
 #region Action For Player Ability UI (Test)
 //public class PlayerAbilitiesUI : MonoBehaviour
@@ -79,6 +80,161 @@ public class PlayerAbilitiesUI : MonoBehaviour
 
     [SerializeField] private Color defaultWarningColor = Color.white;
     public Color DefaultWarningColor => defaultWarningColor;
+
+    [Header("Selection Displays")]
+    public GameObject selection;
+
+    public float speed = 0.15f;
+    public float scaleAmount = 0.05f;
+    private Vector3 initialScale;
+
+    [Header("UI & Trap Settings")]
+    public GameObject trapUI;
+    public Image fillImage;
+    public float setupTime = 2f;
+
+    [Header("Feedback")]
+    public AudioSource audioSource;
+    public AudioClip chargingSound;
+    public AudioClip completeSound;
+    public ParticleSystem completeEffect;
+
+    private Coroutine trapCoroutine;
+
+    void Start()
+    {
+        if (selection != null)
+        {
+            initialScale = selection.transform.localScale;
+        }
+    }
+    void Update()
+    {
+        HighlightAnimation();
+
+        //if (Input.GetKeyDown(KeyCode.A))
+        //{
+        //    Highlight(PlayerEnum.PLAYER1, alarmTrapUI.fillImage);
+        //}
+        //if (Input.GetKeyDown(KeyCode.S))
+        //{
+        //    Highlight(PlayerEnum.PLAYER1, pushTrapUI.fillImage);
+        //}
+        //if (Input.GetKeyDown(KeyCode.D))
+        //{
+        //    Highlight(PlayerEnum.PLAYER1, captureTrapUI.fillImage);
+        //}
+        //if (Input.GetKeyDown(KeyCode.F))
+        //{
+        //    Highlight(PlayerEnum.PLAYER1, whistleFillImage);
+        //}
+
+        /*if (Input.GetKeyDown(KeyCode.X))
+        {
+            trapCoroutine = StartCoroutine(HandleTrapDeployment());
+        }
+
+        if (Input.GetKeyUp(KeyCode.X))
+        {
+            if (trapCoroutine != null)
+            {
+                StopCoroutine(trapCoroutine);
+                trapCoroutine = null;
+
+                ResetUI();
+            }
+        }*/
+    }
+
+    public void DeployTrapUI() => trapCoroutine = StartCoroutine(HandleTrapDeployment());
+    public void StopDeployTrapUI()
+    {
+        if (trapCoroutine != null)
+        {
+            StopCoroutine(trapCoroutine);
+            trapCoroutine = null;
+
+            ResetUI();
+        }
+    }
+    public void Highlight(PlayerEnum currentSelection,Image fillImage)
+    {
+        if(currentSelection == PlayerEnum.PLAYER1)
+        {
+            SelectionUI(fillImage);
+        }
+        else if(currentSelection == PlayerEnum.PLAYER2)
+        {
+            SelectionUI(fillImage);
+        }
+        else if(currentSelection == PlayerEnum.NONE)
+        {
+            SelectionUI(fillImage);
+        }
+    }
+    #region Trap Deployment Feedback UI
+    
+
+
+    private IEnumerator HandleTrapDeployment()
+    {
+        float elapsedTime = 0f;
+        fillImage.fillAmount = 0f;
+
+        trapUI.SetActive(true);
+
+        if (audioSource && chargingSound)
+            audioSource.PlayOneShot(chargingSound);
+
+        // progress trap deployment
+        while (elapsedTime < setupTime)
+        {
+            elapsedTime += Time.deltaTime;
+            fillImage.fillAmount = Mathf.Clamp01(elapsedTime / setupTime);
+            yield return null;
+        }
+
+        if (elapsedTime >= setupTime)
+        {
+            fillImage.fillAmount = 1f;
+
+            if (audioSource && completeSound)
+                audioSource.PlayOneShot(completeSound);
+
+            if (completeEffect)
+                completeEffect.Play();
+
+            Debug.Log("Piège prêt !");
+        }
+
+        trapUI.SetActive(false);
+    }
+
+    private void ResetUI()
+    {
+        trapUI.SetActive(false);
+        fillImage.fillAmount = 0f;
+    }
+
+    #endregion
+
+    #region Selection UI / Update Animation
+    private void SelectionUI(Image fillImage)
+    {
+        // Selection
+        Transform abilityUIPos = fillImage.transform.parent;
+        selection.transform.position = abilityUIPos.position;
+    }
+    public void HighlightAnimation()
+    {
+        if (selection != null)
+        {
+            float scaleFactor = 1 + Mathf.PingPong(Time.time * speed, scaleAmount);
+            selection.transform.localScale = initialScale * scaleFactor;
+        }
+    }
+    #endregion
+
     #region Update Text UI 
     public void UpdateAbilityCountText(TextMeshProUGUI countText, int count)
     {

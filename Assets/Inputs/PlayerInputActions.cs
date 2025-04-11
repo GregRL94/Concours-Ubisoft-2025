@@ -71,6 +71,15 @@ public partial class @PlayerInputActions: IInputActionCollection2, IDisposable
                     ""processors"": """",
                     ""interactions"": """",
                     ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""UIValidate"",
+                    ""type"": ""Button"",
+                    ""id"": ""25f1bd32-2885-4265-bc21-4f708bb07e55"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
                 }
             ],
             ""bindings"": [
@@ -238,6 +247,56 @@ public partial class @PlayerInputActions: IInputActionCollection2, IDisposable
                     ""action"": ""Movement"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": true
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""93ada3b4-59ee-43d4-be3e-147749bc42ff"",
+                    ""path"": ""<Gamepad>/buttonSouth"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": ""Gamepad"",
+                    ""action"": ""UIValidate"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""51147d7f-c893-4d03-8093-bc19dcb22888"",
+                    ""path"": ""<Keyboard>/q"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": ""Keyboard"",
+                    ""action"": ""UIValidate"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                }
+            ]
+        },
+        {
+            ""name"": ""UI"",
+            ""id"": ""397735e4-d6f8-4e15-ad96-4ed15b298bf8"",
+            ""actions"": [
+                {
+                    ""name"": ""Back"",
+                    ""type"": ""Button"",
+                    ""id"": ""1875baff-c6e6-40fd-816c-a41fb3fe1d6d"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
+                }
+            ],
+            ""bindings"": [
+                {
+                    ""name"": """",
+                    ""id"": ""e8b8abd8-8491-4d62-8127-3701ee492bfa"",
+                    ""path"": ""<Gamepad>/buttonEast"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""Back"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
                 }
             ]
         }
@@ -274,6 +333,10 @@ public partial class @PlayerInputActions: IInputActionCollection2, IDisposable
         m_PlayerControls_ActionDeselection = m_PlayerControls.FindAction("ActionDeselection", throwIfNotFound: true);
         m_PlayerControls_ActionActivation = m_PlayerControls.FindAction("ActionActivation", throwIfNotFound: true);
         m_PlayerControls_TrapRotation = m_PlayerControls.FindAction("TrapRotation", throwIfNotFound: true);
+        m_PlayerControls_UIValidate = m_PlayerControls.FindAction("UIValidate", throwIfNotFound: true);
+        // UI
+        m_UI = asset.FindActionMap("UI", throwIfNotFound: true);
+        m_UI_Back = m_UI.FindAction("Back", throwIfNotFound: true);
     }
 
     public void Dispose()
@@ -340,6 +403,7 @@ public partial class @PlayerInputActions: IInputActionCollection2, IDisposable
     private readonly InputAction m_PlayerControls_ActionDeselection;
     private readonly InputAction m_PlayerControls_ActionActivation;
     private readonly InputAction m_PlayerControls_TrapRotation;
+    private readonly InputAction m_PlayerControls_UIValidate;
     public struct PlayerControlsActions
     {
         private @PlayerInputActions m_Wrapper;
@@ -349,6 +413,7 @@ public partial class @PlayerInputActions: IInputActionCollection2, IDisposable
         public InputAction @ActionDeselection => m_Wrapper.m_PlayerControls_ActionDeselection;
         public InputAction @ActionActivation => m_Wrapper.m_PlayerControls_ActionActivation;
         public InputAction @TrapRotation => m_Wrapper.m_PlayerControls_TrapRotation;
+        public InputAction @UIValidate => m_Wrapper.m_PlayerControls_UIValidate;
         public InputActionMap Get() { return m_Wrapper.m_PlayerControls; }
         public void Enable() { Get().Enable(); }
         public void Disable() { Get().Disable(); }
@@ -373,6 +438,9 @@ public partial class @PlayerInputActions: IInputActionCollection2, IDisposable
             @TrapRotation.started += instance.OnTrapRotation;
             @TrapRotation.performed += instance.OnTrapRotation;
             @TrapRotation.canceled += instance.OnTrapRotation;
+            @UIValidate.started += instance.OnUIValidate;
+            @UIValidate.performed += instance.OnUIValidate;
+            @UIValidate.canceled += instance.OnUIValidate;
         }
 
         private void UnregisterCallbacks(IPlayerControlsActions instance)
@@ -392,6 +460,9 @@ public partial class @PlayerInputActions: IInputActionCollection2, IDisposable
             @TrapRotation.started -= instance.OnTrapRotation;
             @TrapRotation.performed -= instance.OnTrapRotation;
             @TrapRotation.canceled -= instance.OnTrapRotation;
+            @UIValidate.started -= instance.OnUIValidate;
+            @UIValidate.performed -= instance.OnUIValidate;
+            @UIValidate.canceled -= instance.OnUIValidate;
         }
 
         public void RemoveCallbacks(IPlayerControlsActions instance)
@@ -409,6 +480,52 @@ public partial class @PlayerInputActions: IInputActionCollection2, IDisposable
         }
     }
     public PlayerControlsActions @PlayerControls => new PlayerControlsActions(this);
+
+    // UI
+    private readonly InputActionMap m_UI;
+    private List<IUIActions> m_UIActionsCallbackInterfaces = new List<IUIActions>();
+    private readonly InputAction m_UI_Back;
+    public struct UIActions
+    {
+        private @PlayerInputActions m_Wrapper;
+        public UIActions(@PlayerInputActions wrapper) { m_Wrapper = wrapper; }
+        public InputAction @Back => m_Wrapper.m_UI_Back;
+        public InputActionMap Get() { return m_Wrapper.m_UI; }
+        public void Enable() { Get().Enable(); }
+        public void Disable() { Get().Disable(); }
+        public bool enabled => Get().enabled;
+        public static implicit operator InputActionMap(UIActions set) { return set.Get(); }
+        public void AddCallbacks(IUIActions instance)
+        {
+            if (instance == null || m_Wrapper.m_UIActionsCallbackInterfaces.Contains(instance)) return;
+            m_Wrapper.m_UIActionsCallbackInterfaces.Add(instance);
+            @Back.started += instance.OnBack;
+            @Back.performed += instance.OnBack;
+            @Back.canceled += instance.OnBack;
+        }
+
+        private void UnregisterCallbacks(IUIActions instance)
+        {
+            @Back.started -= instance.OnBack;
+            @Back.performed -= instance.OnBack;
+            @Back.canceled -= instance.OnBack;
+        }
+
+        public void RemoveCallbacks(IUIActions instance)
+        {
+            if (m_Wrapper.m_UIActionsCallbackInterfaces.Remove(instance))
+                UnregisterCallbacks(instance);
+        }
+
+        public void SetCallbacks(IUIActions instance)
+        {
+            foreach (var item in m_Wrapper.m_UIActionsCallbackInterfaces)
+                UnregisterCallbacks(item);
+            m_Wrapper.m_UIActionsCallbackInterfaces.Clear();
+            AddCallbacks(instance);
+        }
+    }
+    public UIActions @UI => new UIActions(this);
     private int m_GamepadSchemeIndex = -1;
     public InputControlScheme GamepadScheme
     {
@@ -434,5 +551,10 @@ public partial class @PlayerInputActions: IInputActionCollection2, IDisposable
         void OnActionDeselection(InputAction.CallbackContext context);
         void OnActionActivation(InputAction.CallbackContext context);
         void OnTrapRotation(InputAction.CallbackContext context);
+        void OnUIValidate(InputAction.CallbackContext context);
+    }
+    public interface IUIActions
+    {
+        void OnBack(InputAction.CallbackContext context);
     }
 }
