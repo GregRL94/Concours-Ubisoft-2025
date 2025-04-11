@@ -79,9 +79,12 @@ public class TutorialManager : MonoBehaviour
             CompleteTutorial();
             yield return null;
         }
-        _tutorialPages[index].SetActive(true);
-        _currentTutorialPage = _tutorialPages[index];
-        _currentTutorialPageIndex = index;
+        else
+        {
+            _tutorialPages[index].SetActive(true);
+            _currentTutorialPage = _tutorialPages[index];
+            _currentTutorialPageIndex = index;
+        }
     }
 
     private void CompleteTutorial()

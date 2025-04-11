@@ -189,6 +189,7 @@ public class GameManager : MonoBehaviour
     {
         // Start gameplay loop
         _endGame = false;
+        if (_preStartRoundCoroutine != null) StopCoroutine(_preStartRoundCoroutine);
         _preStartRoundCoroutine = StartCoroutine(PreStartRound(_roundsParameter.timeBeforeRoundStart));
     }
 

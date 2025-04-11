@@ -74,6 +74,7 @@ MonoBehaviour:
   selectedTrap: 3
   trapOwner: 0
   _particleSystem: {fileID: 5416871467344221629}
+  _optionalVisualEffect: {fileID: 0}
 --- !u!114 &8636253911965243664
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -102,7 +103,7 @@ MonoBehaviour:
   musicName: Trap Bump
   _tagName: ENEMY
   collideType: 1
-  actionType: 0
+  actionType: 1
 --- !u!114 &1875852629700500061
 MonoBehaviour:
   m_ObjectHideFlags: 0
