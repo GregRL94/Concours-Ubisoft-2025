@@ -245,16 +245,19 @@ public class RobberBehaviour : BTAgent
 
     public BTNode.Status FleeFromPlayers()
     {
-        if (_fleeingTimer == null) _fleeingTimer = StartCoroutine(FleeTimer(_robberTimeFleeing));
-        //relance le timer si il est en range de vision (nouvel leaf / function)
-        if (Vector3.Distance(GetMostFarPosition(), this.transform.position) <= _stealRange)
+        if (_fleeingTimer == null)
+            _fleeingTimer = StartCoroutine(FleeTimer(_robberTimeFleeing));
+
+        if (Vector3.Distance(GetMostFarPosition(), transform.position) <= _stealRange)
         {
             _animator.SetBool("Cours", false);
             return BTNode.Status.SUCCESS;
         }
-        BTNode.Status s = GoToPosition(GetMostFarPosition());
-        return s;
+            
+       _animator.SetBool("Cours", true);
+        return GoToPosition(GetMostFarPosition());
     }
+
     private Vector3 GetMostFarPosition()
     {
         Vector3 mostFar = Vector3.zero;
@@ -270,6 +273,7 @@ public class RobberBehaviour : BTAgent
                 float distanceToPlayer1 = Vector3.Distance(gameGrid[i, j].worldPos, GameManager.Instance.Players[0].transform.position);
                 float distanceToPlayer2 = Vector3.Distance(gameGrid[i, j].worldPos, GameManager.Instance.Players[1].transform.position);
                 float distanceToPlayers = distanceToPlayer1 + distanceToPlayer2;
+                if (!gameGrid[i, j].isFree) continue;
                 if (distanceToPlayers <= mostDistanceToPlayers) continue;
                 mostDistanceToPlayers = distanceToPlayers;
                 mostFar = gameGrid[i, j].worldPos;
@@ -352,37 +356,40 @@ public class RobberBehaviour : BTAgent
 
     public BTNode.Status GoToPosition(Vector3 destination)
     {
-        //lance l'animation de marche
-        //si l'animation de fuite est differente
-        //met une condition dans l'animator qui differencie la marche de la fuite
-        //(la fuite utilise aussi cette fonction)
-        
-        float distanceToTarget = Vector3.Distance(destination, this.transform.position);
-        if (state == ActionState.IDLE)
+        float distanceToTarget = Vector3.Distance(destination, transform.position);
+
+        if (state == ActionState.IDLE || agent.destination != destination)
         {
             _animator.SetBool("Cours", true);
             agent.SetDestination(destination);
             state = ActionState.WORKING;
         }
-        else if (Vector3.Distance(agent.pathEndPosition, destination) >= _stealRange)
+
+        if (agent.pathPending)
+            return BTNode.Status.RUNNING;
+
+        if (agent.remainingDistance <= _stealRange && !agent.pathPending)
         {
-            _rb.velocity = Vector3.zero;
-            _animator.SetBool("Cours", false);
-            state = ActionState.IDLE;
-            return BTNode.Status.FAILURE;
-        }
-        else if (distanceToTarget < _stealRange)
-        {
-            //animation de marche fini
             _animator.SetBool("Cours", false);
             _rb.velocity = Vector3.zero;
             state = ActionState.IDLE;
             return BTNode.Status.SUCCESS;
         }
+
+        if (agent.pathStatus == NavMeshPathStatus.PathInvalid)
+        {
+            _animator.SetBool("Cours", false);
+            _rb.velocity = Vector3.zero;
+            state = ActionState.IDLE;
+            return BTNode.Status.FAILURE;
+        }
+
         return BTNode.Status.RUNNING;
     }
 
-  
+
+
+
     private void StopAndClearCoroutine(ref Coroutine coroutine)
     {
         StopCoroutine(coroutine);
