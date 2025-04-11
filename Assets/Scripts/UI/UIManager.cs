@@ -532,6 +532,7 @@ public class UIManager : MonoBehaviour
             {
                 Draw?.SetActive(true);
             }
+            SceneLoading.Instance.IsTutoCompleted = false;
         }
     }
     #endregion
