@@ -50074,11 +50074,6 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 90.94781
       objectReference: {fileID: 0}
-    - target: {fileID: 4605825621380652861, guid: f19825bf076349b48b5020768d46d91b,
-        type: 3}
-      propertyPath: m_IsActive
-      value: 1
-      objectReference: {fileID: 0}
     - target: {fileID: 4979198028594496014, guid: f19825bf076349b48b5020768d46d91b,
         type: 3}
       propertyPath: m_LocalEulerAnglesHint.x
@@ -50324,11 +50319,6 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: -79.36716
       objectReference: {fileID: 0}
-    - target: {fileID: 6270802838442815591, guid: f19825bf076349b48b5020768d46d91b,
-        type: 3}
-      propertyPath: m_IsActive
-      value: 0
-      objectReference: {fileID: 0}
     - target: {fileID: 6409282518120464724, guid: f19825bf076349b48b5020768d46d91b,
         type: 3}
       propertyPath: m_LocalEulerAnglesHint.x
@@ -50438,11 +50428,6 @@ PrefabInstance:
         type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
       value: -31.42118
-      objectReference: {fileID: 0}
-    - target: {fileID: 7034388824261256322, guid: f19825bf076349b48b5020768d46d91b,
-        type: 3}
-      propertyPath: m_Enabled
-      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 7545854252171353259, guid: f19825bf076349b48b5020768d46d91b,
         type: 3}
@@ -50638,11 +50623,6 @@ PrefabInstance:
         type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0.8874524
-      objectReference: {fileID: 0}
-    - target: {fileID: 9120697786412626247, guid: f19825bf076349b48b5020768d46d91b,
-        type: 3}
-      propertyPath: m_Enabled
-      value: 1
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -71657,30 +71637,15 @@ PrefabInstance:
       propertyPath: m_DefaultControlScheme
       value: Gamepad
       objectReference: {fileID: 0}
-    - target: {fileID: 4605825621380652861, guid: f19825bf076349b48b5020768d46d91b,
-        type: 3}
-      propertyPath: m_IsActive
-      value: 0
-      objectReference: {fileID: 0}
     - target: {fileID: 6198042751136316571, guid: f19825bf076349b48b5020768d46d91b,
         type: 3}
       propertyPath: _playerID
       value: 2
       objectReference: {fileID: 0}
-    - target: {fileID: 6270802838442815591, guid: f19825bf076349b48b5020768d46d91b,
-        type: 3}
-      propertyPath: m_IsActive
-      value: 0
-      objectReference: {fileID: 0}
     - target: {fileID: 6511221510063445955, guid: f19825bf076349b48b5020768d46d91b,
         type: 3}
       propertyPath: _seeTroughRange
       value: 0.5
-      objectReference: {fileID: 0}
-    - target: {fileID: 7034388824261256322, guid: f19825bf076349b48b5020768d46d91b,
-        type: 3}
-      propertyPath: m_Enabled
-      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 7651091043833614891, guid: f19825bf076349b48b5020768d46d91b,
         type: 3}
@@ -71690,11 +71655,6 @@ PrefabInstance:
     - target: {fileID: 7651091043833614891, guid: f19825bf076349b48b5020768d46d91b,
         type: 3}
       propertyPath: m_IsActive
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 9120697786412626247, guid: f19825bf076349b48b5020768d46d91b,
-        type: 3}
-      propertyPath: m_Enabled
       value: 1
       objectReference: {fileID: 0}
     m_RemovedComponents: []
