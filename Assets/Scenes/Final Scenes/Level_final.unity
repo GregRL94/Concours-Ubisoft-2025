@@ -60008,7 +60008,7 @@ PrefabInstance:
     - target: {fileID: 1308096671972412955, guid: 0fc8b0361f3adb04f9da3a1279eaf35d,
         type: 3}
       propertyPath: _roundsParameter.roundTime
-      value: 100
+      value: 10
       objectReference: {fileID: 0}
     - target: {fileID: 1308096671972412955, guid: 0fc8b0361f3adb04f9da3a1279eaf35d,
         type: 3}
@@ -60074,7 +60074,7 @@ PrefabInstance:
     - target: {fileID: 1308096671972412955, guid: 0fc8b0361f3adb04f9da3a1279eaf35d,
         type: 3}
       propertyPath: _roundsParameter.timeBeforeRoundStart
-      value: 20
+      value: 3
       objectReference: {fileID: 0}
     - target: {fileID: 1475679907184301427, guid: 0fc8b0361f3adb04f9da3a1279eaf35d,
         type: 3}
@@ -60415,7 +60415,7 @@ PrefabInstance:
     - target: {fileID: 4775475527431028253, guid: 0fc8b0361f3adb04f9da3a1279eaf35d,
         type: 3}
       propertyPath: _isTutoCompleted
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 4775475527431028253, guid: 0fc8b0361f3adb04f9da3a1279eaf35d,
         type: 3}
