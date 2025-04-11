@@ -169,7 +169,11 @@ public class PlayerActions : MonoBehaviour
         {
             _currentTrap = Instantiate(_trapsDict[trap].trapPrefab, previewPosition, Quaternion.identity, null);
             _currentTrap.GetComponent<Collider>().enabled = false;
-            if(_currentTrap.GetComponent<SphereColliderWireframe>() != null) _currentTrap.GetComponent<SphereColliderWireframe>().enabled = false;
+            if (!_currentTrap.GetComponent<Collider>().enabled) // no animation while holding trap
+            {
+                _currentTrap.transform.GetChild(0).gameObject.SetActive(false);
+            }
+            if (_currentTrap.GetComponent<SphereColliderWireframe>() != null) _currentTrap.GetComponent<SphereColliderWireframe>().enabled = false;
         }        
 
         try
@@ -259,7 +263,8 @@ public class PlayerActions : MonoBehaviour
             }
 
             _currentTrap.GetComponent<Collider>().enabled = true;
-            if(_currentTrap.GetComponent<SphereColliderWireframe>() != null) _currentTrap.GetComponent<SphereColliderWireframe>().enabled = true;
+
+            if (_currentTrap.GetComponent<SphereColliderWireframe>() != null) _currentTrap.GetComponent<SphereColliderWireframe>().enabled = true;
             _currentTrap.GetComponentInChildren<TypeOfTrap>().TrapOwner = _playerControls.PlayerID;
             _currentTrap = null;
             _playerControls.GameGrid.UpdateNode(dropAtNode);

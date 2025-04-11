@@ -116,6 +116,10 @@ public class TrapManager : MonoBehaviour
     public void TriggerPushTrap(Transform tr, PlayerEnum trapOwner = PlayerEnum.NONE)
     {
         Debug.Log($"[PushTrap] L'ennemi a activé un piège !");
+        if (tr.GetComponent<Collider>().enabled)
+        {
+            tr.transform.GetChild(0).gameObject.SetActive(true);
+        }
 
         robberCapture?.GetSifled(trapOwner, _pushTrapValue);
         _agent?.GetComponentInChildren<Animator>()?.SetBool("EstRepousser", true);
@@ -213,13 +217,13 @@ public class TrapManager : MonoBehaviour
         {
             _rb.angularVelocity = Vector3.zero;
             _rb.velocity = Vector3.zero;
-            print("Angular ");
-            print("_rb.velocity " + _rb.velocity);
+            //print("Angular ");
+            //print("_rb.velocity " + _rb.velocity);
         }
         if (_agent != null)
         {
-            print("_agent.isStopped " + _agent.isStopped);
-            print("capture trap pos: " + tr.position);
+            //print("_agent.isStopped " + _agent.isStopped);
+            //print("capture trap pos: " + tr.position);
             _agent.SetDestination(tr.position);
             _agent.isStopped = true;
             _agent.GetComponentInChildren<ParticleSystem>()?.Play();

@@ -71,6 +71,7 @@ MonoBehaviour:
   selectedTrap: 2
   trapOwner: 0
   _particleSystem: {fileID: 493199672664384336}
+  _optionalVisualEffect: {fileID: 0}
 --- !u!114 &3477646423981916272
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -103,6 +104,55 @@ MonoBehaviour:
   circleSegments: 30
   drawInPlayMode: 1
   lineWidth: 0.1
+--- !u!1 &5368717901891335010
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 6814422001897401438}
+  - component: {fileID: 6861373315166498864}
+  m_Layer: 8
+  m_Name: PiegeAnim
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &6814422001897401438
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5368717901891335010}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 4887867580449354759}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!111 &6861373315166498864
+Animation:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5368717901891335010}
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Animation: {fileID: 7626655702611894211, guid: 28269af5ac4825041b4dfde229ab2c57,
+    type: 3}
+  m_Animations:
+  - {fileID: 7626655702611894211, guid: 28269af5ac4825041b4dfde229ab2c57, type: 3}
+  m_WrapMode: 0
+  m_PlayAutomatically: 1
+  m_AnimatePhysics: 0
+  m_CullingType: 0
 --- !u!1 &6068576871829732595
 GameObject:
   m_ObjectHideFlags: 0
@@ -134,6 +184,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
+  - {fileID: 6814422001897401438}
   - {fileID: 5515134413634602003}
   - {fileID: 2542642626580953791}
   - {fileID: 6784277888045770981}
@@ -484,6 +535,11 @@ PrefabInstance:
     - target: {fileID: 1704996674536765106, guid: 28269af5ac4825041b4dfde229ab2c57,
         type: 3}
       propertyPath: m_Layer
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2223639932434330405, guid: 28269af5ac4825041b4dfde229ab2c57,
+        type: 3}
+      propertyPath: m_Enabled
       value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 5494659886970537693, guid: 28269af5ac4825041b4dfde229ab2c57,

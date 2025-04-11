@@ -34,6 +34,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
+  - {fileID: 1419300802793996804}
   - {fileID: 6085883682190176257}
   - {fileID: 7878404472550357706}
   - {fileID: 8318302599052497578}
@@ -121,6 +122,64 @@ MonoBehaviour:
   circleSegments: 30
   drawInPlayMode: 1
   lineWidth: 0.1
+--- !u!1 &7375869120772408128
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1419300802793996804}
+  - component: {fileID: 5230689871697259115}
+  m_Layer: 8
+  m_Name: Bear Trap Anim
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1419300802793996804
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7375869120772408128}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 4375252928968253208}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!320 &5230689871697259115
+PlayableDirector:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7375869120772408128}
+  m_Enabled: 1
+  serializedVersion: 3
+  m_PlayableAsset: {fileID: 11400000, guid: 886ce52130270644a815927d9a5c773d, type: 2}
+  m_InitialState: 1
+  m_WrapMode: 2
+  m_DirectorUpdateMode: 1
+  m_InitialTime: 0
+  m_SceneBindings:
+  - key: {fileID: 8966477182118872781, guid: 886ce52130270644a815927d9a5c773d, type: 2}
+    value: {fileID: 8264666420086811339}
+  - key: {fileID: 8322709425758960038, guid: 886ce52130270644a815927d9a5c773d, type: 2}
+    value: {fileID: 6184387056576367304}
+  - key: {fileID: 8966477182118872781, guid: 5dec4dd2afe90fa47b3f4f71c1682128, type: 2}
+    value: {fileID: 8264666420086811339}
+  - key: {fileID: 8322709425758960038, guid: 5dec4dd2afe90fa47b3f4f71c1682128, type: 2}
+    value: {fileID: 6184387056576367304}
+  m_ExposedReferences:
+    m_References:
+    - 096fdced9fc067e49a9c6f56026ea9d4: {fileID: 0}
 --- !u!1001 &2464557458942217870
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -539,7 +598,7 @@ PlayableDirector:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 6863123381835459259}
-  m_Enabled: 1
+  m_Enabled: 0
   serializedVersion: 3
   m_PlayableAsset: {fileID: 11400000, guid: 886ce52130270644a815927d9a5c773d, type: 2}
   m_InitialState: 1
