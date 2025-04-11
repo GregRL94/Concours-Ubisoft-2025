@@ -1147,6 +1147,11 @@ PrefabInstance:
       propertyPath: m_Name
       value: PF_Fan
       objectReference: {fileID: 0}
+    - target: {fileID: 5416871467344221629, guid: 6dec6df1cb895eb438b2d1e2ad37cc49,
+        type: 3}
+      propertyPath: playOnAwake
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 6415086687773591886, guid: 6dec6df1cb895eb438b2d1e2ad37cc49,
         type: 3}
       propertyPath: m_Enabled
