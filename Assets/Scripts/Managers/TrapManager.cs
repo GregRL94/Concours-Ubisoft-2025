@@ -99,15 +99,17 @@ public class TrapManager : MonoBehaviour
         _animator.SetBool("Cours", true);
         Debug.Log("[RunAwayDelay] Animation updated: running.");
 
-        if (_indicator != null)
-        {
-            _indicator.SetActive(true);
-            Debug.Log("[RunAwayDelay] Indicator activated.");
-        }
-        else
-        {
-            Debug.LogWarning("[RunAwayDelay] Warning: Indicator is null!");
-        }
+        
+        _indicator.GetComponent<ParticleSystem>()?.Play();
+        //if (_indicator != null)
+        //{
+        //    _indicator.SetActive(true);
+        //    Debug.Log("[RunAwayDelay] Indicator activated.");
+        //}
+        //else
+        //{
+        //    Debug.LogWarning("[RunAwayDelay] Warning: Indicator is null!");
+        //}
     }
     #endregion
 
@@ -161,7 +163,8 @@ public class TrapManager : MonoBehaviour
         Debug.Log($"[Stun] Début du stun, apparition de l'indicateur dans {timeTillPushIndicatorAppear} sec");
 
         yield return new WaitForSeconds(timeTillPushIndicatorAppear);
-        _indicator?.SetActive(true);
+        _indicator.GetComponent<ParticleSystem>()?.Play();
+        //_indicator?.SetActive(true);
 
         Debug.Log($"[Stun] Indicateur activé, l'ennemi sera bloqué progressivement sur {timeTillEnemyStop} sec");
 
@@ -189,7 +192,8 @@ public class TrapManager : MonoBehaviour
             _agent.GetComponentInChildren<Animator>()?.SetBool("EstRepousser", false);
         }
 
-        _indicator?.SetActive(false);
+        _indicator.GetComponent<ParticleSystem>()?.Stop();
+        //_indicator?.SetActive(false);
         Debug.Log($"[Stun] Fin du stun, l'ennemi peut à nouveau bouger.");
 
         // coroutine null if push trap behaviour done
@@ -233,7 +237,8 @@ public class TrapManager : MonoBehaviour
         
         yield return new WaitForSeconds(timeTillCaptureIndicatorAppear);
         if(_indicator == null) yield break;
-        _indicator?.SetActive(true);
+        _indicator.GetComponent<ParticleSystem>()?.Play();
+        //_indicator?.SetActive(true);
 
         // Capture for certain amount of seconds
         robberCapture.StartVulnerability();
@@ -251,8 +256,9 @@ public class TrapManager : MonoBehaviour
             _rb.angularVelocity = Vector3.zero;
             _rb.velocity = Vector3.zero;
         }
-        
-        _indicator?.SetActive(false);
+
+        _indicator.GetComponent<ParticleSystem>()?.Stop();
+        //_indicator?.SetActive(false);
         robberCapture?.StopVulnerability();
     }
     #endregion
