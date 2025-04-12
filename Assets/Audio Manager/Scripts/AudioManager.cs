@@ -63,13 +63,16 @@ namespace AkuroTools
                 instance.playingSounds.Clear();
                 Destroy(this.gameObject);
             }
-            instance = this;
-
-            DontDestroyOnLoad(this.gameObject);
-
-            foreach(var audio in audioList)
+            else
             {
-                allAudio[audio.audioName] = audio.audio;
+                instance = this;
+
+                DontDestroyOnLoad(this.gameObject);
+
+                foreach(var audio in audioList)
+                {
+                    allAudio[audio.audioName] = audio.audio;
+                }
             }
 
             //ostMixerVolume = ostMixer.audioMixer.
