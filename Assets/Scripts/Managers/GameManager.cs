@@ -176,6 +176,7 @@ public class GameManager : MonoBehaviour
         {
             AssignManagers();
             InitializePlayers();
+            StartGame();
 
             UIManager.CreatePlayersReputationUI(_maxPlayersReputation, _minPlayersReputation, _playersReputation);
         }
@@ -214,7 +215,6 @@ public class GameManager : MonoBehaviour
 
     void Start()
     {
-        StartGame();
     }
 
     void StartGame()
