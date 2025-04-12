@@ -66073,12 +66073,12 @@ PrefabInstance:
         type: 3}
       propertyPath: m_text
       value: '"The thief will leave before dawn, so <b>after each night you will
-        be assessed on your performance</b>. Get your artworks stolen too often and
-        <b>you''ll lose your job</b>.
+        be assessed on your performance</b>. Get the artworks stolen too often in
+        your area and <b>you''ll lose your job</b>.
 
 
-        The thief will certainly try to come
-        back for several days, so don''t lose your focus. "'
+        The thief will certainly
+        try to come back for several days, so don''t lose your focus. "'
       objectReference: {fileID: 0}
     - target: {fileID: 3827066093338639839, guid: 0fc8b0361f3adb04f9da3a1279eaf35d,
         type: 3}
@@ -66222,7 +66222,7 @@ PrefabInstance:
       value: "\"Hem hem... The mic's working ? Okay, hello and let's get straight
         to the point: paying for two guards is far too expensive for us. So, with
         this thief calling to tell us he's about to rob our museum, that'll be our
-        way to decide who to keep.\r\n\r\nRemember, <b> you\u2019re not friends anymore</b>,
+        way to decide who to keep.\r\n\r\nRemember, <b>you\u2019re not friends anymore</b>,
         one of you will be fired. <b>Each of you has a specific area to defend with
         your color</b>. Try to catch this thief and protect your artworks.\""
       objectReference: {fileID: 0}
@@ -66319,7 +66319,7 @@ PrefabInstance:
     - target: {fileID: 6063827225475549506, guid: 0fc8b0361f3adb04f9da3a1279eaf35d,
         type: 3}
       propertyPath: m_text
-      value: "\"Oh, that's right... HR want me to note read you a note :\n\n<i>Dear
+      value: "\"Oh, that's right... HR wants me to note read you a note :\n\n<i>Dear
         employees, we're sorry of this situation, but to ensure fairness we'll be
         reviewing the basics. \nUse your <b>Left Joystick to move around.</b></i>\""
       objectReference: {fileID: 0}
@@ -66372,6 +66372,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_AnchoredPosition.y
       value: -58
+      objectReference: {fileID: 0}
+    - target: {fileID: 6352926863331517067, guid: 0fc8b0361f3adb04f9da3a1279eaf35d,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 6507636436235381459, guid: 0fc8b0361f3adb04f9da3a1279eaf35d,
         type: 3}
@@ -66536,7 +66541,7 @@ PrefabInstance:
       value: "\"<i>Remember that <b>you'll have to search for the thief to locate
         and see him</b>. Once again, we apologise for all this-</i> \nBlah blah blah...\n\nWell,
         my work is done. You should have a few moments before the thief arrives,
-        so prepare <b>your traps</b> and be ready. Good luck, don't disappoint us..\""
+        so prepare <b>your traps</b> and be ready. Good luck, don't disappoint us.\""
       objectReference: {fileID: 0}
     - target: {fileID: 6860872461207930817, guid: 0fc8b0361f3adb04f9da3a1279eaf35d,
         type: 3}
@@ -66582,7 +66587,7 @@ PrefabInstance:
         type: 3}
       propertyPath: m_text
       value: '"<i>Among your official guard equipment, you received three types of
-        traps. <b>Proximity detectors, fans and bear traps. </b> We recommend that
+        traps. <b>Proximity detectors, fans and bear traps. </b>We recommend that
         you <b>use them in combination</b> to do your duty efficiently.
 
 
