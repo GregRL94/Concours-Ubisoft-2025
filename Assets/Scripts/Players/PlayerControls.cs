@@ -48,6 +48,7 @@ public class PlayerControls : MonoBehaviour
 
     public PlayerEnum PlayerID => _playerID;
     public GameGrid GameGrid => _gameGrid;
+    public Rigidbody Rb => _rb;
 
     private Gamepad _gamepad; 
     #endregion
@@ -172,6 +173,12 @@ public class PlayerControls : MonoBehaviour
     public void Movement(InputAction.CallbackContext context)
     {
         if (!GameManager.Instance.TutorialManager.IsTutorialCompleted && GameManager.Instance.TutorialManager.CurrentTutorialType == UITutorialStep.MOVE_STEP) GameManager.Instance.UIManager.CurrentPlayerValidation.DynamicValidatePage(_playerID);
+        if (_playerActions.IsDeployingTrap)
+        {
+            _leftJoystickInput = Vector2.zero;
+            return;
+        }
+
         _leftJoystickInput = context.ReadValue<Vector2>();        
     }
 

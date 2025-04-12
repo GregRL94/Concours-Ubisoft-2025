@@ -18,6 +18,8 @@ public class PlayerActions : MonoBehaviour
     private Coroutine _trapSetupCoroutine;
     private Animator _animator;
     private ParticleSystem _particleSystem;
+    private bool _isDeployingTrap = false;
+    public bool IsDeployingTrap => _isDeployingTrap;
     #endregion
 
     #region MonoBehaviour Flow
@@ -198,21 +200,23 @@ public class PlayerActions : MonoBehaviour
     public void StartTrapDeployment(Node deployTrapAtNode)
     {        
         if (_currentAbility == AbilitiesEnum.NONE || _currentAbility == AbilitiesEnum.WHISTLE) { return; }
+        if (!deployTrapAtNode.isFree || deployTrapAtNode.playerZone != _playerControls.PlayerID) { return; }
         if (!GameManager.Instance.TutorialManager.IsTutorialCompleted && GameManager.Instance.TutorialManager.CurrentTutorialType == UITutorialStep.PLACE_TRAP_STEP) GameManager.Instance.UIManager.CurrentPlayerValidation.DynamicValidatePage(_playerControls.PlayerID);
-
+        GameManager.TrapData currentTrapData = _trapsDict[_currentAbility];
+        if (currentTrapData.timer > 0f) return;
+        _isDeployingTrap = true;
+        _playerControls.Rb.velocity = Vector3.zero;
         AudioManager.instance.PlayClipAt(AudioManager.instance.allAudio["Trap Placing"], this.transform.position, AudioManager.instance.soundEffectMixer, true, false);
         _pAbilitiesUI.DeployTrapUI();
         _animator.SetBool("installePiege", true);
         _animator.SetTrigger("installation");
-        GameManager.TrapData currentTrapData = _trapsDict[_currentAbility];
         if (currentTrapData.currentCount <= 0 || currentTrapData.timer > 0) 
         {
             _pAbilitiesUI.ShowWarning(currentTrapData.fillImage, _pAbilitiesUI.DefaultWarningTime, _pAbilitiesUI.DefaultWarningColor);
             return;
         }
-        if (!deployTrapAtNode.isFree || deployTrapAtNode.playerZone != _playerControls.PlayerID) { return; }
 
-        _trapSetupCoroutine = StartCoroutine(TrapSetupTimer(currentTrapData.setupTime, deployTrapAtNode));
+        if(_trapSetupCoroutine == null) _trapSetupCoroutine = StartCoroutine(TrapSetupTimer(currentTrapData.setupTime, deployTrapAtNode));
         Debug.Log("Trap deployment started");
         return;
     }
@@ -220,10 +224,12 @@ public class PlayerActions : MonoBehaviour
     public void CancelTrapDeployment()
     {
         if (_trapSetupCoroutine == null) { return; }
-        StopCoroutine(_trapSetupCoroutine);
-        _pAbilitiesUI.StopDeployTrapUI();
-        _trapSetupCoroutine = null;
+        _isDeployingTrap = false;
         _animator.SetBool("installePiege", false);
+        _pAbilitiesUI.StopDeployTrapUI();
+
+        StopCoroutine(_trapSetupCoroutine);
+        _trapSetupCoroutine = null;
         Debug.Log("Trap deployment canceled");
     }
 
@@ -288,6 +294,9 @@ public class PlayerActions : MonoBehaviour
     {
         yield return new WaitForSeconds(setupTime);
         _animator.SetBool("installePiege", false);
+        _isDeployingTrap = false;
+        StopCoroutine(_trapSetupCoroutine);
+        _trapSetupCoroutine = null;
         DropTrap(trapAtNode);
     }
     #endregion
