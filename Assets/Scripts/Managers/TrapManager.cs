@@ -113,6 +113,17 @@ public class TrapManager : MonoBehaviour
         yield return new WaitForSeconds(3);
         Destroy(tr.transform.gameObject);
 
+        
+        _indicator.GetComponent<ParticleSystem>()?.Play();
+        //if (_indicator != null)
+        //{
+        //    _indicator.SetActive(true);
+        //    Debug.Log("[RunAwayDelay] Indicator activated.");
+        //}
+        //else
+        //{
+        //    Debug.LogWarning("[RunAwayDelay] Warning: Indicator is null!");
+        //}
     }
     #endregion
 
@@ -171,7 +182,8 @@ public class TrapManager : MonoBehaviour
         Debug.Log($"[Stun] Début du stun, apparition de l'indicateur dans {timeTillPushIndicatorAppear} sec");
 
         yield return new WaitForSeconds(timeTillPushIndicatorAppear);
-        _indicator?.SetActive(true);
+        _indicator.GetComponent<ParticleSystem>()?.Play();
+        //_indicator?.SetActive(true);
 
         Debug.Log($"[Stun] Indicateur activé, l'ennemi sera bloqué progressivement sur {timeTillEnemyStop} sec");
 
@@ -201,6 +213,8 @@ public class TrapManager : MonoBehaviour
 
         tr.transform.GetChild(0).gameObject.SetActive(false); // deactivate animation
         _indicator?.SetActive(false);
+        _indicator.GetComponent<ParticleSystem>()?.Stop();
+        //_indicator?.SetActive(false);
         Debug.Log($"[Stun] Fin du stun, l'ennemi peut à nouveau bouger.");
 
         // coroutine null if push trap behaviour done
@@ -253,6 +267,9 @@ public class TrapManager : MonoBehaviour
     IEnumerator StunFromCapture(PlayerEnum trapOwner, Transform tr)
     {
         yield return new WaitForSeconds(timeTillCaptureIndicatorAppear);
+        if(_indicator == null) yield break;
+        _indicator.GetComponent<ParticleSystem>()?.Play();
+        //_indicator?.SetActive(true);
 
         if (_indicator != null)
         {
@@ -283,6 +300,8 @@ public class TrapManager : MonoBehaviour
         tr.transform.GetChild(0).gameObject?.SetActive(false); // désactive animation
 
         _indicator?.SetActive(false);
+        _indicator.GetComponent<ParticleSystem>()?.Stop();
+        //_indicator?.SetActive(false);
         robberCapture?.StopVulnerability();
 
         yield return new WaitForSeconds(3);
