@@ -51,11 +51,17 @@ public class TrapManager : MonoBehaviour
     public void TriggerAlarmTrap(Transform tr, PlayerEnum trapOwner = PlayerEnum.NONE)
     {
         Debug.Log($"[TriggerAlarmTrap] Alarm triggered by {trapOwner}");
+        if (tr.GetComponent<Collider>().enabled)
+        {
+            tr.transform.GetChild(0).gameObject.SetActive(true); // activate animation
+        }
+
         robberCapture?.GetSifled(trapOwner, _alarmTrapValue);
 
         if(tr.GetComponent<Collider>() != null)
         {
             tr.GetComponent<Collider>().enabled = false;
+            tr.GetComponent<Collider>().isTrigger = false;
             tr.GetComponent<Collider>().providesContacts = true;
         }
 
@@ -68,8 +74,8 @@ public class TrapManager : MonoBehaviour
             _agent.velocity = Vector3.zero;
         }
 
-        _animator.SetTrigger("Surpris");
         _animator.SetBool("Cours", false);
+        _animator.SetTrigger("Surpris");
 
         StartCoroutine(RunAwayDelay(tr, trapOwner));
     }
@@ -78,7 +84,6 @@ public class TrapManager : MonoBehaviour
     {
         Debug.Log($"[RunAwayDelay] Stun duration: {timeTillFlee} seconds");
         float elapsedTime = 0f;
-
         while (elapsedTime < timeTillFlee)
         {
             elapsedTime += Time.deltaTime;
@@ -99,6 +104,15 @@ public class TrapManager : MonoBehaviour
         _animator.SetBool("Cours", true);
         Debug.Log("[RunAwayDelay] Animation updated: running.");
 
+        tr.transform.GetChild(0).gameObject.SetActive(false); // deactivate animation
+        _indicator?.SetActive(false);
+
+        // coroutine null if push trap behaviour done
+        activePushCoroutine = null;
+
+        yield return new WaitForSeconds(3);
+        Destroy(tr.transform.gameObject);
+
         
         _indicator.GetComponent<ParticleSystem>()?.Play();
         //if (_indicator != null)
@@ -114,10 +128,14 @@ public class TrapManager : MonoBehaviour
     #endregion
 
     #region Push Trigger Behaviour
-    private Coroutine activePushCoroutine = null; // Un seul ennemi, donc une seule coroutine active
+    private Coroutine activePushCoroutine = null; 
     public void TriggerPushTrap(Transform tr, PlayerEnum trapOwner = PlayerEnum.NONE)
     {
         Debug.Log($"[PushTrap] L'ennemi a activé un piège !");
+        if (tr.GetComponent<Collider>().enabled)
+        {
+            tr.transform.GetChild(0).gameObject.SetActive(true); // activate animation
+        }
 
         robberCapture?.GetSifled(trapOwner, _pushTrapValue);
         _agent?.GetComponentInChildren<Animator>()?.SetBool("EstRepousser", true);
@@ -125,6 +143,7 @@ public class TrapManager : MonoBehaviour
         if (tr.GetComponent<Collider>() != null)
         {
             tr.GetComponent<Collider>().enabled = false;
+            tr.GetComponent<Collider>().isTrigger = false;
             tr.GetComponent<Collider>().providesContacts = true;
         }
 
@@ -192,41 +211,54 @@ public class TrapManager : MonoBehaviour
             _agent.GetComponentInChildren<Animator>()?.SetBool("EstRepousser", false);
         }
 
+        tr.transform.GetChild(0).gameObject.SetActive(false); // deactivate animation
+        _indicator?.SetActive(false);
         _indicator.GetComponent<ParticleSystem>()?.Stop();
         //_indicator?.SetActive(false);
         Debug.Log($"[Stun] Fin du stun, l'ennemi peut à nouveau bouger.");
 
         // coroutine null if push trap behaviour done
         activePushCoroutine = null;
+
+        yield return new WaitForSeconds(3);
+        // DESTROY GAMEOBJECT BUG SI DEUX ET PLUS VENTILATEUR SE FONT DESTRUIRE EN MEME TMEPS UN SE DESTRUIT SEULEMENT
+        Destroy(tr.transform.gameObject);
     }
     #endregion
 
     #region Capture Trigger Behaviour
+
     public void TriggerCaptureTrap(PlayerEnum trapOwner, Transform tr)
     {
-        print("trapOwner " + trapOwner);
+        if (tr.GetComponent<Collider>()?.enabled == true)
+        {
+            tr.transform.GetChild(0).gameObject.SetActive(true); // activate animation and VFX
+        }
+
         robberCapture?.GetSifled(trapOwner, _captureTrapValue);
 
-        if (tr.GetComponent<Collider>() != null)
+        var collider = tr?.GetComponent<Collider>();
+        if (collider != null)
         {
-            tr.GetComponent<Collider>().enabled = false;
-            tr.GetComponent<Collider>().providesContacts = true;
+            collider.enabled = false;
+            collider.isTrigger = false;
+            collider.providesContacts = true;
         }
 
         if (_rb != null)
         {
-            _rb.angularVelocity = Vector3.zero;
             _rb.velocity = Vector3.zero;
-            print("Angular ");
-            print("_rb.velocity " + _rb.velocity);
+            _rb.angularVelocity = Vector3.zero;
+            _rb.isKinematic = true; // Rend le Rigidbody immobile
         }
+
         if (_agent != null)
         {
-            print("_agent.isStopped " + _agent.isStopped);
-            print("capture trap pos: " + tr.position);
+            _agent.GetComponent<RobberBehaviour>().enabled = false;
             _agent.SetDestination(tr.position);
-            _agent.isStopped = true;
-            _agent.GetComponentInChildren<ParticleSystem>()?.Play();
+            _agent.updatePosition = false;
+            _agent.updateRotation = false;
+            //_agent.enabled = false; // Désactive complètement le NavMeshAgent DANGER
         }
 
         StartCoroutine(StunFromCapture(trapOwner, tr));
@@ -234,33 +266,50 @@ public class TrapManager : MonoBehaviour
 
     IEnumerator StunFromCapture(PlayerEnum trapOwner, Transform tr)
     {
-        
         yield return new WaitForSeconds(timeTillCaptureIndicatorAppear);
         if(_indicator == null) yield break;
         _indicator.GetComponent<ParticleSystem>()?.Play();
         //_indicator?.SetActive(true);
 
-        // Capture for certain amount of seconds
-        robberCapture.StartVulnerability();
-        yield return new WaitForSeconds(captureDuration);
-
-        //Destroy(captureTrap);
-        if (_agent != null)
+        if (_indicator != null)
         {
-            _agent.isStopped = false;
+            _indicator.SetActive(true);
         }
-        else yield break;
 
+        // Capture pendant un certain temps
+        robberCapture?.StartVulnerability();
+        _animator?.SetBool("EstPieger", true);
+        yield return new WaitForSeconds(captureDuration);
+        _animator?.SetBool("EstPieger", false);
         if (_rb != null)
         {
-            _rb.angularVelocity = Vector3.zero;
+            _rb.isKinematic = false;
             _rb.velocity = Vector3.zero;
+            _rb.angularVelocity = Vector3.zero;
         }
 
+        if (_agent != null)
+        {
+            _agent.GetComponent<RobberBehaviour>().enabled = true;
+            //_agent.enabled = true; // Danger 
+            _agent.Warp(_rb.position);
+            _agent.updatePosition = true;
+            _agent.updateRotation = true;
+        }
+
+        tr.transform.GetChild(0).gameObject?.SetActive(false); // désactive animation
+
+        _indicator?.SetActive(false);
         _indicator.GetComponent<ParticleSystem>()?.Stop();
         //_indicator?.SetActive(false);
         robberCapture?.StopVulnerability();
+
+        yield return new WaitForSeconds(3);
+
+        Destroy(tr.gameObject);
     }
+
     #endregion
+
 }
 
